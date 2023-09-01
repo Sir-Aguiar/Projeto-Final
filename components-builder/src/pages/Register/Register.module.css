@@ -1,35 +1,36 @@
 .form {
-	@apply min-w-[320px] w-[360px];
-	@apply py-4 px-2 gap-6;
-	@apply flex flex-col items-center;
-	@apply font-Roboto text-[#474747];
+  @apply py-4 px-5 mobile:px-3 gap-6;
+  @apply flex flex-col items-center;
+  @apply font-Roboto;
+  @apply min-h-[600px] h-full w-full mobile:max-w-[360px] max-w-[400px] mx-auto items-center justify-center;
 }
+
 .form header {
-	@apply w-full flex flex-col items-center gap-3 font-semibold;
+  @apply w-full flex flex-col items-center gap-3 font-semibold;
 }
 .form header h1 {
-	@apply w-full text-center mobile:text-[15px];
+  @apply w-full text-center mobile:text-[15px];
 }
 
 .logo {
-	@apply max-w-[250px] mobile:max-w-[220px];
+  @apply max-w-[250px] mobile:max-w-[220px];
 }
 
 .input_container {
-	@apply w-full;
-	@apply flex flex-col items-center gap-2;
+  @apply w-full;
+  @apply flex flex-col items-center gap-2;
 }
 
 .register {
-	background: var(--Nice-blue, linear-gradient(90deg, #3973e5 9.38%, #3695d9 90.07%));
-	@apply w-[250px] h-[40px];
-	@apply font-Roboto text-white font-semibold rounded-sm;
-	@apply hover:brightness-95 transition-all duration-200;
+  @apply w-[250px] h-[40px];
+  @apply bg-blue-gradient;
+  @apply font-Roboto text-background font-semibold rounded-sm;
+  @apply hover:brightness-95 transition-all duration-200;
 }
 
 .register_message {
-	@apply w-full text-center text-[13px] font-normal leading-4;
+  @apply w-full text-center text-[13px] font-normal leading-4;
 }
 .content_container {
-	@apply h-full w-full flex-1 flex items-center justify-center;
+  @apply h-full w-full flex-1;
 }

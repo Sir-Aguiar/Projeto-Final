@@ -1,67 +1,70 @@
-.normal_grid {
-	@apply grid;
-	@apply grid-cols-12 gap-6 mx-40;
-	@apply tablet:grid-cols-8 tablet:gap-4 tablet:mx-8;
-	@apply mobile:grid-cols-3 mobile:gap-2 mobile:mx-4;
-}
-
 .content_container {
-	@apply flex flex-col;
-	@apply w-full h-screen min-h-full mt-[150px];
-	@apply mobile:gap-2 mobile:mx-4;
-	@apply tablet:max-w-[770px];
-	@apply gap-6 desktop:max-w-[1120px];
+  @apply flex flex-col gap-6;
+  @apply w-full h-full mt-[125px];
+  @apply desktop:max-w-[1120px];
+  @apply tablet:max-w-[770px];
+  @apply mobile:max-w-[328px];
 }
 
-.introduction {
-	@apply flex justify-between;
-	@apply mobile:flex-col mobile:items-center gap-6 mobile:gap-4;
-	@apply w-full h-full max-h-[300px] mobile:min-h-[600px];
-	@apply overflow-hidden;
+.banner {
+  @apply bg-black-text w-full h-full;
+  @apply desktop:max-w-[450px];
+  @apply tablet:max-w-[380px];
 }
 
-.message_container {
-	@apply flex flex-col items-end gap-6;
-	@apply w-full max-w-[580px] tablet:max-w-[450px] mobile:max-w-[328px];
-	@apply h-full;
+.apresentation_banner {
+  @apply flex justify-between gap-6;
+  @apply mobile:flex-col mobile:items-center mobile:gap-4;
+  @apply w-full h-full max-h-[300px];
+  @apply mobile:min-h-[600px];
 }
 
-.introduction_title {
-	@apply text-[#474747];
-	@apply w-full text-right font-Montserrat;
-	@apply text-[20px] font-bold;
-	@apply tablet:text-[16px];
-	@apply mobile:text-sm;
+.apresentation_message {
+  @apply flex flex-col items-end gap-6 desktop:py-3 tablet:py-3;
+  @apply w-full max-w-[580px] tablet:max-w-[450px] mobile:max-w-[328px];
+  @apply h-full;
+}
+
+.apresentation_title {
+  @apply text-black-text;
+  @apply w-full text-right font-Montserrat;
+  @apply text-[20px] font-bold;
+  @apply tablet:text-[16px];
+  @apply mobile:text-[17px];
 }
 
 .invite {
-	@apply font-Roboto;
-	@apply py-3 gap-8;
-	@apply w-full h-full flex flex-col justify-center;
+  @apply font-Roboto;
+  @apply py-3 gap-4;
+  @apply w-full h-full flex flex-col justify-center;
 }
 
 .cta_invite {
-	@apply text-[#474747] text-sm mobile:text-[12px] font-semibold leading-4 w-full text-right;
+  @apply text-black-text text-sm  font-semibold leading-4 w-full text-right;
 }
 
 .CTAs {
-	@apply w-full flex justify-end gap-2 mobile:gap-1;
+  @apply w-full flex justify-end gap-2 mobile:gap-1;
 }
 
 .CTAs button {
-	@apply w-[175px] mobile:w-[150px] h-[40px];
-	@apply hover:brightness-95 transition-all duration-200;
+  @apply w-[175px] mobile:w-[150px] h-[40px];
+  @apply hover:brightness-95 transition-all duration-200;
 }
 
 .CTAs .primary {
-	background: var(--Nice-blue, linear-gradient(90deg, #3973e5 9.38%, #3695d9 90.07%));
-	@apply font-Roboto text-white font-semibold rounded-sm;
+  @apply font-Roboto text-background font-semibold rounded-sm;
+  @apply bg-blue-gradient;
 }
 
 .CTAs .secundary {
-	@apply border-2 border-[#474747];
-	@apply font-Roboto text-[#474747] font-semibold rounded-sm;
+  @apply border-2 border-black-text border-opacity-50;
+  @apply font-Roboto text-black-text font-semibold rounded-sm;
 }
 .promotions {
-	@apply py-2 px-4 gap-3 flex justify-around items-center mobile:flex-col;
+  @apply py-2 px-4 gap-3 flex justify-around items-center mobile:flex-col;
+}
+.features {
+  @apply w-full h-full;
+  @apply flex flex-col items-center gap-6;
 }

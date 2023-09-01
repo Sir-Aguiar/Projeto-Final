@@ -1,23 +1,23 @@
 .navigation_container {
-	@apply fixed left-1/2 -translate-x-1/2 top-0;
-	@apply w-[90%] h-[50px] backdrop-blur-[2px] max-w-[1120px] tablet:max-w-[770px] mobile:max-w-[328px];
-	@apply flex py-2 px-5 mobile:px-2 justify-between items-start;
-	@apply font-Roboto text-[#474747];
-	@apply border-b-2 border-[#474747];
+  @apply fixed left-1/2 -translate-x-1/2 top-0;
+  @apply w-full h-[50px] backdrop-blur-[2px] desktop:max-w-[1120px] tablet:max-w-[770px] mobile:max-w-[328px];
+  @apply flex py-2 px-5 mobile:px-2 justify-between items-start;
+  @apply font-Roboto text-black-text;
+  @apply border-b-2 border-black-text;
 }
 .CTAs {
-	@apply flex gap-2 h-full items-center;
+  @apply flex gap-2 h-full items-center;
 }
 
 .CTAs button {
-	@apply h-[30px] w-[100px] mobile:w-[75px] mobile:h-[25px] mobile:text-[12px]  rounded-sm font-semibold text-sm;
-	@apply transition-all duration-200 hover:brightness-90;
+  @apply h-[30px] w-[100px] mobile:w-[75px] mobile:h-[25px] mobile:text-[12px]  rounded-sm font-semibold text-sm;
+  @apply transition-all duration-200 hover:brightness-90;
 }
 
 .register {
-	@apply text-[#3973E5];
-	@apply hover:bg-slate-50 bg-opacity-10;
+  @apply text-[#3973E5];
+  @apply hover:bg-slate-50 bg-opacity-10;
 }
 .login {
-	@apply bg-[#3973E5] text-white;
+  @apply bg-blue-gradient text-background;
 }
