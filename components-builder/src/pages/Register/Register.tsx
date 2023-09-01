@@ -28,7 +28,9 @@ const Register: React.FC = () => {
 					<p className={`${styles.register_message}`}>
 						Lorem ipsum dolor sit amet, consectetur cras amet.
 						<br />
-						<a className="font-bold text-[#228CE5] underline">Já possui uma conta?</a>
+						<a className="font-bold text-[#228CE5] underline cursor-pointer hover:brightness-90">
+							Já possui uma conta?
+						</a>
 					</p>
 
 					<button type="submit" className={styles.register} id="register-submiter">

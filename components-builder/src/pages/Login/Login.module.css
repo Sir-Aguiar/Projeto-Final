@@ -36,5 +36,5 @@
 	@apply hover:brightness-95 transition-all duration-200;
 }
 .logo {
-	@apply  max-w-[250px]
+	@apply max-w-[250px];
 }

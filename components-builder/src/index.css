@@ -7,12 +7,10 @@ body,
 #root {
 	height: 100%;
 	width: 100%;
-	min-height: 100vh;
-	min-width: 100vw;
-	@apply overflow-hidden;
+	min-height: 100%;
+	min-width: 100%;
 }
 #root {
 	@apply flex justify-center items-center;
 }
-
 

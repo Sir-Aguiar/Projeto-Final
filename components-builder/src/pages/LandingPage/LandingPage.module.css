@@ -1,0 +1,67 @@
+.normal_grid {
+	@apply grid;
+	@apply grid-cols-12 gap-6 mx-40;
+	@apply tablet:grid-cols-8 tablet:gap-4 tablet:mx-8;
+	@apply mobile:grid-cols-3 mobile:gap-2 mobile:mx-4;
+}
+
+.content_container {
+	@apply flex flex-col;
+	@apply w-full h-screen min-h-full mt-[150px];
+	@apply mobile:gap-2 mobile:mx-4;
+	@apply tablet:max-w-[770px];
+	@apply gap-6 desktop:max-w-[1120px];
+}
+
+.introduction {
+	@apply flex justify-between;
+	@apply mobile:flex-col mobile:items-center gap-6 mobile:gap-4;
+	@apply w-full h-full max-h-[300px] mobile:min-h-[600px];
+	@apply overflow-hidden;
+}
+
+.message_container {
+	@apply flex flex-col items-end gap-6;
+	@apply w-full max-w-[580px] tablet:max-w-[450px] mobile:max-w-[328px];
+	@apply h-full;
+}
+
+.introduction_title {
+	@apply text-[#474747];
+	@apply w-full text-right font-Montserrat;
+	@apply text-[20px] font-bold;
+	@apply tablet:text-[16px];
+	@apply mobile:text-sm;
+}
+
+.invite {
+	@apply font-Roboto;
+	@apply py-3 gap-8;
+	@apply w-full h-full flex flex-col justify-center;
+}
+
+.cta_invite {
+	@apply text-[#474747] text-sm mobile:text-[12px] font-semibold leading-4 w-full text-right;
+}
+
+.CTAs {
+	@apply w-full flex justify-end gap-2 mobile:gap-1;
+}
+
+.CTAs button {
+	@apply w-[175px] mobile:w-[150px] h-[40px];
+	@apply hover:brightness-95 transition-all duration-200;
+}
+
+.CTAs .primary {
+	background: var(--Nice-blue, linear-gradient(90deg, #3973e5 9.38%, #3695d9 90.07%));
+	@apply font-Roboto text-white font-semibold rounded-sm;
+}
+
+.CTAs .secundary {
+	@apply border-2 border-[#474747];
+	@apply font-Roboto text-[#474747] font-semibold rounded-sm;
+}
+.promotions {
+	@apply py-2 px-4 gap-3 flex justify-around items-center mobile:flex-col;
+}
