@@ -1,7 +1,7 @@
 .paragraph_container {
   @apply flex justify-center items-center content-center overflow-hidden;
-  @apply gap-y-3 gap-x-6 p-2;
-  @apply min-h-[224px] max-w-[928px] mobile:min-h-[400px];
+  @apply gap-6 p-2;
+  @apply min-h-[224px] max-w-[928px] mobile:min-h-[450px];
   @apply border-b-2 border-black-text border-opacity-40;
 }
 
@@ -21,9 +21,9 @@
 }
 
 .title {
-  @apply mobile:text-[21px] w-full;
-  @apply text-transparent bg-clip-text bg-blue-gradient;
   @apply text-[24px] font-bold;
+  @apply mobile:text-[20px] w-full;
+  @apply text-transparent bg-clip-text bg-blue-gradient;
 }
 
 .paragraph {
