@@ -8,6 +8,7 @@ module.exports = {
   database: "Eligo",
   dialect: "postgres",
   define: {
+    logging: false,
     timestamps: true,
   },
 };
