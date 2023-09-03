@@ -1,25 +1,34 @@
 # Setup
 
+### Environment Variables
+
+```js
+PORT=
+HOSTNAME=
+PASSWORD=
+PG_USER=
+```
+
 ### 1 - Instalando dependências
 
-```npm
+```bash
 npm install
 ```
 
 ### 2 - Criando base de dados
 
-```npm
+```bash
 npm run db:create
 ```
 
 ### 3 - Sincronizando migrações
 
-```npm
+```bash
 npm run db:migrate
 ```
 
 ### 4 - Populando tabelas (Mocking)
 
-```npm
+```bash
 npm run db:populate
 ```
