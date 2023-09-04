@@ -1,5 +1,6 @@
 const { DataTypes } = require("sequelize");
 const Database = require("../database");
+const Escola = require("./Escola");
 const Professor = Database.define(
 	"Professor",
 	{
@@ -31,5 +32,7 @@ const Professor = Database.define(
 		tableName: "professores",
 	},
 );
+
+
 
 module.exports = Professor;
