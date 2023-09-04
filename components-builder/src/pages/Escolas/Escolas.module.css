@@ -1,8 +1,60 @@
 .content_container {
-  @apply bg-red-400;
-	@apply flex mobile:flex-col gap-6;
+	@apply flex mobile:flex-col gap-2 p-2;
 	@apply w-full h-full mt-[125px];
 	@apply desktop:max-w-[1120px];
 	@apply tablet:max-w-[770px];
 	@apply mobile:max-w-[328px];
+}
+.controllers {
+	@apply flex flex-col gap-4 items-center justify-center;
+	@apply w-full desktop:max-w-[260px] tablet:max-w-[260px];
+	@apply h-full max-h-[400px];
+}
+
+.actions {
+	@apply flex items-center justify-between py-2 px-6;
+	@apply w-full;
+	@apply border-[1px] border-black-text border-opacity-50 rounded-sm;
+}
+
+.actions svg {
+	@apply cursor-pointer fill-black-text;
+	@apply transition-all duration-200;
+	@apply h-10 w-10 p-2 rounded-full;
+	@apply hover:bg-slate-100;
+}
+
+.filters {
+	@apply w-full h-full;
+	@apply border-[1px] border-black-text border-opacity-50 rounded-[5px];
+}
+
+.table_container {
+	@apply w-full h-full;
+	@apply overflow-auto;
+	@apply flex flex-col items-start;
+	@apply border-[1px] border-black-text border-opacity-50 rounded-[5px];
+}
+
+.content_table {
+	@apply w-full min-w-full;
+	@apply font-Roboto text-black-text;
+}
+
+.table_header {
+	@apply bg-black-text text-background;
+}
+.table_header svg {
+	@apply cursor-pointer fill-background;
+	@apply transition-all duration-200;
+	@apply h-10 w-10 p-2 rounded-full;
+	@apply hover:bg-slate-500;
+}
+
+.table_header th {
+	@apply text-start;
+	@apply min-h-[50px] h-[50px] p-2;
+}
+.table_body td {
+	@apply min-h-[45px] h-[45px] p-2;
 }
