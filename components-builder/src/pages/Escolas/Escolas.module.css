@@ -1,0 +1,8 @@
+.content_container {
+  @apply bg-red-400;
+	@apply flex mobile:flex-col gap-6;
+	@apply w-full h-full mt-[125px];
+	@apply desktop:max-w-[1120px];
+	@apply tablet:max-w-[770px];
+	@apply mobile:max-w-[328px];
+}
