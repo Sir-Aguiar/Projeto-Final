@@ -6,7 +6,6 @@ const { ValidationErrorItem } = require("sequelize");
 const newUser = async (userData) => {
   const { nome, email, login, senha } = userData;
 
-  
 
   try {
     const insertedUser = await Professor.create({ nome, email, login, senha: HASHED_PASSWORD });
