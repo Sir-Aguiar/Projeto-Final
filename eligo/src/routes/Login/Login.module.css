@@ -1,0 +1,36 @@
+.form {
+  @apply py-4 px-5 mobile:px-3 gap-6;
+  @apply flex flex-col items-center;
+  @apply font-Roboto;
+  @apply min-h-[500px] h-full w-full max-w-[360px] mx-auto items-center justify-center;
+}
+
+.inputs {
+  @apply w-full;
+  @apply flex flex-col items-center gap-3;
+}
+
+.text {
+  @apply flex flex-col;
+  @apply gap-[10px] py-1;
+  @apply text-center;
+}
+
+.text p {
+  @apply mobile:text-sm font-semibold text-[#737373];
+}
+
+.text h1 {
+  @apply text-2xl font-bold text-black-text;
+}
+
+.login {
+  @apply w-[250px] h-[40px];
+  @apply font-Roboto text-background font-semibold rounded-sm;
+  @apply hover:brightness-95 transition-all duration-200;
+  @apply bg-blue-gradient;
+}
+
+.logo {
+  @apply max-w-[250px];
+}
