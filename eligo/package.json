@@ -11,10 +11,6 @@
     "dev:host": "vite --host"
   },
   "dependencies": {
-    "react": "^18.2.0",
-    "react-auth-kit": "^2.12.6",
-    "react-dom": "^18.2.0",
-    "react-router-dom": "^6.15.0",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@fontsource/roboto": "^5.0.8",
@@ -22,6 +18,11 @@
     "@mui/material": "^5.14.7",
     "@mui/styled-engine-sc": "^5.14.7",
     "@mui/x-data-grid": "^6.12.1",
+    "axios": "^1.5.0",
+    "react": "^18.2.0",
+    "react-auth-kit": "^2.12.6",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.15.0",
     "styled-components": "^5.3.11"
   },
   "devDependencies": {
