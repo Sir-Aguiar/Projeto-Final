@@ -32,6 +32,7 @@ module.exports = async (req, res) => {
 				{
 					login,
 					email: userFound.dataValues.email,
+					idProfessor: userFound.dataValues.idProfessor,
 				},
 				process.env.SECRET,
 				{},

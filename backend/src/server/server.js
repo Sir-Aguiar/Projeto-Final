@@ -8,9 +8,9 @@ const app = express();
 const httpServer = createServer(app);
 
 app.use(
-  cors({
-    origin: "*",
-  }),
+	cors({
+		origin: "*",
+	}),
 );
 
 app.use(express.json());
