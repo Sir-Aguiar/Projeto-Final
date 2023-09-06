@@ -56,4 +56,13 @@ Chamada.belongsTo(Turma, {
 	as: "turma",
 });
 
+Aluno.belongsTo(Turma, {
+	foreignKey: "idTurma",
+	as: "turma",
+});
+Turma.hasMany(Aluno, {
+	foreignKey: "idTurma",
+	as: "alunos",
+});
+
 module.exports = Turma;

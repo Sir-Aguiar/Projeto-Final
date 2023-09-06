@@ -1,66 +1,69 @@
 .content_container {
-  @apply flex mobile:flex-col gap-2 p-2;
-  @apply w-full h-full mt-[125px];
-  @apply desktop:max-w-[1120px];
-  @apply tablet:max-w-[770px];
-  @apply mobile:max-w-[328px];
+	@apply flex mobile:flex-col gap-2 p-2;
+	@apply w-full h-full mt-[65px] mx-auto;
+	@apply desktop:max-w-[1120px];
+	@apply tablet:max-w-[770px];
+	@apply mobile:max-w-[328px];
 }
 .controllers {
-  @apply flex flex-col gap-4 items-center justify-center;
-  @apply w-full desktop:max-w-[260px] tablet:max-w-[260px];
-  @apply h-full max-h-[400px];
+	@apply flex flex-col gap-4 items-center justify-center;
+	@apply w-full desktop:max-w-[260px] tablet:max-w-[260px];
+	@apply h-full max-h-[400px];
 }
 
 .actions {
-  @apply flex items-center justify-between py-2 px-6;
-  @apply w-full;
-  @apply border-[1px] border-black-text border-opacity-50 rounded-sm;
+	@apply flex items-center justify-between py-2 px-6;
+	@apply w-full;
+	@apply border-[1px] border-black-text border-opacity-50 rounded-sm;
 }
 
 .actions button {
-  @apply h-[40px] w-[40px];
-  @apply flex items-center justify-center;
-  @apply transition-all duration-200;
-  @apply p-2 rounded-full;
-  @apply enabled:hover:bg-slate-100;
-  @apply disabled:cursor-not-allowed;
-  @apply text-black-text disabled:text-opacity-75;
+	@apply h-[40px] w-[40px];
+	@apply flex items-center justify-center;
+	@apply transition-all duration-200;
+	@apply p-2 rounded-full;
+	@apply enabled:hover:bg-slate-100;
+	@apply disabled:cursor-not-allowed;
+	@apply text-black-text disabled:text-opacity-75;
 }
 
 .classes {
-  @apply w-full h-full;
-  @apply flex flex-col gap-1 p-2;
-  @apply border-[1px] border-black-text border-opacity-50 rounded-[5px];
-  @apply text-black-text font-Roboto;
-  @apply overflow-y-auto;
+	@apply w-full h-full;
+	@apply flex flex-col gap-1 p-2;
+	@apply border-[1px] border-black-text border-opacity-50 rounded-[5px];
+	@apply text-black-text font-Roboto;
+	@apply overflow-y-auto;
 }
 
 .table_container {
-  @apply w-full h-full;
-  @apply overflow-auto;
-  @apply flex flex-col items-start;
-  @apply border-[1px] border-black-text border-opacity-50 rounded-[5px];
+	@apply w-full h-full;
+	@apply overflow-auto;
+	@apply flex flex-col items-start;
+	@apply border-[1px] border-black-text border-opacity-50 rounded-[5px];
 }
 
 .content_table {
-  @apply w-full min-w-full;
-  @apply font-Roboto text-black-text;
+	@apply w-full min-w-full;
+	@apply font-Roboto text-black-text;
 }
 
 .table_header {
-  @apply bg-black-text text-background;
+	@apply bg-black-text text-background;
 }
 .table_header svg {
-  @apply cursor-pointer fill-background;
-  @apply transition-all duration-200;
-  @apply h-10 w-10 p-2 rounded-full;
-  @apply hover:bg-slate-500;
+	@apply cursor-pointer fill-background;
+	@apply transition-all duration-200;
+	@apply h-10 w-10 p-2 rounded-full;
+	@apply hover:bg-slate-500;
 }
 
 .table_header th {
-  @apply text-start;
-  @apply min-h-[50px] h-[50px] p-2;
+	@apply text-start;
+	@apply min-h-[50px] h-[50px] p-2;
 }
 .table_body td {
-  @apply min-h-[45px] h-[45px] p-2;
+	@apply min-h-[45px] h-[45px] p-2;
+}
+.insert_container {
+	@apply font-Roboto text-black-text;
 }

@@ -26,13 +26,6 @@ const Aluno = Database.define(
 	{ tableName: "alunos" },
 );
 
-Aluno.belongsTo(Turma, {
-	foreignKey: "idTurma",
-	as: "turma",
-});
-Turma.hasMany(Aluno, {
-	foreignKey: "idTurma",
-	as: "alunos",
-});
+
 
 module.exports = Aluno;

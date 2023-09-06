@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./Escolas.module.css";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import LibraryAddIcon from "@mui/icons-material/LibraryAdd";
 import EditIcon from "@mui/icons-material/Edit";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import Checkbox from "@mui/material/Checkbox";
-import { Box, Divider, Drawer, Typography } from "@mui/material";
-import Navbar from "../../components/Navigation/Navbar/NavBar";
+import { Box, Divider, Drawer, Typography, TextField } from "@mui/material";
+import axios from "axios";
+import { useAuthHeader } from "react-auth-kit";
 
 type ClassLinkProps = {
 	name: string;
@@ -25,8 +26,23 @@ const ClassLink: React.FC<ClassLinkProps> = ({ link, name }) => {
 };
 
 const Escolas: React.FC = () => {
+	const authHeader = useAuthHeader();
+
 	const [insertDrawer, toggleInsert] = useState(false);
 	const [updateDrawer, toggleUpdate] = useState(false);
+	const [escolas, setEscolas] = useState<any[]>([]);
+
+	useEffect(() => {
+		axios
+			.get("http://localhost:8080/escolas", {
+				headers: {
+					Authorization: authHeader(),
+				},
+			})
+			.then((res) => {
+				setEscolas(res.data.escolas);
+			});
+	}, []);
 
 	return (
 		<div className={styles.content_container}>
@@ -60,21 +76,30 @@ const Escolas: React.FC = () => {
 						</tr>
 					</thead>
 					<tbody className={styles.table_body}>
-						<tr>
-							<td className="min-w-[50px] w-[50px]">
-								<Checkbox />
-							</td>
-							<td className="min-w-[450px]">Escola Estadual Professora Eliane Digigov Santana</td>
-						</tr>
+						{escolas.map((escola, index) => (
+							<tr key={index}>
+								<td className="min-w-[50px] w-[50px]">
+									<Checkbox />
+								</td>
+								<td className="min-w-[450px]">{escola.nome}</td>
+							</tr>
+						))}
 					</tbody>
 				</table>
 			</div>
 
 			<Drawer anchor="right" open={insertDrawer} onClose={() => toggleInsert(false)}>
-				<Box p={2} width="320px" textAlign="center" role="presentation">
-					<Typography variant="h5" component="div">
-						Lorem Ipsum Dolor
-					</Typography>
+				<Box p={2} width="320px" textAlign="center" role="presentation" className={styles.insert_container}>
+					<h1 className="font-bold text-lg mb-2">Cadastrar Escola</h1>
+					<Divider />
+					<div className="flex flex-col items-center w-full py-5">
+						<TextField fullWidth id="nome" label="Nome da escola" variant="outlined" />
+						<span className="text-[10px] my-2 font-medium">Estes dados podem ser alterados no futuro</span>
+					</div>
+					<Divider />
+					<div className="w-full flex-col items-center py-2 gap-2">
+						<h1 className="font-semibold">Adicionar turmas</h1>
+					</div>
 				</Box>
 			</Drawer>
 
