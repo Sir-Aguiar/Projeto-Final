@@ -4,21 +4,21 @@ const Turma = require("../../../database/models/Turma");
 /** @type {import("express").RequestHandler}  */
 const UpdateTurmaController = async (req, res) => {
   const { idProfessor } = req.userData;
-  const { idEscola, idSerie, idTurma } = req.params;
+  const { idTurma } = req.params;
   const { toUpdate } = req.body;
 
-  if (!idEscola || !idSerie || !toUpdate) {
+  if (isNaN(Number(idTurma))) {
     return res.status(400).json({
       error: {
-        message: "Dados insuficientes para realizar esta ação",
+        message: "Dados inválidos para realizar esta ação",
       },
     });
   }
 
-  if (isNaN(Number(idEscola))) {
+  if (!toUpdate) {
     return res.status(400).json({
       error: {
-        message: "Dados inválidos para realizar esta ação",
+        message: "Dados insuficientes para realizar esta ação",
       },
     });
   }
@@ -34,22 +34,28 @@ const UpdateTurmaController = async (req, res) => {
   }
 
   try {
-    // Verifica permissão do usuário
-    const schoolExists = await Escola.findOne({
-      where: { idEscola, idProfessor },
-    });
+    const requestedClass = await Turma.findByPk(Number(idTurma));
 
-    if (!schoolExists) {
+    if (!requestedClass) {
       return res.status(404).json({
         error: {
-          message: "Nenhuma escola foi encontrada com este ID",
+          message: "Nenhuma turma encontrada com este ID",
         },
       });
     }
 
-    await Turma.update({ nome }, { where: { idTurma } });
+    const requestedSchool = await Escola.findByPk(requestedClass.dataValues.idEscola);
 
-    return res.status(201).json({ error: null });
+    if (requestedSchool.dataValues.idProfessor == idProfessor) {
+      await requestedClass.update({ nome }, { where: { idTurma } });
+      return res.status(200).json({ error: null });
+    }
+
+    return res.status(400).json({
+      error: {
+        message: "Você não possui permissão para fazer isto",
+      },
+    });
   } catch (error) {
     if (error instanceof ValidationError) {
       return res.status(404).json({

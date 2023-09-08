@@ -25,7 +25,7 @@ routes.get("/turma", UserAuthMiddleware, GetTurmasController);
 routes.get("/turma/:idEscola", UserAuthMiddleware, GetTurmasController);
 routes.get("/turma/:idEscola/:idSerie", UserAuthMiddleware, GetTurmasController);
 routes.post("/turma/:idEscola/:idSerie", UserAuthMiddleware, CreateTurmaController);
-routes.put("/turma/:idEscola/:idSerie/:idTurma", UserAuthMiddleware, UpdateTurmaController);
-routes.delete("/turma/:idTurma/:idEscola", UserAuthMiddleware, DeleteTurmasController);
+routes.put("/turma/:idTurma", UserAuthMiddleware, UpdateTurmaController);
+routes.delete("/turma/:idTurma", UserAuthMiddleware, DeleteTurmasController);
 
-module.exports = routes;
+module.exports = routes;  

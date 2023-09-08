@@ -7,18 +7,10 @@ const CreateTurmaController = async (req, res) => {
   const { idEscola, idSerie } = req.params;
   const { nome } = req.body;
 
-  if (!idEscola || !idSerie || !nome) {
+  if (!nome) {
     return res.status(400).json({
       error: {
-        message: "Dados insuficientes para realizar esta ação",
-      },
-    });
-  }
-
-  if (isNaN(Number(idEscola))) {
-    return res.status(400).json({
-      error: {
-        message: "Dados inválidos para realizar esta ação",
+        message: "É necessário atribuir um nome à turma",
       },
     });
   }
@@ -27,6 +19,14 @@ const CreateTurmaController = async (req, res) => {
     return res.status(400).json({
       error: {
         message: "Nome de turma deve ter no máximo 15 caractéres",
+      },
+    });
+  }
+
+  if (isNaN(Number(idEscola))) {
+    return res.status(400).json({
+      error: {
+        message: "Dados inválidos para realizar esta ação",
       },
     });
   }
