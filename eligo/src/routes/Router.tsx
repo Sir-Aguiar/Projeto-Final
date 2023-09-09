@@ -5,32 +5,40 @@ import LandingPage from "./LandingPage/LandingPage";
 import Register from "./Register/Register";
 import Navbar from "../components/Navigation/Navbar/NavBar";
 import Escolas from "./Escolas/Escolas";
+import { EscolasProvider } from "./Escolas/RouteStateManager";
 
 const Router = () => {
-	const isUserLogged = useIsAuthenticated();
+  const isUserLogged = useIsAuthenticated();
 
-	return (
-		<BrowserRouter>
-			<Routes>
-				<Route
-					element={
-						<RequireAuth loginPath={"/login"}>
-							<>
-								<Navbar />
-								<Outlet />
-							</>
-						</RequireAuth>
-					}
-				>
-					<Route path="/escolas" element={<Escolas />} />
-				</Route>
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route
+          element={
+            <RequireAuth loginPath={"/login"}>
+              <>
+                <Navbar />
+                <Outlet />
+              </>
+            </RequireAuth>
+          }
+        >
+          <Route
+            path="/escolas"
+            element={
+              <EscolasProvider>
+                <Escolas />
+              </EscolasProvider>
+            }
+          />
+        </Route>
 
-				<Route path="/login" element={<Login />} />
-				<Route path="/registro" element={<Register />} />
-				<Route path="/" element={isUserLogged() ? <></> : <LandingPage />} />
-			</Routes>
-		</BrowserRouter>
-	);
+        <Route path="/login" element={<Login />} />
+        <Route path="/registro" element={<Register />} />
+        <Route path="/" element={isUserLogged() ? <></> : <LandingPage />} />
+      </Routes>
+    </BrowserRouter>
+  );
 };
 
 export { Router };

@@ -65,5 +65,5 @@
 	@apply min-h-[45px] h-[45px] p-2;
 }
 .insert_container {
-	@apply font-Roboto text-black-text;
+	@apply font-Roboto text-black-text flex flex-col;
 }

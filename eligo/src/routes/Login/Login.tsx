@@ -21,7 +21,7 @@ const Login: React.FC = () => {
 		};
 
 		axios
-			.post("http://localhost:8080/login", {
+			.post("http://192.168.15.20:8080/login", {
 				...userData,
 			})
 			.then((res) => {
