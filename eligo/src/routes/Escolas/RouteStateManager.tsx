@@ -43,7 +43,6 @@ const EscolasProvider: React.FC<ProviderProps> = ({ children }) => {
   const [isCreateOpen, setCreateDrawer] = useState(false);
   const [isUpdateOpen, setUpdateDrawer] = useState(false);
   const [isDeleteOpen, setDeleteModal] = useState(false);
-
   const [Turmas, setTurmas] = useState<ITurma[]>([]);
   const [Escolas, setEscolas] = useState<IEscola[]>([]);
   const [selectedRows, setRows] = useState<number[]>([]);
@@ -52,7 +51,11 @@ const EscolasProvider: React.FC<ProviderProps> = ({ children }) => {
     return {
       situation: isCreateOpen,
       open: () => setCreateDrawer(true),
-      close: () => setCreateDrawer(false),
+      close: () => {
+        showSchools().then(() => {
+          setCreateDrawer(false);
+        });
+      },
     };
   }, [isCreateOpen]);
 
@@ -84,6 +87,14 @@ const EscolasProvider: React.FC<ProviderProps> = ({ children }) => {
     const response = await RouteAPI.get(`/turma/${idEscola}`);
     setTurmas(response.data.turmas);
   };
+  const showSchools = async () => {
+    try {
+      const response = await RouteAPI.get("/escola");
+      setEscolas(response.data.escolas);
+    } catch (error: any) {
+      alert(error.response.data.error.message);
+    }
+  };
 
   const selectRow = (idEscola: number) => {
     setRows((values) => {
@@ -104,14 +115,21 @@ const EscolasProvider: React.FC<ProviderProps> = ({ children }) => {
   };
 
   useEffect(() => {
-    RouteAPI.get("/escola").then((res) => {
-      setEscolas(res.data.escolas);
-    });
+    showSchools();
   }, []);
 
   return (
     <RouteContext.Provider
-      value={{ RouteAPI, DrawerUpdate, DrawerCreate, ModalDelete, Escolas, Turmas, selectedRows, selectRow }}
+      value={{
+        RouteAPI,
+        DrawerUpdate,
+        DrawerCreate,
+        ModalDelete,
+        Escolas,
+        Turmas,
+        selectedRows,
+        selectRow,
+      }}
     >
       {children}
     </RouteContext.Provider>

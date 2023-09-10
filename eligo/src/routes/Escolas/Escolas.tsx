@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import styles from "./Escolas.module.css";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import LibraryAddIcon from "@mui/icons-material/LibraryAdd";
 import EditIcon from "@mui/icons-material/Edit";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import Checkbox from "@mui/material/Checkbox";
-import { Box, Divider, Drawer, Typography, TextField } from "@mui/material";
-import axios from "axios";
+import { Divider, Typography } from "@mui/material";
 import { useEscolasContext } from "./RouteStateManager";
-
+import Create from "./Drawers/Create";
 type ClassLinkProps = {
   name: string;
   link: string;
@@ -26,7 +25,7 @@ const ClassLink: React.FC<ClassLinkProps> = ({ link, name }) => {
 };
 
 const Escolas: React.FC = () => {
-  const { selectedRows, DrawerCreate, DrawerUpdate, Escolas, selectRow, Turmas } = useEscolasContext();
+  const { selectedRows, DrawerCreate, DrawerUpdate, Escolas, selectRow, Turmas, RouteAPI } = useEscolasContext();
   return (
     <div className={styles.content_container}>
       <div className={styles.controllers}>
@@ -77,6 +76,7 @@ const Escolas: React.FC = () => {
           </tbody>
         </table>
       </div>
+      <Create onClose={() => DrawerCreate.close()} open={DrawerCreate.situation} API={RouteAPI} />
     </div>
   );
 };

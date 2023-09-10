@@ -37,9 +37,11 @@ const Turma = Database.define(
 Turma.belongsTo(Escola, {
   foreignKey: "idEscola",
   as: "escola",
+  onDelete: "CASCADE",
 });
 
 Escola.hasMany(Turma, {
+  onDelete: "CASCADE",
   foreignKey: "idEscola",
   as: "turmas",
 });
