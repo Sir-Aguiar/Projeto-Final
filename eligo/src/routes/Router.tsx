@@ -6,6 +6,8 @@ import Register from "./Register/Register";
 import Navbar from "../components/Navigation/Navbar/NavBar";
 import Escolas from "./Escolas/Escolas";
 import { EscolasProvider } from "./Escolas/RouteStateManager";
+import { TurmasProvider } from "./Turmas/RouteStateManager";
+import Turmas from "./Turmas/Turmas";
 
 const Router = () => {
   const isUserLogged = useIsAuthenticated();
@@ -29,6 +31,14 @@ const Router = () => {
               <EscolasProvider>
                 <Escolas />
               </EscolasProvider>
+            }
+          />
+          <Route
+            path="/turmas"
+            element={
+              <TurmasProvider>
+                <Turmas />
+              </TurmasProvider>
             }
           />
         </Route>
