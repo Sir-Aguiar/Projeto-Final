@@ -63,7 +63,11 @@ const EscolasProvider: React.FC<ProviderProps> = ({ children }) => {
     return {
       situation: isUpdateOpen,
       open: () => setUpdateDrawer(true),
-      close: () => setUpdateDrawer(false),
+      close: () => {
+        showSchools().then(() => {
+          setUpdateDrawer(false);
+        });
+      },
     };
   }, [isUpdateOpen]);
 
@@ -71,7 +75,12 @@ const EscolasProvider: React.FC<ProviderProps> = ({ children }) => {
     return {
       situation: isDeleteOpen,
       open: () => setDeleteModal(true),
-      close: () => setDeleteModal(false),
+      close: () => {
+        showSchools().then(() => {
+          setDeleteModal(false);
+          setRows([]);
+        });
+      },
     };
   }, [isDeleteOpen]);
 

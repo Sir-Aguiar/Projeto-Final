@@ -8,6 +8,8 @@ import Checkbox from "@mui/material/Checkbox";
 import { Divider, Typography } from "@mui/material";
 import { useEscolasContext } from "./RouteStateManager";
 import Create from "./Drawers/Create";
+import Update from "./Drawers/Update";
+import Delete from "./Modals/Delete";
 type ClassLinkProps = {
   name: string;
   link: string;
@@ -25,7 +27,8 @@ const ClassLink: React.FC<ClassLinkProps> = ({ link, name }) => {
 };
 
 const Escolas: React.FC = () => {
-  const { selectedRows, DrawerCreate, DrawerUpdate, Escolas, selectRow, Turmas, RouteAPI } = useEscolasContext();
+  const { selectedRows, DrawerCreate, DrawerUpdate, Escolas, ModalDelete, selectRow, Turmas, RouteAPI } =
+    useEscolasContext();
   return (
     <div className={styles.content_container}>
       <div className={styles.controllers}>
@@ -36,7 +39,7 @@ const Escolas: React.FC = () => {
           <button disabled={selectedRows.length !== 1} title="Editar escola" onClick={() => DrawerUpdate.open()}>
             <EditIcon />
           </button>
-          <button disabled={selectedRows.length < 1} title="Excluir escola">
+          <button disabled={selectedRows.length < 1} onClick={() => ModalDelete.open()} title="Excluir escola">
             <DeleteForeverIcon />
           </button>
         </header>
@@ -68,7 +71,10 @@ const Escolas: React.FC = () => {
             {Escolas.map((escola, index) => (
               <tr key={index}>
                 <td className="min-w-[50px] w-[50px] max-w-[50px]">
-                  <Checkbox onChange={() => selectRow(escola.idEscola)} />
+                  <Checkbox
+                    checked={selectedRows.includes(escola.idEscola)}
+                    onChange={() => selectRow(escola.idEscola)}
+                  />
                 </td>
                 <td className="min-w-[450px]">{escola.nome}</td>
               </tr>
@@ -77,6 +83,8 @@ const Escolas: React.FC = () => {
         </table>
       </div>
       <Create onClose={() => DrawerCreate.close()} open={DrawerCreate.situation} API={RouteAPI} />
+      <Update />
+      <Delete />
     </div>
   );
 };

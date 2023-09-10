@@ -1,13 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import styles from "./Create.module.css";
 import AddBoxIcon from "@mui/icons-material/AddBox";
-import { Box, Divider, Drawer, TextField } from "@mui/material";
+import { Divider, Drawer, TextField } from "@mui/material";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { AxiosError, AxiosInstance } from "axios";
-import { toast } from "react-toastify";
 
 type CreateProps = {
   open: boolean;
@@ -19,7 +18,7 @@ const ClassToAdd: React.FC = () => {
   const [serie, setSerie] = useState("EF1");
   return (
     <div className="class-to-add w-full flex gap-2">
-      <TextField label="Nome da turma" variant="outlined" name="nome-turma" fullWidth />
+      <TextField label="Nome da turma" variant="outlined" name="nome-turma" fullWidth inputProps={{ maxLength: 15 }} />
       <FormControl style={{ width: "75%" }}>
         <InputLabel>Série</InputLabel>
         <Select value={serie} name="serie-turma" label="Série" onChange={(e: any) => setSerie(e.target.value)}>
@@ -88,7 +87,7 @@ const Create: React.FC<CreateProps> = ({ onClose, open, API }) => {
         </header>
         <Divider />
         <main className="w-full h-full flex flex-col gap-2  overflow-y-auto">
-          <form id="create-school" onSubmit={onSubmit}>
+          <form className="py-2" id="create-school" onSubmit={onSubmit}>
             <TextField
               fullWidth
               id="nome"
