@@ -1,5 +1,6 @@
 const { DataTypes } = require("sequelize");
 const Database = require("../database");
+
 const ProfessorLeciona = Database.define(
   "ProfessorLeciona",
   {
@@ -29,4 +30,7 @@ const ProfessorLeciona = Database.define(
   },
   { tableName: "professorLeciona" },
 );
+
+
+
 module.exports = ProfessorLeciona;

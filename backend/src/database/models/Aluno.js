@@ -35,4 +35,6 @@ const Aluno = Database.define(
   },
   { tableName: "alunos" },
 );
+
+
 module.exports = Aluno;

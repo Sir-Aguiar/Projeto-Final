@@ -1,5 +1,8 @@
 const { DataTypes } = require("sequelize");
+const Aluno = require("./Aluno");
+const Aula = require("./Aula");
 const Database = require("../database");
+const ProfessorLeciona = require("./ProfessorLeciona");
 const Turma = Database.define(
   "Turma",
   {
@@ -20,4 +23,14 @@ const Turma = Database.define(
   },
   { tableName: "turmas" },
 );
+
+Turma.hasMany(Aluno, { foreignKey: "idTurma", as: "alunos" });
+Aluno.belongsTo(Turma, { foreignKey: "idTurma", as: "turma" });
+
+Turma.hasMany(Aula, { foreignKey: "idTurma", as: "aulas" });
+Aula.belongsTo(Turma, { foreignKey: "idTurma", as: "turma" });
+
+Turma.hasMany(ProfessorLeciona, { foreignKey: "idTurma", as: "professores" });
+ProfessorLeciona.belongsTo(Turma, { foreignKey: "idTurma", as: "turma" });
+
 module.exports = Turma;

@@ -1,5 +1,8 @@
 const { DataTypes } = require("sequelize");
+const Chamada = require("./Chamada");
+const Aluno = require("./Aluno");
 const Database = require("../database");
+
 const ChamadaAluno = Database.define(
   "ChamadaAluno",
   {
@@ -33,4 +36,8 @@ const ChamadaAluno = Database.define(
   },
   { tableName: "chamadaAluno" },
 );
+
+Aluno.belongsToMany(Chamada, { through: ChamadaAluno, foreignKey: "idAluno" });
+Chamada.belongsToMany(Aluno, { through: ChamadaAluno, foreignKey: "idChamada" });
+
 module.exports = ChamadaAluno;

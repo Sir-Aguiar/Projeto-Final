@@ -1,5 +1,8 @@
 const { DataTypes } = require("sequelize");
 const Database = require("../database");
+const Escola = require("./Escola");
+const ProfessorLeciona = require("./ProfessorLeciona");
+
 const Disciplina = Database.define(
   "Disciplina",
   {
@@ -21,4 +24,18 @@ const Disciplina = Database.define(
   },
   { tableName: "disciplinas" },
 );
+
+Escola.hasMany(Disciplina, {
+  foreignKey: "idEscola",
+  as: "disciplinas",
+});
+
+Disciplina.belongsTo(Escola, {
+  foreignKey: "idEscola",
+  as: "escola",
+});
+
+Disciplina.hasMany(ProfessorLeciona, { foreignKey: "idDisciplina", as: "professores" });
+ProfessorLeciona.belongsTo(Disciplina, { foreignKey: "idDisciplina", as: "disciplina" });
+
 module.exports = Disciplina;

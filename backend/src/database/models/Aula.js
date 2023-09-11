@@ -1,4 +1,5 @@
 const { DataTypes } = require("sequelize");
+const Chamada = require("./Chamada");
 const Database = require("../database");
 const Aula = Database.define(
   "Aula",
@@ -42,4 +43,8 @@ const Aula = Database.define(
   },
   { tableName: "aulas" },
 );
+
+Aula.hasOne(Chamada, { foreignKey: "idChamada", as: "chamada" });
+Chamada.belongsTo(Aula, { foreignKey: "idChamada", as: "aula" });
+
 module.exports = Aula;
