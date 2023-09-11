@@ -3,28 +3,28 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("alunoChamada", {
-      idRelacao: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
-      idAluno: {
+    await queryInterface.createTable("cursoDisciplina", {
+      idCurso: {
+        primaryKey: true,
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: "alunos",
-          key: "idAluno",
+          model: "cursos",
+          key: "idCurso",
         },
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
       },
-      idChamada: {
+      idDisciplina: {
+        primaryKey: true,
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: "chamadas",
-          key: "idChamada",
+          model: "disciplinas",
+          key: "idDisciplina",
         },
-      },
-      situacao: {
-        type: Sequelize.BOOLEAN,
-        defaultValue: false,
-        allowNull: false,
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
       },
       createdAt: {
         type: Sequelize.DATE,
@@ -38,7 +38,7 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("alunoChamada");
+    await queryInterface.dropTable("cursoDisciplina");
   },
 };
 
