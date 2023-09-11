@@ -11,6 +11,8 @@ const DeleteEscolasController = require("./controllers/Escolas/Delete");
 const CreateTurmaController = require("./controllers/Turmas/Create");
 const GetTurmasController = require("./controllers/Turmas/Get");
 const DeleteTurmasController = require("./controllers/Turmas/Delete");
+const CreateAlunosController = require("./controllers/Alunos/Create");
+const GetAlunosController = require("./controllers/Alunos/Get");
 
 routes.post("/create-user", RegisterUser);
 routes.post("/login", Login);
@@ -28,4 +30,6 @@ routes.post("/turma/:idEscola/:idSerie", UserAuthMiddleware, CreateTurmaControll
 routes.put("/turma/:idTurma", UserAuthMiddleware, UpdateTurmaController);
 routes.delete("/turma/:idTurma", UserAuthMiddleware, DeleteTurmasController);
 
-module.exports = routes;  
+routes.post("/aluno", UserAuthMiddleware, CreateAlunosController);
+routes.get("/aluno", UserAuthMiddleware, GetAlunosController);
+module.exports = routes;

@@ -21,7 +21,7 @@ const Login: React.FC = () => {
 		};
 
 		axios
-			.post("http://192.168.15.20:8080/login", {
+			.post(`${import.meta.env.VITE_SERVER_URL}/login`, {
 				...userData,
 			})
 			.then((res) => {
@@ -63,7 +63,7 @@ const Login: React.FC = () => {
 					<button type="submit" className={styles.login} id="login-submiter">
 						Entrar
 					</button>
-					<a href="" className="text-[11px] text-blue-400 underline font-bold">
+					<a href="/registro" className="text-[11px] text-blue-400 underline font-bold">
 						Criar conta
 					</a>
 				</form>

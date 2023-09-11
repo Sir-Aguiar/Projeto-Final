@@ -28,7 +28,7 @@ const Register: React.FC = () => {
           <p className={`${styles.register_message}`}>
             Lorem ipsum dolor sit amet, consectetur cras amet.
             <br />
-            <a className="font-bold text-[#228CE5] underline cursor-pointer hover:brightness-90">
+            <a href="/login" className="font-bold text-[#228CE5] underline cursor-pointer hover:brightness-90">
               Já possui uma conta?
             </a>
           </p>
