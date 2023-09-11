@@ -11,7 +11,10 @@ module.exports = {
       },
       idProfessor: {
         type: Sequelize.INTEGER,
-        references: { model: "professores", key: "idProfessor" },
+        references: {
+          model: "usuarios",
+          key: "idUsuario",
+        },
         allowNull: false,
       },
       idDisciplina: {

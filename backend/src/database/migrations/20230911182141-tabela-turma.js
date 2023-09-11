@@ -33,4 +33,3 @@ module.exports = {
     await queryInterface.dropTable("turmas");
   },
 };
-
