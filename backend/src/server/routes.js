@@ -17,11 +17,12 @@ const GetAlunosController = require("./controllers/Alunos/Get");
 routes.post("/create-user", RegisterUser);
 routes.post("/login", Login);
 
+routes.post("/escola", UserAuthMiddleware, CreateEscolasController);
 routes.get("/escola", UserAuthMiddleware, GetEscolasController);
 routes.get("/escola/:idEscola", UserAuthMiddleware, GetEscolasController);
-routes.post("/escola", UserAuthMiddleware, CreateEscolasController);
 routes.put("/escola/:idEscola", UserAuthMiddleware, UpdateEscolasController);
 routes.delete("/escola/:idEscola", UserAuthMiddleware, DeleteEscolasController);
+/* 
 
 routes.get("/turma", UserAuthMiddleware, GetTurmasController);
 routes.get("/turma/:idEscola", UserAuthMiddleware, GetTurmasController);
@@ -31,5 +32,5 @@ routes.put("/turma/:idTurma", UserAuthMiddleware, UpdateTurmaController);
 routes.delete("/turma/:idTurma", UserAuthMiddleware, DeleteTurmasController);
 
 routes.post("/aluno", UserAuthMiddleware, CreateAlunosController);
-routes.get("/aluno", UserAuthMiddleware, GetAlunosController);
+routes.get("/aluno", UserAuthMiddleware, GetAlunosController); */
 module.exports = routes;

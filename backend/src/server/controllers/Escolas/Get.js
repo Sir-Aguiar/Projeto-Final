@@ -2,12 +2,12 @@ const Escola = require("../../../database/models/Escola");
 const Turma = require("../../../database/models/Turma");
 /** @type {import("express").RequestHandler}  */
 const GetEscolasController = async (req, res) => {
-  const { idProfessor } = req.userData;
+  const { idUsuario } = req.userData;
   const { idEscola } = req.params;
   try {
     if (idEscola) {
       const escola = await Escola.findOne({
-        where: { idProfessor, idEscola },
+        where: { idGestor: idUsuario, idEscola },
         include: [
           {
             model: Turma,
@@ -26,7 +26,7 @@ const GetEscolasController = async (req, res) => {
 
       return res.status(200).json({ error: null, escola });
     }
-    const escolas = await Escola.findAll({ where: { idProfessor } });
+    const escolas = await Escola.findAll({ where: { idGestor: idUsuario } });
     return res.status(200).json({ error: null, escolas });
   } catch (error) {
     console.log(error);
