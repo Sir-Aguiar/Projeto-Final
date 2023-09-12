@@ -3,8 +3,8 @@ const Escola = require("../../../database/models/Escola");
 const Turma = require("../../../database/models/Turma");
 /** @type {import("express").RequestHandler}  */
 const CreateTurmaController = async (req, res) => {
-  const { idProfessor } = req.userData;
-  const { idEscola, idSerie } = req.params;
+  const { idUsuario } = req.userData;
+  const { idEscola, idCurso } = req.params;
   const { nome } = req.body;
 
   if (!nome) {
@@ -34,7 +34,7 @@ const CreateTurmaController = async (req, res) => {
   try {
     // Verifica permissão do usuário
     const schoolExists = await Escola.findOne({
-      where: { idEscola, idProfessor },
+      where: { idEscola, idGestor: idUsuario },
     });
 
     if (!schoolExists) {
@@ -46,7 +46,7 @@ const CreateTurmaController = async (req, res) => {
     }
 
     // Insere no banco
-    const insertedObject = await Turma.create({ nome, idSerie, idEscola });
+    const insertedObject = await Turma.create({ nome, idCurso, idEscola });
 
     return res.status(201).json({ error: null, insertedObject });
   } catch (error) {

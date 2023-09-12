@@ -3,7 +3,7 @@ const Escola = require("../../../database/models/Escola");
 const Turma = require("../../../database/models/Turma");
 /** @type {import("express").RequestHandler}  */
 const UpdateTurmaController = async (req, res) => {
-  const { idProfessor } = req.userData;
+  const { idUsuario } = req.userData;
   const { idTurma } = req.params;
   const { toUpdate } = req.body;
 
@@ -46,7 +46,7 @@ const UpdateTurmaController = async (req, res) => {
 
     const requestedSchool = await Escola.findByPk(requestedClass.dataValues.idEscola);
 
-    if (requestedSchool.dataValues.idProfessor == idProfessor) {
+    if (requestedSchool.dataValues.idGestor == idUsuario) {
       await requestedClass.update({ nome }, { where: { idTurma } });
       return res.status(200).json({ error: null });
     }

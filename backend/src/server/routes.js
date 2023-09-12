@@ -22,14 +22,15 @@ routes.get("/escola", UserAuthMiddleware, GetEscolasController);
 routes.get("/escola/:idEscola", UserAuthMiddleware, GetEscolasController);
 routes.put("/escola/:idEscola", UserAuthMiddleware, UpdateEscolasController);
 routes.delete("/escola/:idEscola", UserAuthMiddleware, DeleteEscolasController);
-/* 
 
-routes.get("/turma", UserAuthMiddleware, GetTurmasController);
+// routes.get("/turma", UserAuthMiddleware, GetTurmasController);
 routes.get("/turma/:idEscola", UserAuthMiddleware, GetTurmasController);
-routes.get("/turma/:idEscola/:idSerie", UserAuthMiddleware, GetTurmasController);
-routes.post("/turma/:idEscola/:idSerie", UserAuthMiddleware, CreateTurmaController);
+routes.get("/turma/:idEscola/:idCurso", UserAuthMiddleware, GetTurmasController);
+routes.post("/turma/:idEscola/:idCurso", UserAuthMiddleware, CreateTurmaController);
 routes.put("/turma/:idTurma", UserAuthMiddleware, UpdateTurmaController);
 routes.delete("/turma/:idTurma", UserAuthMiddleware, DeleteTurmasController);
+/* 
+
 
 routes.post("/aluno", UserAuthMiddleware, CreateAlunosController);
 routes.get("/aluno", UserAuthMiddleware, GetAlunosController); */

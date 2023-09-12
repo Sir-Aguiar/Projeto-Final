@@ -3,7 +3,7 @@ const Escola = require("../../../database/models/Escola");
 const Turma = require("../../../database/models/Turma");
 /** @type {import("express").RequestHandler}  */
 const DeleteTurmasController = async (req, res) => {
-  const { idProfessor } = req.userData;
+  const { idUsuario } = req.userData;
   const { idTurma } = req.params;
 
   if (isNaN(Number(idTurma))) {
@@ -27,7 +27,7 @@ const DeleteTurmasController = async (req, res) => {
 
     const requestedSchool = await Escola.findByPk(requestedClass.dataValues.idEscola);
 
-    if (requestedSchool.dataValues.idProfessor == idProfessor) {
+    if (requestedSchool.dataValues.idGestor == idUsuario) {
       await requestedClass.destroy();
       return res.status(200).json({ error: null });
     }
