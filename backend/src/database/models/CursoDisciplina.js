@@ -47,6 +47,6 @@ Disciplina.hasMany(CursoDisciplina, {
 });
 CursoDisciplina.belongsTo(Disciplina, {
   foreignKey: "idDisciplina",
-});
- */
+}); */
+
 module.exports = CursoDisciplina;
