@@ -13,6 +13,10 @@ const GetTurmasController = require("./controllers/Turmas/Get");
 const DeleteTurmasController = require("./controllers/Turmas/Delete");
 const CreateAlunosController = require("./controllers/Alunos/Create");
 const GetAlunosController = require("./controllers/Alunos/Get");
+const CreateDisciplinaController = require("./controllers/Disciplinas/Create");
+const GetDisciplinasController = require("./controllers/Disciplinas/Get");
+const UpdateDisciplinasController = require("./controllers/Disciplinas/Update");
+const DeleteDisciplinasController = require("./controllers/Disciplinas/Delete");
 
 routes.post("/create-user", RegisterUser);
 routes.post("/login", Login);
@@ -29,6 +33,12 @@ routes.get("/turma/:idEscola/:idCurso", UserAuthMiddleware, GetTurmasController)
 routes.post("/turma/:idEscola/:idCurso", UserAuthMiddleware, CreateTurmaController);
 routes.put("/turma/:idTurma", UserAuthMiddleware, UpdateTurmaController);
 routes.delete("/turma/:idTurma", UserAuthMiddleware, DeleteTurmasController);
+
+routes.post("/disciplina", UserAuthMiddleware, CreateDisciplinaController);
+routes.get("/disciplina/:idEscola", UserAuthMiddleware, GetDisciplinasController);
+routes.put("/disciplina/:idDisciplina", UserAuthMiddleware, UpdateDisciplinasController);
+routes.delete("/disciplina/:idDisciplina", UserAuthMiddleware, DeleteDisciplinasController);
+
 /* 
 
 
