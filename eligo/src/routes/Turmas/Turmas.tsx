@@ -10,59 +10,59 @@ import Create from "./Drawers/Create";
 import Delete from "./Modals/Delete";
 import Update from "./Drawers/Update";
 const Turmas: React.FC = () => {
-	const { TurmasState, selectRow, selectedRows, DrawerCreate, ModalDelete, DrawerUpdate } = useTurmasContext();
+  const { TurmasState, selectRow, selectedRows, DrawerCreate, ModalDelete, DrawerUpdate } = useTurmasContext();
 
-	return (
-		<div className={styles.content_container}>
-			<div className={styles.controllers}>
-				<header className={styles.actions}>
-					<button title="Cadastrar turma" onClick={() => DrawerCreate.open()}>
-						<LibraryAddIcon />
-					</button>
-					<button disabled={selectedRows.length !== 1} title="Editar turma" onClick={() => DrawerUpdate.open()}>
-						<EditIcon />
-					</button>
-					<button disabled={selectedRows.length < 1} title="Excluir turmas" onClick={() => ModalDelete.open()}>
-						<DeleteForeverIcon />
-					</button>
-					<button title="Filtrar turmas">
-						<FilterListIcon />
-					</button>
-				</header>
-				<div className={styles.students}>
-					<h1 className="font-semibold text-center py-1">Alunos</h1>
-					<Divider />
-				</div>
-			</div>
-			<div className={styles.table_container}>
-				<table className={styles.content_table}>
-					<thead className={styles.table_header}>
-						<tr>
-							<th className="min-w-[50px] w-[50px] max-w-[50px]"></th>
-							<th className="min-w-[150px] w-[150px]">Turma</th>
-							<th className="min-w-[150px] w-[150px]">Série</th>
-							<th className="min-w-[350px] w-[350px]">Escola</th>
-						</tr>
-					</thead>
-					<tbody className={styles.table_body}>
-						{TurmasState.map((turma, index) => (
-							<tr key={index}>
-								<td className="min-w-[50px] w-[50px] max-w-[50px]">
-									<Checkbox checked={selectedRows.includes(turma.idTurma)} onChange={() => selectRow(turma.idTurma)} />
-								</td>
-								<td>{turma.nome}</td>
-								<td>{turma.curso.nome}</td>
-								<td>{turma.escola.nome}</td>
-							</tr>
-						))}
-					</tbody>
-				</table>
-			</div>
-			<Create />
-			<Delete />
-			<Update />
-		</div>
-	);
+  return (
+    <div className={styles.content_container}>
+      <div className={styles.controllers}>
+        <header className={styles.actions}>
+          <button title="Cadastrar turma" onClick={() => DrawerCreate.open()}>
+            <LibraryAddIcon />
+          </button>
+          <button disabled={selectedRows.length !== 1} title="Editar turma" onClick={() => DrawerUpdate.open()}>
+            <EditIcon />
+          </button>
+          <button disabled={selectedRows.length < 1} title="Excluir turmas" onClick={() => ModalDelete.open()}>
+            <DeleteForeverIcon />
+          </button>
+          <button title="Filtrar turmas">
+            <FilterListIcon />
+          </button>
+        </header>
+        <div className={styles.students}>
+          <h1 className="font-semibold text-center py-1">Alunos</h1>
+          <Divider />
+        </div>
+      </div>
+      <div className={styles.table_container}>
+        <table className={styles.content_table}>
+          <thead className={styles.table_header}>
+            <tr>
+              <th className="min-w-[50px] w-[50px] max-w-[50px]"></th>
+              <th className="min-w-[150px] w-[150px]">Turma</th>
+              <th className="min-w-[150px] w-[150px]">Série</th>
+              <th className="min-w-[350px] w-[350px]">Escola</th>
+            </tr>
+          </thead>
+          <tbody className={styles.table_body}>
+            {TurmasState.map((turma, index) => (
+              <tr key={index}>
+                <td className="min-w-[50px] w-[50px] max-w-[50px]">
+                  <Checkbox checked={selectedRows.includes(turma.idTurma)} onChange={() => selectRow(turma.idTurma)} />
+                </td>
+                <td>{turma.nome}</td>
+                <td>{turma.curso.nome}</td>
+                <td>{turma.escola.nome}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <Create />
+      <Delete />
+      <Update />
+    </div>
+  );
 };
 
 export default Turmas;
