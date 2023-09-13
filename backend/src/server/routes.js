@@ -48,10 +48,8 @@ routes.get("/escola/:idEscola", UserAuthMiddleware, GetEscolasController);
 routes.put("/escola/:idEscola", UserAuthMiddleware, UpdateEscolasController);
 routes.delete("/escola/:idEscola", UserAuthMiddleware, DeleteEscolasController);
 
-// routes.get("/turma", UserAuthMiddleware, GetTurmasController);
-routes.get("/turma/:idEscola", UserAuthMiddleware, GetTurmasController);
-routes.get("/turma/:idEscola/:idCurso", UserAuthMiddleware, GetTurmasController);
-routes.post("/turma/:idEscola/:idCurso", UserAuthMiddleware, CreateTurmaController);
+routes.get("/turma", UserAuthMiddleware, GetTurmasController);
+routes.post("/turma", UserAuthMiddleware, CreateTurmaController);
 routes.put("/turma/:idTurma", UserAuthMiddleware, UpdateTurmaController);
 routes.delete("/turma/:idTurma", UserAuthMiddleware, DeleteTurmasController);
 
@@ -70,15 +68,15 @@ routes.get("/professor-leciona", UserAuthMiddleware, GetProfessorLecionaControll
 routes.get("/professor-leciona/:idTurma", UserAuthMiddleware, GetProfessorLecionaController);
 
 routes.delete(
-  "/professor-leciona/:idProfessor/:idTurma/:idDisciplina",
-  UserAuthMiddleware,
-  DeleteProfessorLecionaController,
+	"/professor-leciona/:idProfessor/:idTurma/:idDisciplina",
+	UserAuthMiddleware,
+	DeleteProfessorLecionaController,
 );
 
 routes.put(
-  "/professor-leciona/:idProfessor/:idTurma/:idDisciplina",
-  UserAuthMiddleware,
-  UpdateProfessorLecionaController,
+	"/professor-leciona/:idProfessor/:idTurma/:idDisciplina",
+	UserAuthMiddleware,
+	UpdateProfessorLecionaController,
 );
 
 routes.post("/aula", UserAuthMiddleware, CreateAulaController);

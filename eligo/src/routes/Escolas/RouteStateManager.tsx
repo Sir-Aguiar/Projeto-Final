@@ -4,13 +4,13 @@ import { useAuthHeader } from "react-auth-kit";
 
 interface IEscola {
 	idEscola: number;
-	idProfessor: number;
+	idGestor: number;
 	nome: string;
 }
 
 interface ITurma {
 	idTurma: number;
-	idSerie: string;
+	idCurso: string;
 	idEscola: number;
 	nome: string;
 }
@@ -46,6 +46,46 @@ const EscolasProvider: React.FC<ProviderProps> = ({ children }) => {
 	const [Turmas, setTurmas] = useState<ITurma[]>([]);
 	const [Escolas, setEscolas] = useState<IEscola[]>([]);
 	const [selectedRows, setRows] = useState<number[]>([]);
+
+	// Axios instance
+	const RouteAPI = axios.create({
+		baseURL: import.meta.env.VITE_SERVER_URL,
+		headers: {
+			Authorization: authHeader(),
+		},
+	});
+
+	const showClasses = async (idEscola: number) => {
+		const response = await RouteAPI.get(`/turma?idEscola=${idEscola}`);
+		setTurmas(response.data.turmas);
+	};
+
+	const showSchools = async () => {
+		try {
+			const response = await RouteAPI.get("/escola");
+			setEscolas(response.data.escolas);
+		} catch (error: any) {
+			alert(error.response.data.error.message);
+		}
+	};
+
+	const selectRow = (idEscola: number) => {
+		setRows((values) => {
+			let newValues: number[];
+
+			if (values.includes(idEscola)) {
+				newValues = values.filter((value) => value !== idEscola);
+			} else {
+				newValues = [...values, idEscola];
+			}
+			if (newValues.length === 1) {
+				showClasses(newValues[0]);
+			} else {
+				setTurmas([]);
+			}
+			return newValues;
+		});
+	};
 
 	const DrawerCreate: IModalProps = useMemo(() => {
 		return {
@@ -83,46 +123,6 @@ const EscolasProvider: React.FC<ProviderProps> = ({ children }) => {
 			},
 		};
 	}, [isDeleteOpen]);
-
-	// Axios instance
-	const RouteAPI = axios.create({
-		baseURL: import.meta.env.VITE_SERVER_URL,
-		headers: {
-			Authorization: authHeader(),
-		},
-	});
-
-	const showClasses = async (idEscola: number) => {
-		const response = await RouteAPI.get(`/turma/${idEscola}`);
-		setTurmas(response.data.turmas);
-	};
-
-	const showSchools = async () => {
-		try {
-			const response = await RouteAPI.get("/escola");
-			setEscolas(response.data.escolas);
-		} catch (error: any) {
-			alert(error.response.data.error.message);
-		}
-	};
-
-	const selectRow = (idEscola: number) => {
-		setRows((values) => {
-			let newValues: number[];
-
-			if (values.includes(idEscola)) {
-				newValues = values.filter((value) => value !== idEscola);
-			} else {
-				newValues = [...values, idEscola];
-			}
-			if (newValues.length === 1) {
-				showClasses(newValues[0]);
-			} else {
-				setTurmas([]);
-			}
-			return newValues;
-		});
-	};
 
 	useEffect(() => {
 		showSchools();

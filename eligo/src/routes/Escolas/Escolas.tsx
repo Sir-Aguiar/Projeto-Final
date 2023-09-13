@@ -63,14 +63,14 @@ const Escolas: React.FC = () => {
 				<table className={styles.content_table}>
 					<thead className={styles.table_header}>
 						<tr>
-							<th></th>
+							<th className="min-w-[50px] w-[50px] max-w-[50px]"></th>
 							<th>Nome</th>
 						</tr>
 					</thead>
 					<tbody className={styles.table_body}>
 						{Escolas.map((escola, index) => (
 							<tr key={index}>
-								<td className="min-w-[50px] w-[50px] max-w-[50px]">
+								<td >
 									<Checkbox
 										checked={selectedRows.includes(escola.idEscola)}
 										onChange={() => selectRow(escola.idEscola)}
