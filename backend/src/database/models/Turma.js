@@ -4,24 +4,26 @@ const Aula = require("./Aula");
 const Database = require("../database");
 const ProfessorLeciona = require("./ProfessorLeciona");
 const Turma = Database.define(
-	"Turma",
-	{
-		idTurma: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-		idEscola: {
-			type: DataTypes.INTEGER,
-			allowNull: false,
-			references: { model: "escolas", key: "idEscola" },
-			onDelete: "CASCADE",
-		},
-		idCurso: {
-			type: DataTypes.INTEGER,
-			references: { model: "cursos", key: "idCurso" },
-			allowNull: false,
-			onDelete: "CASCADE",
-		},
-		nome: { type: DataTypes.STRING(15), allowNull: false },
-	},
-	{ tableName: "turmas" },
+  "Turma",
+  {
+    idTurma: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    idEscola: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: { model: "escolas", key: "idEscola" },
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
+    },
+    idCurso: {
+      type: DataTypes.INTEGER,
+      references: { model: "cursos", key: "idCurso" },
+      allowNull: false,
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
+    },
+    nome: { type: DataTypes.STRING(15), allowNull: false },
+  },
+  { tableName: "turmas" },
 );
 
 Turma.hasMany(Aluno, { foreignKey: "idTurma", as: "alunos" });

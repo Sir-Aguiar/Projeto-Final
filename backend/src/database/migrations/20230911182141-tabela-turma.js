@@ -10,12 +10,14 @@ module.exports = {
         allowNull: false,
         references: { model: "escolas", key: "idEscola" },
         onDelete: "CASCADE",
+        onDelete: "CASCADE",
       },
       idCurso: {
         type: Sequelize.INTEGER,
         references: { model: "cursos", key: "idCurso" },
         allowNull: false,
         onDelete: "CASCADE",
+        onUpdate: "CASCADE",
       },
       nome: { type: Sequelize.STRING(15), allowNull: false },
       createdAt: {

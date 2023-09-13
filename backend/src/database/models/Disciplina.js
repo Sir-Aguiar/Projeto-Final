@@ -16,6 +16,7 @@ const Disciplina = Database.define(
       allowNull: false,
       references: { model: "escolas", key: "idEscola" },
       onDelete: "CASCADE",
+      onUpdate: "CASCADE",
     },
     nome: {
       type: DataTypes.STRING(50),

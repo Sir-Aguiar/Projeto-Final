@@ -17,6 +17,8 @@ const Escola = Database.define(
         model: "usuarios",
         key: "idUsuario",
       },
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
     },
     nome: {
       type: DataTypes.STRING(150),

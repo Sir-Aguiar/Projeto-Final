@@ -12,6 +12,8 @@ module.exports = {
           model: "aulas",
           key: "idAula",
         },
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
       },
       createdAt: {
         type: Sequelize.DATE,

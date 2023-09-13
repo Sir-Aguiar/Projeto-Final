@@ -11,6 +11,8 @@ const Chamada = Database.define(
         model: "aulas",
         key: "idAula",
       },
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
     },
   },
   { tableName: "chamadas" },

@@ -16,16 +16,22 @@ module.exports = {
           key: "idUsuario",
         },
         allowNull: false,
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
       },
       idDisciplina: {
         type: Sequelize.INTEGER,
         references: { model: "disciplinas", key: "idDisciplina" },
         allowNull: false,
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
       },
       idTurma: {
         type: Sequelize.INTEGER,
         references: { model: "turmas", key: "idTurma" },
         allowNull: false,
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
       },
       createdAt: {
         type: Sequelize.DATE,

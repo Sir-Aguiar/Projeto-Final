@@ -14,6 +14,7 @@ module.exports = {
         allowNull: false,
         references: { model: "escolas", key: "idEscola" },
         onDelete: "CASCADE",
+        onUpdate: "CASCADE",
       },
       nome: {
         type: Sequelize.STRING(50),
