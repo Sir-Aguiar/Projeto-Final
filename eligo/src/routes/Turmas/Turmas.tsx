@@ -7,8 +7,9 @@ import EditIcon from "@mui/icons-material/Edit";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { useTurmasContext } from "./RouteStateManager";
 import Create from "./Drawers/Create";
+import Delete from "./Modals/Delete";
 const Turmas: React.FC = () => {
-	const { TurmasState, selectRow, selectedRows, DrawerCreate } = useTurmasContext();
+	const { TurmasState, selectRow, selectedRows, DrawerCreate, ModalDelete } = useTurmasContext();
 
 	return (
 		<div className={styles.content_container}>
@@ -20,7 +21,7 @@ const Turmas: React.FC = () => {
 					<button disabled={true} title="Editar turma">
 						<EditIcon />
 					</button>
-					<button disabled={true} title="Excluir turmas">
+					<button disabled={selectedRows.length < 1} title="Excluir turmas" onClick={() => ModalDelete.open()}>
 						<DeleteForeverIcon />
 					</button>
 					<button title="Filtrar turmas">
@@ -57,6 +58,7 @@ const Turmas: React.FC = () => {
 				</table>
 			</div>
 			<Create />
+			<Delete />
 		</div>
 	);
 };
