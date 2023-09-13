@@ -9,14 +9,15 @@ import { useNavigate } from "react-router-dom";
 const Login: React.FC = () => {
 	const signIn = useSignIn();
 	const navigate = useNavigate();
+
 	const logIn = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
-		const login = e.currentTarget.querySelector("#login") as HTMLInputElement;
+		const email = e.currentTarget.querySelector("#email") as HTMLInputElement;
 		const senha = e.currentTarget.querySelector("#senha") as HTMLInputElement;
 
 		const userData = {
-			login: login.value,
+			email: email.value,
 			senha: senha.value,
 		};
 
@@ -31,7 +32,7 @@ const Login: React.FC = () => {
 						tokenType: "Bearer",
 						expiresIn: 80000,
 						authState: {
-							login,
+							email,
 						},
 					})
 				) {
@@ -50,7 +51,7 @@ const Login: React.FC = () => {
 						<p>Entre para ter acesso à nossa plataforma</p>
 					</div>
 					<div className={styles.inputs}>
-						<TextField fullWidth id="login" label="Nome de usuário" variant="outlined" />
+						<TextField fullWidth id="email" type="email" label="Nome de usuário" variant="outlined" />
 						<TextField fullWidth id="senha" label="Senha" type="password" variant="outlined" />
 						<div className="w-full flex items-center font-Roboto text-sm text-black-text font-medium">
 							<Checkbox size="small" id="remember" />
