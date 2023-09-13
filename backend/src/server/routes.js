@@ -39,7 +39,7 @@ const CreateAlunoChamadaController = require("./controllers/AlunoChamada/Create"
 const GetAlunoChamadaController = require("./controllers/AlunoChamada/Get");
 const UpdateAlunoChamadaController = require("./controllers/AlunoChamada/Update");
 const DeleteAlunoChamadaController = require("./controllers/AlunoChamada/Delete");
-routes.post("/create-user", RegisterUser);
+routes.post("/registro", RegisterUser);
 routes.post("/login", Login);
 
 routes.post("/escola", UserAuthMiddleware, CreateEscolasController);
