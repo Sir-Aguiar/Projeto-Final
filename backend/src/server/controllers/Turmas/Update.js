@@ -7,7 +7,7 @@ const UpdateTurmaController = async (req, res) => {
   const { idTurma } = req.params;
   const { toUpdate } = req.body;
 
-  if (isNaN(Number(idTurma))) {
+  if (!idTurma || isNaN(Number(idTurma))) {
     return res.status(400).json({
       error: {
         message: "Dados inválidos para realizar esta ação",
@@ -23,9 +23,9 @@ const UpdateTurmaController = async (req, res) => {
     });
   }
 
-  const { nome } = toUpdate;
+  const { nome, idCurso } = toUpdate;
 
-  if (!nome || nome.length > 15) {
+  if (!nome || nome.length > 15 || !idCurso || isNaN(Number(idCurso))) {
     return res.status(400).json({
       error: {
         message: "Nome de turma inválido",
@@ -47,7 +47,7 @@ const UpdateTurmaController = async (req, res) => {
     const requestedSchool = await Escola.findByPk(requestedClass.dataValues.idEscola);
 
     if (requestedSchool.dataValues.idGestor == idUsuario) {
-      await requestedClass.update({ nome }, { where: { idTurma } });
+      await requestedClass.update({ nome, idCurso: Number(idCurso) }, { where: { idTurma } });
       return res.status(200).json({ error: null });
     }
 

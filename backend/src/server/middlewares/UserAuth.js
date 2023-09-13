@@ -16,7 +16,6 @@ const UserAuthMiddleware = async (req, res, next) => {
 
   try {
     const userData = jwt.verify(AuthToken, process.env.SECRET, {});
-    console.log(` ${req.path}`);
     req.userData = userData;
     next();
   } catch (error) {

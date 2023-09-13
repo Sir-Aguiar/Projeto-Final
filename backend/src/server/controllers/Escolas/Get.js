@@ -4,6 +4,9 @@ const Turma = require("../../../database/models/Turma");
 const GetEscolasController = async (req, res) => {
   const { idUsuario } = req.userData;
   const { idEscola } = req.params;
+
+  
+
   try {
     if (idEscola) {
       const escola = await Escola.findOne({
