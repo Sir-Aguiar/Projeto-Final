@@ -85,7 +85,7 @@ routes.put("/aula/:idAula", UserAuthMiddleware, UdpateAulasController);
 routes.delete("/aula/:idAula", UserAuthMiddleware, DeleteAulasController);
 
 routes.post("/aluno", UserAuthMiddleware, CreateAlunosController);
-routes.get("/aluno/:idTurma", UserAuthMiddleware, GetAlunosController);
+routes.get("/aluno", UserAuthMiddleware, GetAlunosController);
 routes.delete("/aluno/:idAluno", UserAuthMiddleware, DeleteAlunosController);
 routes.put("/aluno/:idAluno", UserAuthMiddleware, UpdateAlunosController);
 

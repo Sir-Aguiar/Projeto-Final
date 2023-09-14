@@ -4,26 +4,36 @@ const Turma = require("../../../database/models/Turma");
 /** @type {import("express").RequestHandler}  */
 const CreateAlunosController = async (req, res) => {
   const { idUsuario } = req.userData;
-  const { nome, idTurma, idEscola } = req.body;
+  const { alunos } = req.body;
 
-  if (!nome || !idTurma || isNaN(Number(idTurma))) {
+  if (!alunos || alunos.length <= 0) {
     return res.status(400).json({
       error: {
-        message: "Dados insuficientes ou inválidos para realizar esta ação",
-      },
-    });
-  }
-
-  if (nome.length > 50) {
-    return res.status(400).json({
-      error: {
-        message: "Nome do aluno deve ter no máximo 50 caracteres",
+        message: "Insira alunos à serem adicionados",
       },
     });
   }
 
   try {
-    await Aluno.create({ nome, idTurma, idEscola });
+    for (const aluno of alunos) {
+      const { idTurma, nome } = aluno;
+      const foundClass = await Turma.findByPk(idTurma, { include: { model: Escola, as: "escola" } });
+
+      if (!foundClass) {
+        return res.status(404).json({ error: { message: "Nenhuma turma foi encontrada com este ID" } });
+      }
+
+      if (foundClass.dataValues.escola.idGestor !== Number(idUsuario)) {
+        return res.status(401).json({
+          error: {
+            message: `Você não possui autorização para inserir ${nome} nesta turma`,
+          },
+        });
+      }
+
+      await Aluno.create({ nome, idTurma, idEscola: foundClass.dataValues.idEscola });
+    }
+
     return res.status(201).json({ error: null });
   } catch (error) {
     return res.status(500).json({ error });
