@@ -1,6 +1,7 @@
 const { json } = require("sequelize");
 const Aluno = require("../../../database/models/Aluno");
 const Escola = require("../../../database/models/Escola");
+const Curso = require("../../../database/models/Curso");
 const Turma = require("../../../database/models/Turma");
 
 /** @type {import("express").RequestHandler}  */
@@ -18,11 +19,10 @@ const GetAlunosController = async (req, res) => {
 
 			return res.status(200).json({ error: null, alunos });
 		}
-    // Todos alunos de turma
+		// Todos alunos de turma
 		if (idEscola && !isNaN(Number(idEscola))) {
-			
-      // Todos alunos de uma série/curso
-      if (idCurso && !isNaN(Number(idCurso))) {
+			// Todos alunos de uma série/curso
+			if (idCurso && !isNaN(Number(idCurso))) {
 				const alunos = await Aluno.findAll({
 					where: { idCurso, idEscola },
 					include: { model: Escola, as: "escola", where: { idGestor: idUsuario } },
@@ -34,20 +34,22 @@ const GetAlunosController = async (req, res) => {
 				where: { idEscola },
 				include: { model: Escola, as: "escola", where: { idGestor: idUsuario } },
 			});
-      
+
 			return res.status(200).json({ error: null, alunos });
 		}
 
 		const alunos = await Aluno.findAll({
-			include: {
-				model: Escola,
-				as: "escola",
-				where: {
-					idGestor: idUsuario,
+			include: [
+				{ model: Escola, as: "escola", where: { idGestor: idUsuario }, attributes: ["idEscola", "nome"] },
+				{
+					model: Turma,
+					as: "turma",
+					attributes: ["idTurma", "nome"],
+					include: [{ model: Curso, as: "curso", attributes: ["idCurso", "nome"] }],
 				},
-			},
+			],
+			attributes: ["idAluno", "nome"],
 		});
-
 		return res.status(200).json({ error: null, alunos });
 	} catch (error) {
 		console.log(error);
