@@ -70,9 +70,7 @@ const Create: React.FC = () => {
 
 		try {
 			await RouteAPI.post(`/turma?idEscola=${idEscola}`, { turmas });
-			DrawerCreate.close();
-			setClassesToAdd([]);
-			setIdEscola("");
+			onClose();
 		} catch (error: any) {
 			if (error instanceof AxiosError) {
 				console.log(error);

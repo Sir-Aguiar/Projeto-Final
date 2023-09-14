@@ -10,12 +10,12 @@ import Create from "./Drawers/Create";
 import { useAlunosContext } from "./RouteStateManager";
 
 const Alunos: React.FC = () => {
-	const { Alunos, AlunosQTD, selectRow, selectedRows, loadMore } = useAlunosContext();
+	const { Alunos, AlunosQTD, selectRow, selectedRows, loadMore, DrawerCreate } = useAlunosContext();
 	return (
 		<div className={styles.content_container}>
 			<div className={styles.controllers}>
 				<header className={styles.actions}>
-					<button title="Cadastrar escola">
+					<button title="Cadastrar escola" onClick={() => DrawerCreate.open()}>
 						<LibraryAddIcon />
 					</button>
 					<button disabled title="Editar escola">

@@ -12,6 +12,25 @@ interface IModalProps {
 	close: () => void;
 }
 
+interface ITurma {
+	idTurma: number;
+	idCurso: number;
+	idEscola: number;
+	nome: string;
+	escola: {
+		idGestor: number;
+		nome: string;
+	};
+	curso: {
+		nome: string;
+	};
+}
+interface IEscola {
+	idEscola: number;
+	idGestor: number;
+	nome: string;
+}
+
 interface IAluno {
 	idAluno: number;
 	nome: string;
@@ -31,6 +50,8 @@ interface IAluno {
 
 interface IRouteContext {
 	Alunos: IAluno[];
+	EscolasState: IEscola[];
+	TurmasState: ITurma[];
 	AlunosQTD: number;
 	RouteAPI: AxiosInstance;
 	DrawerCreate: IModalProps;
@@ -39,6 +60,8 @@ interface IRouteContext {
 	selectedRows: number[];
 	selectRow: (idTurma: number) => void;
 	loadMore: () => Promise<void>;
+	showSchools: () => Promise<void>;
+	showClasses: () => Promise<void>;
 }
 
 const RouteContext = createContext<IRouteContext | null>(null);
@@ -51,6 +74,9 @@ const AlunosProvider: React.FC<ProviderProps> = ({ children }) => {
 	const [selectedRows, setRows] = useState<number[]>([]);
 	const [Alunos, setAlunos] = useState<IAluno[]>([]);
 	const [AlunosQTD, setAlunosQTD] = useState(0);
+	const [TurmasState, setTurmas] = useState<ITurma[]>([]);
+	const [EscolasState, setEscolas] = useState<IEscola[]>([]);
+
 	// Axios instance
 	const RouteAPI = axios.create({
 		baseURL: import.meta.env.VITE_SERVER_URL,
@@ -62,8 +88,14 @@ const AlunosProvider: React.FC<ProviderProps> = ({ children }) => {
 	const DrawerCreate: IModalProps = useMemo(() => {
 		return {
 			situation: isCreateOpen,
-			open: () => {},
-			close: () => {},
+			open: () => {
+				showSchools().then(() => setCreateDrawer(true));
+			},
+			close: () => {
+				showStudent().then(() => setCreateDrawer(false));
+				setEscolas([]);
+				setTurmas([]);
+			},
 		};
 	}, [isCreateOpen]);
 
@@ -101,6 +133,16 @@ const AlunosProvider: React.FC<ProviderProps> = ({ children }) => {
 		});
 	};
 
+	const showSchools = async () => {
+		const response = await RouteAPI.get("/escola");
+		setEscolas(response.data.escolas);
+	};
+
+	const showClasses = async () => {
+		const response = await RouteAPI.get(`/turma`);
+		setTurmas(response.data.turmas);
+	};
+
 	const showStudent = async () => {
 		const response = await RouteAPI.get(`/aluno`);
 		setAlunos(response.data.alunos);
@@ -129,7 +171,11 @@ const AlunosProvider: React.FC<ProviderProps> = ({ children }) => {
 				ModalDelete,
 				RouteAPI,
 				selectedRows,
+				EscolasState,
+				TurmasState,
 				selectRow,
+				showClasses,
+				showSchools,
 			}}
 		>
 			{children}

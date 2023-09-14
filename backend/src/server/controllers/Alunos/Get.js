@@ -51,6 +51,7 @@ const GetAlunosController = async (req, res) => {
 			attributes: ["idAluno", "nome"],
 			limit: Number(take) || 30,
 			offset: Number(skip) || 0,
+			order: [["nome", "ASC"]],
 		});
 		return res.status(200).json({ error: null, alunos: alunos.rows, qtd: alunos.count });
 	} catch (error) {
