@@ -110,8 +110,13 @@ const AlunosProvider: React.FC<ProviderProps> = ({ children }) => {
 	const ModalDelete: IModalProps = useMemo(() => {
 		return {
 			situation: isDeleteOpen,
-			open: () => {},
-			close: () => {},
+			open: () => setDeleteModal(true),
+			close: () => {
+				showStudent().then(() => {
+					setDeleteModal(false);
+					setRows([]);
+				});
+			},
 		};
 	}, [isDeleteOpen]);
 

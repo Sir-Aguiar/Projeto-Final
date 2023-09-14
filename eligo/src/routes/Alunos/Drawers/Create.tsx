@@ -25,11 +25,9 @@ const Create: React.FC = () => {
 		const AlunoNome = e.currentTarget.querySelector<HTMLInputElement>("#aluno-nome");
 		try {
 			const response = await RouteAPI.post(`/aluno`, { alunos: [{ idTurma, nome: AlunoNome?.value }] });
-			console.log(response);
 			onClose();
 		} catch (error: any) {
 			if (error instanceof AxiosError) {
-				console.log(error);
 				alert(error.response?.data.error.message);
 			}
 		}
@@ -69,9 +67,7 @@ const Create: React.FC = () => {
 								id="aluno-turma"
 								required
 								label="Turma"
-								onChange={(e: any) => {
-									setIdTurma(e.target.value);
-								}}
+								onChange={(e: any) => setIdTurma(e.target.value)}
 							>
 								{TurmasState.length > 0
 									? TurmasState.map((turma, index) => (

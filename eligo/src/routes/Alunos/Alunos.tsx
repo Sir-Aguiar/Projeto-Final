@@ -10,18 +10,18 @@ import Create from "./Drawers/Create";
 import { useAlunosContext } from "./RouteStateManager";
 
 const Alunos: React.FC = () => {
-	const { Alunos, AlunosQTD, selectRow, selectedRows, loadMore, DrawerCreate } = useAlunosContext();
+	const { Alunos, AlunosQTD, selectRow, selectedRows, loadMore, DrawerCreate, ModalDelete } = useAlunosContext();
 	return (
 		<div className={styles.content_container}>
 			<div className={styles.controllers}>
 				<header className={styles.actions}>
-					<button title="Cadastrar escola" onClick={() => DrawerCreate.open()}>
+					<button title="Cadastrar aluno" onClick={() => DrawerCreate.open()}>
 						<LibraryAddIcon />
 					</button>
-					<button disabled title="Editar escola">
+					<button disabled title="Editar aluno">
 						<EditIcon />
 					</button>
-					<button disabled title="Excluir escola">
+					<button disabled={selectedRows.length < 1} title="Excluir alunos" onClick={() => ModalDelete.open()}>
 						<DeleteForeverIcon />
 					</button>
 				</header>
