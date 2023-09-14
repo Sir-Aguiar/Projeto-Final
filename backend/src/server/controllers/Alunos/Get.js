@@ -7,7 +7,7 @@ const Turma = require("../../../database/models/Turma");
 /** @type {import("express").RequestHandler}  */
 const GetAlunosController = async (req, res) => {
 	const { idUsuario } = req.userData;
-	const { idEscola, idTurma, idCurso, take, skip } = req.query;
+	const { idEscola, idTurma, idCurso, idAluno, take, skip } = req.query;
 
 	try {
 		// Todos alunos de uma turma
@@ -36,6 +36,22 @@ const GetAlunosController = async (req, res) => {
 			});
 
 			return res.status(200).json({ error: null, alunos });
+		}
+
+		if (idAluno && !isNaN(Number(idAluno))) {
+			const aluno = await Aluno.findByPk(idAluno, {
+				include: [
+					{ model: Escola, as: "escola", where: { idGestor: idUsuario }, attributes: ["idEscola", "nome"] },
+					{
+						model: Turma,
+						as: "turma",
+						attributes: ["idTurma", "nome"],
+						include: [{ model: Curso, as: "curso", attributes: ["idCurso", "nome"] }],
+					},
+				],
+				attributes: ["idAluno", "nome"],
+			});
+			return res.status(200).json({ error: null, aluno });
 		}
 
 		const alunos = await Aluno.findAndCountAll({

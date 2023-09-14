@@ -10,7 +10,8 @@ import Create from "./Drawers/Create";
 import { useAlunosContext } from "./RouteStateManager";
 
 const Alunos: React.FC = () => {
-	const { Alunos, AlunosQTD, selectRow, selectedRows, loadMore, DrawerCreate, ModalDelete } = useAlunosContext();
+	const { Alunos, AlunosQTD, selectRow, selectedRows, loadMore, DrawerCreate, ModalDelete, DrawerUpdate } =
+		useAlunosContext();
 	return (
 		<div className={styles.content_container}>
 			<div className={styles.controllers}>
@@ -18,7 +19,7 @@ const Alunos: React.FC = () => {
 					<button title="Cadastrar aluno" onClick={() => DrawerCreate.open()}>
 						<LibraryAddIcon />
 					</button>
-					<button disabled title="Editar aluno">
+					<button disabled={selectedRows.length !== 1} title="Editar alunos" onClick={() => DrawerUpdate.open()}>
 						<EditIcon />
 					</button>
 					<button disabled={selectedRows.length < 1} title="Excluir alunos" onClick={() => ModalDelete.open()}>
@@ -33,10 +34,10 @@ const Alunos: React.FC = () => {
 					<thead className={styles.table_header}>
 						<tr>
 							<th className="min-w-[50px] w-[50px] max-w-[50px]"></th>
-							<th className="min-w-[150px] w-[150px]">Nome</th>
+							<th className="min-w-[150px] w-[200px]">Nome</th>
 							<th className="min-w-[100px] w-[100px]">Turma</th>
 							<th className="min-w-[125px] w-[125px]">Série</th>
-							<th className="min-w-[300px] w-[300px]">Escola</th>
+							<th className="min-w-[200px] w-[250px]">Escola</th>
 						</tr>
 					</thead>
 					<tbody className={styles.table_body}>

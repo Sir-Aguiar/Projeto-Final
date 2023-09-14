@@ -102,7 +102,9 @@ const AlunosProvider: React.FC<ProviderProps> = ({ children }) => {
 	const DrawerUpdate: IModalProps = useMemo(() => {
 		return {
 			situation: isUpdateOpen,
-			open: () => {},
+			open: () => {
+				showClasses().then(() => setUpdateDrawer(true));
+			},
 			close: () => {},
 		};
 	}, [isUpdateOpen]);

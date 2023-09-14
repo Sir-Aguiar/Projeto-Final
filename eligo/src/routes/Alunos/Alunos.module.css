@@ -63,4 +63,5 @@
 }
 .table_body td {
 	@apply min-h-[45px] h-[45px] p-2;
+	@apply overflow-hidden text-ellipsis whitespace-nowrap;
 }
