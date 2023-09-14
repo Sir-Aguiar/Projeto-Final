@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./Turmas.module.css";
-import { Checkbox, Divider } from "@mui/material";
+import { Checkbox, Divider, Typography } from "@mui/material";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import LibraryAddIcon from "@mui/icons-material/LibraryAdd";
 import EditIcon from "@mui/icons-material/Edit";
@@ -9,60 +9,85 @@ import { useTurmasContext } from "./RouteStateManager";
 import Create from "./Drawers/Create";
 import Delete from "./Modals/Delete";
 import Update from "./Drawers/Update";
-const Turmas: React.FC = () => {
-  const { TurmasState, selectRow, selectedRows, DrawerCreate, ModalDelete, DrawerUpdate } = useTurmasContext();
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
-  return (
-    <div className={styles.content_container}>
-      <div className={styles.controllers}>
-        <header className={styles.actions}>
-          <button title="Cadastrar turma" onClick={() => DrawerCreate.open()}>
-            <LibraryAddIcon />
-          </button>
-          <button disabled={selectedRows.length !== 1} title="Editar turma" onClick={() => DrawerUpdate.open()}>
-            <EditIcon />
-          </button>
-          <button disabled={selectedRows.length < 1} title="Excluir turmas" onClick={() => ModalDelete.open()}>
-            <DeleteForeverIcon />
-          </button>
-          <button title="Filtrar turmas">
-            <FilterListIcon />
-          </button>
-        </header>
-        <div className={styles.students}>
-          <h1 className="font-semibold text-center py-1">Alunos</h1>
-          <Divider />
-        </div>
-      </div>
-      <div className={styles.table_container}>
-        <table className={styles.content_table}>
-          <thead className={styles.table_header}>
-            <tr>
-              <th className="min-w-[50px] w-[50px] max-w-[50px]"></th>
-              <th className="min-w-[150px] w-[150px]">Turma</th>
-              <th className="min-w-[150px] w-[150px]">Série</th>
-              <th className="min-w-[350px] w-[350px]">Escola</th>
-            </tr>
-          </thead>
-          <tbody className={styles.table_body}>
-            {TurmasState.map((turma, index) => (
-              <tr key={index}>
-                <td className="min-w-[50px] w-[50px] max-w-[50px]">
-                  <Checkbox checked={selectedRows.includes(turma.idTurma)} onChange={() => selectRow(turma.idTurma)} />
-                </td>
-                <td>{turma.nome}</td>
-                <td>{turma.curso.nome}</td>
-                <td>{turma.escola.nome}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <Create />
-      <Delete />
-      <Update />
-    </div>
-  );
+const StudentLink: React.FC<{ link: string; name: string }> = ({ link, name }) => {
+	return (
+		<div className=" w-full h-[50px] min-h-[50px] flex items-center justify-start gap-3 px-2">
+			<a href={link} className="transition-all duration-300 rounded-full hover:bg-slate-200 p-1 group ">
+				<OpenInNewIcon className="transition-all duration-300 group-hover:text-blue-icon group-hover:scale-95 " />
+			</a>
+			<span className="font-medium text-sm">{name}</span>
+		</div>
+	);
+};
+
+const Turmas: React.FC = () => {
+	const { TurmasState, selectRow, selectedRows, DrawerCreate, ModalDelete, DrawerUpdate, AlunosTurmaState } =
+		useTurmasContext();
+
+	return (
+		<div className={styles.content_container}>
+			<div className={styles.controllers}>
+				<header className={styles.actions}>
+					<button title="Cadastrar turma" onClick={() => DrawerCreate.open()}>
+						<LibraryAddIcon />
+					</button>
+					<button disabled={selectedRows.length !== 1} title="Editar turma" onClick={() => DrawerUpdate.open()}>
+						<EditIcon />
+					</button>
+					<button disabled={selectedRows.length < 1} title="Excluir turmas" onClick={() => ModalDelete.open()}>
+						<DeleteForeverIcon />
+					</button>
+					<button title="Filtrar turmas">
+						<FilterListIcon />
+					</button>
+				</header>
+				<div className={styles.students}>
+					<h1 className="font-semibold text-center py-1">Alunos</h1>
+					<Divider />
+					{selectedRows.length !== 1 ? (
+						<Typography variant="subtitle2" textAlign={"center"} component="span">
+							Selecione <span className="font-bold">uma</span> turma
+						</Typography>
+					) : AlunosTurmaState.length > 0 ? (
+						AlunosTurmaState.map((aluno, index) => <StudentLink key={index} name={aluno.nome} link="#" />)
+					) : (
+						<Typography variant="subtitle2" textAlign={"center"} component="span">
+							Esta escola ainda não possui turmas
+						</Typography>
+					)}
+				</div>
+			</div>
+			<div className={styles.table_container}>
+				<table className={styles.content_table}>
+					<thead className={styles.table_header}>
+						<tr>
+							<th className="min-w-[50px] w-[50px] max-w-[50px]"></th>
+							<th className="min-w-[150px] w-[150px]">Turma</th>
+							<th className="min-w-[150px] w-[150px]">Série</th>
+							<th className="min-w-[350px] w-[350px]">Escola</th>
+						</tr>
+					</thead>
+					<tbody className={styles.table_body}>
+						{TurmasState.map((turma, index) => (
+							<tr key={index}>
+								<td className="min-w-[50px] w-[50px] max-w-[50px]">
+									<Checkbox checked={selectedRows.includes(turma.idTurma)} onChange={() => selectRow(turma.idTurma)} />
+								</td>
+								<td>{turma.nome}</td>
+								<td>{turma.curso.nome}</td>
+								<td>{turma.escola.nome}</td>
+							</tr>
+						))}
+					</tbody>
+				</table>
+			</div>
+			<Create />
+			<Delete />
+			<Update />
+		</div>
+	);
 };
 
 export default Turmas;

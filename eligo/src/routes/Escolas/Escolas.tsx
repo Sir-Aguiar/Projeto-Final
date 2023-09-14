@@ -70,7 +70,7 @@ const Escolas: React.FC = () => {
 					<tbody className={styles.table_body}>
 						{Escolas.map((escola, index) => (
 							<tr key={index}>
-								<td >
+								<td>
 									<Checkbox
 										checked={selectedRows.includes(escola.idEscola)}
 										onChange={() => selectRow(escola.idEscola)}
@@ -82,7 +82,7 @@ const Escolas: React.FC = () => {
 					</tbody>
 				</table>
 			</div>
-			<Create onClose={() => DrawerCreate.close()} open={DrawerCreate.situation} API={RouteAPI} />
+			<Create />
 			<Update />
 			<Delete />
 		</div>

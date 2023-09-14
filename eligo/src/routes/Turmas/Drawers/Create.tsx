@@ -41,6 +41,12 @@ const Create: React.FC = () => {
 	const [classesToAdd, setClassesToAdd] = useState<number[]>([]);
 	const addClass = () => setClassesToAdd((values) => [...values, 1]);
 
+	const onClose = () => {
+		DrawerCreate.close();
+		setClassesToAdd([]);
+		setIdEscola("");
+	};
+
 	const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		const turmas: any[] = [];
@@ -76,7 +82,7 @@ const Create: React.FC = () => {
 	};
 
 	return (
-		<Drawer anchor="right" open={DrawerCreate.situation} onClose={() => DrawerCreate.close()}>
+		<Drawer anchor="right" open={DrawerCreate.situation} onClose={onClose}>
 			<div className={styles.insert_container}>
 				<header className="py-1">
 					<h1 className="font-bold text-lg">Cadastrar Turma</h1>
@@ -113,7 +119,7 @@ const Create: React.FC = () => {
 				</main>
 				<Divider />
 				<footer className={styles.senders}>
-					<button onClick={() => DrawerCreate.close()} className={styles.cancel}>
+					<button onClick={onClose} className={styles.cancel}>
 						Cancelar
 					</button>
 					<input type="submit" value="Cadastrar" form="create-class" className={styles.submiter} />

@@ -7,12 +7,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { AxiosError, AxiosInstance } from "axios";
-
-type CreateProps = {
-	open: boolean;
-	onClose: () => void;
-	API: AxiosInstance;
-};
+import { useEscolasContext } from "../RouteStateManager";
 
 const ClassToAdd: React.FC = () => {
 	const [serie, setSerie] = useState("1");
@@ -40,9 +35,16 @@ const ClassToAdd: React.FC = () => {
 	);
 };
 
-const Create: React.FC<CreateProps> = ({ onClose, open, API }) => {
+const Create: React.FC = () => {
+	const { DrawerCreate, RouteAPI } = useEscolasContext();
+
 	const [classesToAdd, setClassesToAdd] = useState<number[]>([]);
 	const addClass = () => setClassesToAdd((values) => [...values, 1]);
+
+	const onClose = () => {
+		DrawerCreate.close();
+		setClassesToAdd([]);
+	};
 
 	const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -68,7 +70,7 @@ const Create: React.FC<CreateProps> = ({ onClose, open, API }) => {
 		}
 
 		try {
-			await API.post("/escola", RequestBody);
+			await RouteAPI.post("/escola", RequestBody);
 			onClose();
 			setClassesToAdd([]);
 		} catch (error: any) {
@@ -80,7 +82,7 @@ const Create: React.FC<CreateProps> = ({ onClose, open, API }) => {
 	};
 
 	return (
-		<Drawer anchor="right" open={open} onClose={onClose}>
+		<Drawer anchor="right" open={DrawerCreate.situation} onClose={onClose}>
 			<div className={styles.insert_container}>
 				<header className="py-1">
 					<h1 className="font-bold text-lg">Cadastrar Escola</h1>
