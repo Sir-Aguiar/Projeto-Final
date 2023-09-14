@@ -7,7 +7,7 @@ const Turma = require("../../../database/models/Turma");
 /** @type {import("express").RequestHandler}  */
 const GetAlunosController = async (req, res) => {
 	const { idUsuario } = req.userData;
-	const { idEscola, idTurma, idCurso } = req.query;
+	const { idEscola, idTurma, idCurso, take, skip } = req.query;
 
 	try {
 		// Todos alunos de uma turma
@@ -38,7 +38,7 @@ const GetAlunosController = async (req, res) => {
 			return res.status(200).json({ error: null, alunos });
 		}
 
-		const alunos = await Aluno.findAll({
+		const alunos = await Aluno.findAndCountAll({
 			include: [
 				{ model: Escola, as: "escola", where: { idGestor: idUsuario }, attributes: ["idEscola", "nome"] },
 				{
@@ -49,8 +49,10 @@ const GetAlunosController = async (req, res) => {
 				},
 			],
 			attributes: ["idAluno", "nome"],
+			limit: Number(take) || 30,
+			offset: Number(skip) || 0,
 		});
-		return res.status(200).json({ error: null, alunos });
+		return res.status(200).json({ error: null, alunos: alunos.rows, qtd: alunos.count });
 	} catch (error) {
 		console.log(error);
 		res.status(500).json({ error });

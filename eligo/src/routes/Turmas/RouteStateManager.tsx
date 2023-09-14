@@ -105,7 +105,6 @@ const TurmasProvider: React.FC<ProviderProps> = ({ children }) => {
 
 	const showClassStudents = async (idTurma: number) => {
 		const response = await RouteAPI.get(`/aluno?idTurma=${idTurma}`);
-		console.log(response.data.alunos);
 		setAlunoTurma(response.data.alunos);
 	};
 
