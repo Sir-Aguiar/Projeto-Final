@@ -61,7 +61,8 @@ interface IRouteContext {
 	selectRow: (idTurma: number) => void;
 	loadMore: () => Promise<void>;
 	showSchools: () => Promise<void>;
-	showClasses: () => Promise<void>;
+	showClasses: (idEscola?: number) => Promise<void>;
+	showStudent: (idEscola?: number) => Promise<void>;
 }
 
 const RouteContext = createContext<IRouteContext | null>(null);
@@ -145,13 +146,13 @@ const AlunosProvider: React.FC<ProviderProps> = ({ children }) => {
 		setEscolas(response.data.escolas);
 	};
 
-	const showClasses = async () => {
-		const response = await RouteAPI.get(`/turma`);
+	const showClasses = async (idEscola?: number) => {
+		const response = await RouteAPI.get(`/turma${idEscola && `?idEscola=${idEscola}`}`);
 		setTurmas(response.data.turmas);
 	};
 
-	const showStudent = async () => {
-		const response = await RouteAPI.get(`/aluno`);
+	const showStudent = async (idEscola?: number) => {
+		const response = await RouteAPI.get(`/aluno${idEscola ? `?idEscola=${idEscola}` : ""}`);
 		setAlunos(response.data.alunos);
 		setAlunosQTD(response.data.qtd);
 	};
@@ -165,6 +166,7 @@ const AlunosProvider: React.FC<ProviderProps> = ({ children }) => {
 
 	useEffect(() => {
 		showStudent();
+		showSchools();
 	}, []);
 
 	return (
@@ -183,6 +185,7 @@ const AlunosProvider: React.FC<ProviderProps> = ({ children }) => {
 				selectRow,
 				showClasses,
 				showSchools,
+				showStudent,
 			}}
 		>
 			{children}

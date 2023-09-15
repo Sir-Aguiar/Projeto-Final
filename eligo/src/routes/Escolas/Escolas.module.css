@@ -33,7 +33,8 @@
 	@apply border-[1px] border-black-text border-opacity-50 rounded-[5px];
 	@apply text-black-text font-Roboto;
 }
-.classes{	@apply w-full h-full;
+.classes {
+	@apply w-full h-full max-h-[275px];
 	@apply flex flex-col gap-1 p-2;
 	@apply overflow-y-auto;
 }
@@ -67,4 +68,3 @@
 .table_body td {
 	@apply min-h-[45px] h-[45px] p-2;
 }
-

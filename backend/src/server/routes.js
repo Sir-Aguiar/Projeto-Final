@@ -16,10 +16,10 @@ const GetAlunosController = require("./controllers/Alunos/Get");
 const UpdateAlunosController = require("./controllers/Alunos/Update");
 const DeleteAlunosController = require("./controllers/Alunos/Delete");
 const CreateDisciplinaController = require("./controllers/Disciplinas/Create");
+const AssociateCursoDiscipinaController = require("./controllers/Disciplinas/AssociateCourse");
 const GetDisciplinasController = require("./controllers/Disciplinas/Get");
 const UpdateDisciplinasController = require("./controllers/Disciplinas/Update");
 const DeleteDisciplinasController = require("./controllers/Disciplinas/Delete");
-const CreateCursoDisciplinaController = require("./controllers/CursoDisciplina/Create");
 const GetCursoDisciplinaController = require("./controllers/CursoDisciplina/Get");
 const DeleteCursoDisciplinasController = require("./controllers/CursoDisciplina/Delete");
 const UpdateCursoDisciplinaController = require("./controllers/CursoDisciplina/Update");
@@ -54,11 +54,11 @@ routes.put("/turma/:idTurma", UserAuthMiddleware, UpdateTurmaController);
 routes.delete("/turma/:idTurma", UserAuthMiddleware, DeleteTurmasController);
 
 routes.post("/disciplina", UserAuthMiddleware, CreateDisciplinaController);
-routes.get("/disciplina/:idEscola", UserAuthMiddleware, GetDisciplinasController);
+routes.get("/disciplina", UserAuthMiddleware, GetDisciplinasController);
 routes.put("/disciplina/:idDisciplina", UserAuthMiddleware, UpdateDisciplinasController);
 routes.delete("/disciplina/:idDisciplina", UserAuthMiddleware, DeleteDisciplinasController);
 
-routes.post("/curso-disciplina", UserAuthMiddleware, CreateCursoDisciplinaController);
+routes.post("/curso-disciplina", UserAuthMiddleware, AssociateCursoDiscipinaController);
 routes.get("/curso-disciplina/:idDisciplina", UserAuthMiddleware, GetCursoDisciplinaController);
 routes.delete("/curso-disciplina/:idCurso/:idDisciplina", UserAuthMiddleware, DeleteCursoDisciplinasController);
 routes.put("/curso-disciplina/:idCurso/:idDisciplina", UserAuthMiddleware, UpdateCursoDisciplinaController);

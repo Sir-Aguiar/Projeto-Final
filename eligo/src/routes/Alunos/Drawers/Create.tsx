@@ -50,7 +50,7 @@ const Create: React.FC = () => {
 								label="Escola"
 								onChange={(e: any) => {
 									setIdEscola(e.target.value);
-									showClasses();
+									showClasses(e.target.value);
 								}}
 							>
 								{EscolasState.map((escola, index) => (

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./Alunos.module.css";
 import { Checkbox, Divider, Typography } from "@mui/material";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
@@ -8,10 +8,27 @@ import Delete from "./Modals/Delete";
 import Update from "./Drawers/Update";
 import Create from "./Drawers/Create";
 import { useAlunosContext } from "./RouteStateManager";
-
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import InputLabel from "@mui/material/InputLabel";
 const Alunos: React.FC = () => {
-	const { Alunos, AlunosQTD, selectRow, selectedRows, loadMore, DrawerCreate, ModalDelete, DrawerUpdate } =
-		useAlunosContext();
+	const {
+		Alunos,
+		AlunosQTD,
+		selectRow,
+		selectedRows,
+		loadMore,
+		DrawerCreate,
+		ModalDelete,
+		DrawerUpdate,
+		EscolasState,
+		TurmasState,
+		showStudent,
+		showClasses,
+	} = useAlunosContext();
+	const [selectedIdEscola, setSelectedIdEscola] = useState("");
+	const [selectedIdTurma, setSelectedIdTurma] = useState("");
 	return (
 		<div className={styles.content_container}>
 			<div className={styles.controllers}>
@@ -27,7 +44,47 @@ const Alunos: React.FC = () => {
 					</button>
 				</header>
 
-				<div className={styles.classes}></div>
+				<div className={styles.classes}>
+					<FormControl fullWidth>
+						<InputLabel>Escola</InputLabel>
+						<Select
+							value={selectedIdEscola}
+							required
+							label="Escola"
+							onChange={(e: any) => {
+								setSelectedIdEscola(e.target.value);
+								showStudent(Number(e.target.value));
+								showClasses(Number(e.target.value));
+							}}
+						>
+							{EscolasState.length > 0 &&
+								EscolasState.map((escola, index) => (
+									<MenuItem key={index} value={escola.idEscola}>
+										{escola.nome}
+									</MenuItem>
+								))}
+						</Select>
+					</FormControl>
+					<FormControl fullWidth disabled={TurmasState.length < 1}>
+						<InputLabel>Turma</InputLabel>
+						<Select
+							value={selectedIdTurma}
+							required
+							label="Turma"
+							onChange={(e: any) => {
+								setSelectedIdTurma(e.target.value);
+								showStudent(Number(e.target.value));
+							}}
+						>
+							{TurmasState.length > 0 &&
+								TurmasState.map((turma, index) => (
+									<MenuItem key={index} value={turma.idTurma}>
+										{turma.nome}
+									</MenuItem>
+								))}
+						</Select>
+					</FormControl>
+				</div>
 			</div>
 			<div className={styles.table_container}>
 				<table className={styles.content_table}>
@@ -41,17 +98,21 @@ const Alunos: React.FC = () => {
 						</tr>
 					</thead>
 					<tbody className={styles.table_body}>
-						{Alunos.map((aluno, index) => (
-							<tr key={index}>
-								<td>
-									<Checkbox checked={selectedRows.includes(aluno.idAluno)} onChange={() => selectRow(aluno.idAluno)} />
-								</td>
-								<td>{aluno.nome}</td>
-								<td>{aluno.turma.nome}</td>
-								<td>{aluno.turma.curso.nome}</td>
-								<td>{aluno.escola.nome}</td>
-							</tr>
-						))}
+						{Alunos.length > 0 &&
+							Alunos.map((aluno, index) => (
+								<tr key={index}>
+									<td>
+										<Checkbox
+											checked={selectedRows.includes(aluno.idAluno)}
+											onChange={() => selectRow(aluno.idAluno)}
+										/>
+									</td>
+									<td>{aluno.nome}</td>
+									<td>{aluno.turma.nome}</td>
+									<td>{aluno.turma.curso.nome}</td>
+									<td>{aluno.escola.nome}</td>
+								</tr>
+							))}
 						{Alunos.length < AlunosQTD && (
 							<tr onClick={loadMore}>
 								<td

@@ -29,10 +29,9 @@
 
 .classes {
 	@apply w-full h-full;
-	@apply flex flex-col gap-1 p-2;
-	@apply border-[1px] border-black-text border-opacity-50 rounded-[5px];
+	@apply flex flex-col gap-1 py-2;
 	@apply text-black-text font-Roboto;
-	@apply overflow-y-auto;
+	@apply overflow-y-auto overflow-x-hidden;
 }
 
 .table_container {
