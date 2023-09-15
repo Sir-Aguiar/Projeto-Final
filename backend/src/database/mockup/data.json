@@ -1,0 +1,653 @@
+{
+  "Usuarios": [
+    {
+      "email": "socurran0@reddit.com",
+      "nome": "Stace O'Curran",
+      "senha": "yX2}(f>}Eh\\RW"
+    },
+    {
+      "email": "dwoehler1@ebay.com",
+      "nome": "Dennis Woehler",
+      "senha": "iD6*S8jjmkRt"
+    },
+    {
+      "email": "cgrutchfield2@arizona.edu",
+      "nome": "Candi Grutchfield",
+      "senha": "rJ2}_OLV"
+    },
+    {
+      "email": "pjaher3@quantcast.com",
+      "nome": "Pancho Jaher",
+      "senha": "yB8~%Dg&"
+    },
+    {
+      "email": "lwellbeloved4@purevolume.com",
+      "nome": "Lannie Wellbeloved",
+      "senha": "oS9.EWQGrbp83x"
+    },
+    {
+      "email": "mollenbuttel5@nationalgeographic.com",
+      "nome": "Marsha Ollenbuttel",
+      "senha": "sE3_3M~Qw+yK"
+    },
+    {
+      "email": "lhollington6@free.fr",
+      "nome": "Lonee Hollington",
+      "senha": "iV8@!CTFV4F5{$'"
+    },
+    {
+      "email": "rpaynes7@indiegogo.com",
+      "nome": "Robbin Paynes",
+      "senha": "kM0~|3AmU+"
+    },
+    {
+      "email": "sblogg8@tumblr.com",
+      "nome": "Spence Blogg",
+      "senha": "kW7,5aU?QI"
+    },
+    {
+      "email": "nfuzzard9@blog.com",
+      "nome": "Nowell Fuzzard",
+      "senha": "bP6#mwfL}JcpfXg,"
+    },
+    {
+      "email": "felipeferreiraaguiar9@gmail.com",
+      "nome": "Felipe Ferreira Aguiar",
+      "senha": "112233"
+    },
+    {
+      "email": "slarmorb@storify.com",
+      "nome": "Stephani Larmor",
+      "senha": "eW8%l\">Aj"
+    }
+  ],
+  "Escolas": [
+    {
+      "idGestor": 3,
+      "nome": "Escola Municipal Weerawila"
+    },
+    {
+      "idGestor": 12,
+      "nome": "Escola Estadual Dunwich"
+    },
+    {
+      "idGestor": 11,
+      "nome": "Instituição Sherman Army Air Field"
+    },
+    {
+      "idGestor": 3,
+      "nome": "Escola Mount Etjo"
+    },
+    {
+      "idGestor": 12,
+      "nome": "Escola Estadual Southern Seaplane"
+    },
+    {
+      "idGestor": 11,
+      "nome": "Espaço New Orleans Field"
+    }
+  ],
+  "Cursos": [
+    {
+      "idCurso": 1,
+      "nome": "1ª Série"
+    },
+    {
+      "idCurso": 2,
+      "nome": "2ª Série"
+    },
+    {
+      "idCurso": 3,
+      "nome": "3ª Série"
+    },
+    {
+      "idCurso": 4,
+      "nome": "4ª Série"
+    },
+    {
+      "idCurso": 5,
+      "nome": "5ª Série"
+    },
+    {
+      "idCurso": 6,
+      "nome": "6ª Série"
+    },
+    {
+      "idCurso": 7,
+      "nome": "7ª Série"
+    },
+    {
+      "idCurso": 8,
+      "nome": "8ª Série"
+    },
+    {
+      "idCurso": 9,
+      "nome": "9ª Série"
+    },
+    {
+      "idCurso": 10,
+      "nome": "1º Ano"
+    },
+    {
+      "idCurso": 11,
+      "nome": "2º Ano"
+    },
+    {
+      "idCurso": 12,
+      "nome": "3º Ano"
+    }
+  ],
+  "Turmas": [
+    {
+      "idCurso": 10,
+      "idEscola": 1,
+      "nome": "1 Ano A"
+    },
+    {
+      "idCurso": 10,
+      "idEscola": 1,
+      "nome": "1 Ano B"
+    },
+    {
+      "idCurso": 10,
+      "idEscola": 1,
+      "nome": "1 Ano C"
+    },
+    {
+      "idCurso": 11,
+      "idEscola": 1,
+      "nome": "2 Ano A"
+    },
+    {
+      "idCurso": 11,
+      "idEscola": 1,
+      "nome": "2 Ano B"
+    },
+    {
+      "idCurso": 11,
+      "idEscola": 1,
+      "nome": "2 Ano C"
+    },
+    {
+      "idCurso": 12,
+      "idEscola": 1,
+      "nome": "3 Ano A"
+    },
+    {
+      "idCurso": 12,
+      "idEscola": 1,
+      "nome": "3 Ano B"
+    },
+    {
+      "idCurso": 12,
+      "idEscola": 1,
+      "nome": "3 Ano C"
+    },
+    {
+      "idCurso": 10,
+      "idEscola": 3,
+      "nome": "1 Ano A"
+    },
+    {
+      "idCurso": 10,
+      "idEscola": 3,
+      "nome": "1 Ano B"
+    },
+    {
+      "idCurso": 10,
+      "idEscola": 3,
+      "nome": "1 Ano C"
+    },
+    {
+      "idCurso": 11,
+      "idEscola": 3,
+      "nome": "2 Ano A"
+    },
+    {
+      "idCurso": 11,
+      "idEscola": 3,
+      "nome": "2 Ano B"
+    },
+    {
+      "idCurso": 11,
+      "idEscola": 3,
+      "nome": "2 Ano C"
+    },
+    {
+      "idCurso": 12,
+      "idEscola": 3,
+      "nome": "3 Ano A"
+    },
+    {
+      "idCurso": 12,
+      "idEscola": 3,
+      "nome": "3 Ano B"
+    },
+    {
+      "idCurso": 12,
+      "idEscola": 3,
+      "nome": "3 Ano C"
+    },
+    {
+      "idCurso": 1,
+      "idEscola": 2,
+      "nome": "1 Ano A"
+    },
+    {
+      "idCurso": 1,
+      "idEscola": 2,
+      "nome": "1 Ano B"
+    },
+    {
+      "idCurso": 2,
+      "idEscola": 2,
+      "nome": "2 Ano A"
+    },
+    {
+      "idCurso": 3,
+      "idEscola": 2,
+      "nome": "3 Ano B"
+    },
+    {
+      "idCurso": 3,
+      "idEscola": 2,
+      "nome": "3 Ano A"
+    },
+    {
+      "idCurso": 2,
+      "idEscola": 2,
+      "nome": "2 Ano B"
+    },
+    {
+      "idCurso": 4,
+      "idEscola": 2,
+      "nome": "4 Ano A"
+    },
+    {
+      "idCurso": 4,
+      "idEscola": 2,
+      "nome": "4 Ano B"
+    },
+    {
+      "idCurso": 6,
+      "idEscola": 2,
+      "nome": "6 Ano A"
+    },
+    {
+      "idCurso": 6,
+      "idEscola": 2,
+      "nome": "6 Ano B"
+    },
+    {
+      "idCurso": 7,
+      "idEscola": 2,
+      "nome": "7 Ano A"
+    },
+    {
+      "idCurso": 7,
+      "idEscola": 2,
+      "nome": "7 Ano B"
+    },
+    {
+      "idCurso": 8,
+      "idEscola": 2,
+      "nome": "8 Ano A"
+    },
+    {
+      "idCurso": 8,
+      "idEscola": 2,
+      "nome": "8 Ano B"
+    },
+    {
+      "idCurso": 5,
+      "idEscola": 4,
+      "nome": "5 Ano A"
+    },
+    {
+      "idCurso": 5,
+      "idEscola": 4,
+      "nome": "5 Ano B"
+    },
+    {
+      "idCurso": 6,
+      "idEscola": 4,
+      "nome": "6 Ano A"
+    },
+    {
+      "idCurso": 6,
+      "idEscola": 4,
+      "nome": "6 Ano B"
+    },
+    {
+      "idCurso": 9,
+      "idEscola": 4,
+      "nome": "9 Ano A"
+    },
+    {
+      "idCurso": 9,
+      "idEscola": 4,
+      "nome": "9 Ano B"
+    },
+    {
+      "idCurso": 9,
+      "idEscola": 4,
+      "nome": "9 Ano C"
+    },
+    {
+      "idCurso": 1,
+      "idEscola": 5,
+      "nome": "1 Ano A"
+    },
+    {
+      "idCurso": 1,
+      "idEscola": 5,
+      "nome": "1 Ano B"
+    },
+    {
+      "idCurso": 1,
+      "idEscola": 5,
+      "nome": "1 Ano C"
+    },
+    {
+      "idCurso": 2,
+      "idEscola": 5,
+      "nome": "2 Ano A"
+    },
+    {
+      "idCurso": 2,
+      "idEscola": 5,
+      "nome": "2 Ano B"
+    },
+    {
+      "idCurso": 2,
+      "idEscola": 5,
+      "nome": "2 Ano C"
+    },
+    {
+      "idCurso": 3,
+      "idEscola": 5,
+      "nome": "3 Ano A"
+    },
+    {
+      "idCurso": 3,
+      "idEscola": 5,
+      "nome": "3 Ano B"
+    },
+    {
+      "idCurso": 3,
+      "idEscola": 5,
+      "nome": "3 Ano C"
+    },
+    {
+      "idCurso": 4,
+      "idEscola": 5,
+      "nome": "4 Ano A"
+    },
+    {
+      "idCurso": 4,
+      "idEscola": 5,
+      "nome": "4 Ano B"
+    },
+    {
+      "idCurso": 4,
+      "idEscola": 5,
+      "nome": "4 Ano C"
+    },
+    {
+      "idCurso": 5,
+      "idEscola": 5,
+      "nome": "5 Ano A"
+    },
+    {
+      "idCurso": 5,
+      "idEscola": 5,
+      "nome": "5 Ano B"
+    },
+    {
+      "idCurso": 5,
+      "idEscola": 5,
+      "nome": "5 Ano C"
+    },
+    {
+      "idCurso": 1,
+      "idEscola": 6,
+      "nome": "1 Ano A"
+    },
+    {
+      "idCurso": 1,
+      "idEscola": 6,
+      "nome": "1 Ano B"
+    },
+    {
+      "idCurso": 1,
+      "idEscola": 6,
+      "nome": "1 Ano C"
+    },
+    {
+      "idCurso": 2,
+      "idEscola": 6,
+      "nome": "2 Ano A"
+    },
+    {
+      "idCurso": 2,
+      "idEscola": 6,
+      "nome": "2 Ano B"
+    },
+    {
+      "idCurso": 2,
+      "idEscola": 6,
+      "nome": "2 Ano C"
+    },
+    {
+      "idCurso": 3,
+      "idEscola": 6,
+      "nome": "3 Ano A"
+    },
+    {
+      "idCurso": 3,
+      "idEscola": 6,
+      "nome": "3 Ano B"
+    },
+    {
+      "idCurso": 3,
+      "idEscola": 6,
+      "nome": "3 Ano C"
+    },
+    {
+      "idCurso": 4,
+      "idEscola": 6,
+      "nome": "4 Ano A"
+    },
+    {
+      "idCurso": 4,
+      "idEscola": 6,
+      "nome": "4 Ano B"
+    },
+    {
+      "idCurso": 4,
+      "idEscola": 6,
+      "nome": "4 Ano C"
+    },
+    {
+      "idCurso": 5,
+      "idEscola": 6,
+      "nome": "5 Ano A"
+    },
+    {
+      "idCurso": 5,
+      "idEscola": 6,
+      "nome": "5 Ano B"
+    },
+    {
+      "idCurso": 5,
+      "idEscola": 6,
+      "nome": "5 Ano C"
+    }
+  ],
+  "Disciplinas": [
+    {
+      "idEscola": 3,
+      "nome": "Português 1º Ano"
+    },
+    {
+      "idEscola": 3,
+      "nome": "Português 2º Ano"
+    },
+    {
+      "idEscola": 3,
+      "nome": "Português 3º Ano"
+    },
+    {
+      "idEscola": 3,
+      "nome": "Matemática 1º Ano"
+    },
+    {
+      "idEscola": 3,
+      "nome": "Matemática 2º Ano"
+    },
+    {
+      "idEscola": 3,
+      "nome": "Matemática 3º Ano"
+    },
+    {
+      "idEscola": 3,
+      "nome": "Física 1º Ano"
+    },
+    {
+      "idEscola": 3,
+      "nome": "Física 2º Ano"
+    },
+    {
+      "idEscola": 3,
+      "nome": "Física 3º Ano"
+    },
+    {
+      "idEscola": 3,
+      "nome": "Química 1º Ano"
+    },
+    {
+      "idEscola": 3,
+      "nome": "Química 2º Ano"
+    },
+    {
+      "idEscola": 3,
+      "nome": "Química 3º Ano"
+    },
+    {
+      "idEscola": 2,
+      "nome": "Matemática 1ª Série"
+    },
+    {
+      "idEscola": 2,
+      "nome": "Matemática 2ª Série"
+    },
+    {
+      "idEscola": 2,
+      "nome": "Matemática 3ª Série"
+    },
+    {
+      "idEscola": 2,
+      "nome": "Matemática 4ª Série"
+    },
+    {
+      "idEscola": 2,
+      "nome": "Matemática 5ª Série"
+    },
+    {
+      "idEscola": 2,
+      "nome": "Português 1ª Série"
+    },
+    {
+      "idEscola": 2,
+      "nome": "Português 2ª Série"
+    },
+    {
+      "idEscola": 2,
+      "nome": "Português 3ª Série"
+    },
+    {
+      "idEscola": 2,
+      "nome": "Português 4ª Série"
+    },
+    {
+      "idEscola": 2,
+      "nome": "Português 5ª Série"
+    },
+    {
+      "idEscola": 2,
+      "nome": "Português 1ª Série"
+    },
+    {
+      "idEscola": 2,
+      "nome": "Português 2ª Série"
+    },
+    {
+      "idEscola": 2,
+      "nome": "Português 3ª Série"
+    },
+    {
+      "idEscola": 2,
+      "nome": "Português 4ª Série"
+    },
+    {
+      "idEscola": 2,
+      "nome": "Português 6ª Série"
+    },
+    {
+      "idEscola": 2,
+      "nome": "Português 7ª Série"
+    },
+    {
+      "idEscola": 2,
+      "nome": "Português 8ª Série"
+    },
+    {
+      "idEscola": 2,
+      "nome": "Física 8ª Série"
+    },
+    {
+      "idEscola": 2,
+      "nome": "Química 8ª Série"
+    },
+    {
+      "idEscola": 6,
+      "nome": "Português 1ª Série"
+    },
+    {
+      "idEscola": 6,
+      "nome": "Português 2ª Série"
+    },
+    {
+      "idEscola": 6,
+      "nome": "Português 3ª Série"
+    },
+    {
+      "idEscola": 6,
+      "nome": "Português 4ª Série"
+    },
+    {
+      "idEscola": 6,
+      "nome": "Português 5ª Série"
+    },
+    {
+      "idEscola": 6,
+      "nome": "Matemática 1ª Série"
+    },
+    {
+      "idEscola": 6,
+      "nome": "Matemática 2ª Série"
+    },
+    {
+      "idEscola": 6,
+      "nome": "Matemática 3ª Série"
+    },
+    {
+      "idEscola": 6,
+      "nome": "Matemática 4ª Série"
+    },
+    {
+      "idEscola": 6,
+      "nome": "Matemática 5ª Série"
+    }
+  ]
+}

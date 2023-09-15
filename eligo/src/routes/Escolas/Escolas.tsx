@@ -43,10 +43,10 @@ const Escolas: React.FC = () => {
 						<DeleteForeverIcon />
 					</button>
 				</header>
-				<div className={styles.classes}>
+				<div className={styles.class_controller}>
 					<h1 className="font-semibold text-center py-1">Turmas</h1>
 					<Divider />
-					{selectedRows.length !== 1 ? (
+					<div className={styles.classes}>{selectedRows.length !== 1 ? (
 						<Typography variant="subtitle2" textAlign={"center"} component="span">
 							Selecione <span className="font-bold">uma</span> escola
 						</Typography>
@@ -56,7 +56,7 @@ const Escolas: React.FC = () => {
 						<Typography variant="subtitle2" textAlign={"center"} component="span">
 							Esta escola ainda não possui turmas
 						</Typography>
-					)}
+					)}</div>
 				</div>
 			</div>
 			<div className={styles.table_container}>

@@ -27,11 +27,14 @@
 	@apply text-black-text disabled:text-opacity-75;
 }
 
-.classes {
+.class_controller {
 	@apply w-full h-full;
-	@apply flex flex-col gap-1 p-2;
+	@apply flex flex-col gap-1 p-1;
 	@apply border-[1px] border-black-text border-opacity-50 rounded-[5px];
 	@apply text-black-text font-Roboto;
+}
+.classes{	@apply w-full h-full;
+	@apply flex flex-col gap-1 p-2;
 	@apply overflow-y-auto;
 }
 

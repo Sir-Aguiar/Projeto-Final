@@ -22,7 +22,8 @@
     "delete-migrations": "npx sequelize db:migrate:undo:all",
     "db:populate": "",
     "dev": "node --watch src/index.js",
-    "start": "node src/index.js"
+    "start": "node src/index.js",
+    "db:mock": "node src/database/mockup/populate.js"
   },
   "keywords": [],
   "author": "",
