@@ -33,7 +33,7 @@ const Aluno = Database.define(
       allowNull: false,
     },
   },
-  { tableName: "alunos" },
+  { tableName: "alunos", timestamps: false },
 );
 
 

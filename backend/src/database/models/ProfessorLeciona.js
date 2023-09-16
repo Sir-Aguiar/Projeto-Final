@@ -31,7 +31,7 @@ const ProfessorLeciona = Database.define(
       onUpdate: "CASCADE",
     },
   },
-  { tableName: "professorLeciona" },
+  { tableName: "professorLeciona", timestamps: false },
 );
 
 module.exports = ProfessorLeciona;

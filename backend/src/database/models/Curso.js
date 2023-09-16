@@ -16,7 +16,7 @@ const Curso = Database.define(
 			allowNull: false,
 		},
 	},
-	{ tableName: "cursos" },
+	{ tableName: "cursos", timestamps: false },
 );
 
 Curso.hasMany(Turma, { foreignKey: "idCurso", as: "turmas" });

@@ -25,7 +25,7 @@ const Escola = Database.define(
 			allowNull: false,
 		},
 	},
-	{ tableName: "escolas" },
+	{ tableName: "escolas", timestamps: false },
 );
 
 Escola.hasMany(Turma, {
