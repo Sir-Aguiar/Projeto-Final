@@ -1,0 +1,52 @@
+.content_container {
+  @apply flex flex-col gap-x-2;
+  @apply w-full h-full min-h-[750px] mt-[65px] mx-auto;
+  @apply desktop:max-w-[1120px];
+  @apply tablet:max-w-[770px];
+  @apply mobile:max-w-[328px];
+  @apply overflow-x-hidden;
+  @apply font-Roboto;
+}
+.header {
+  @apply w-full h-[120px];
+  @apply flex flex-col justify-center gap-2;
+  @apply border-b-2 border-black-text border-opacity-60;
+}
+.header .button {
+  @apply flex items-center justify-center gap-2;
+  @apply min-w-[150px] w-full max-w-[200px] h-[40px];
+  @apply bg-black-text text-background font-semibold text-sm mobile:text-[13px];
+  @apply rounded-sm;
+}
+.header .secundary_button {
+  @apply bg-transparent border-[1px] border-black-text;
+  @apply text-black-text;
+}
+.content_data {
+  @apply w-full h-full;
+  @apply flex mobile:flex-col gap-2 py-2;
+}
+
+.today_classes {
+  @apply bg-blue-400;
+  @apply w-full h-full;
+}
+.info_cards {
+  @apply w-full max-w-[256px] mobile:max-w-full h-full max-h-[256px];
+  @apply flex flex-col mobile:justify-center gap-2;
+}
+.info_card {
+  @apply rounded-sm;
+  @apply w-full h-[50px];
+  @apply flex items-center gap-2 px-2;
+  @apply bg-black-text text-[#fefefe] text-[15px] mobile:font-medium;
+}
+.info_card span {
+  @apply text-blue-icon font-bold text-[17px];
+}
+.info_card svg {
+  @apply transition-all;
+  @apply p-1 hover:bg-slate-500 rounded-full;
+  @apply h-[25px] w-[25px];
+  @apply cursor-pointer;
+}

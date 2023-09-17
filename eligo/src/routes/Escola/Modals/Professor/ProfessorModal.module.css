@@ -1,0 +1,56 @@
+.modal_container {
+  @apply min-w-[328px] w-full max-w-[1000px] tablet:max-w-[770px] mobile:max-w-[328px];
+  @apply min-h-[500px];
+  @apply bg-background;
+  @apply absolute left-1/2 -translate-x-1/2 top-[25px];
+  @apply flex flex-col items-center justify-center gap-3 p-3 mobile:px-2;
+  @apply rounded-md;
+  @apply font-Roboto;
+}
+
+.contentable_container {
+  @apply w-full h-full;
+  @apply flex gap-2 mobile:flex-col;
+}
+
+.side_bar {
+  @apply min-w-[256px] w-full max-w-[256px] mobile:max-w-full;
+  @apply h-full min-h-[450px];
+  @apply flex flex-col items-center gap-2;
+}
+
+.table_container {
+  @apply w-full h-full min-h-[450px];
+  @apply overflow-auto;
+  @apply flex flex-col items-start;
+  @apply border-[1px] border-black-text border-opacity-50 rounded-[5px];
+}
+
+.content_table {
+  @apply w-full min-w-full;
+  @apply font-Roboto text-black-text;
+}
+
+.table_header {
+  @apply bg-black-text text-background;
+}
+.table_header svg {
+  @apply cursor-pointer fill-background;
+  @apply transition-all duration-200;
+  @apply h-10 w-10 p-2 rounded-full;
+  @apply hover:bg-slate-500;
+}
+
+.table_header th {
+  @apply text-start;
+  @apply min-h-[50px] h-[50px] p-2;
+}
+.table_body td {
+  @apply min-h-[45px] h-[45px] p-2;
+}
+.remove_button {
+  @apply w-full flex items-center justify-center mt-auto p-2;
+  @apply font-semibold text-[12px] text-center text-red-500;
+  @apply transition-all disabled:opacity-50 disabled:cursor-not-allowed;
+  @apply hover:bg-slate-200;
+}

@@ -4,42 +4,43 @@ const Disciplina = require("./Disciplina");
 const { DataTypes } = require("sequelize");
 const Database = require("../database");
 const CursoDisciplina = Database.define(
-	"CursoDisciplina",
-	{
-		idCurso: {
-			primaryKey: true,
-			type: DataTypes.INTEGER,
-			allowNull: false,
-			references: {
-				model: "cursos",
-				key: "idCurso",
-			},
-			onDelete: "CASCADE",
-			onUpdate: "CASCADE",
-		},
-		idDisciplina: {
-			primaryKey: true,
-			type: DataTypes.INTEGER,
-			allowNull: false,
-			references: {
-				model: "disciplinas",
-				key: "idDisciplina",
-			},
-			onDelete: "CASCADE",
-			onUpdate: "CASCADE",
-		},
-	},
-	{ tableName: "cursoDisciplina" },
+  "CursoDisciplina",
+  {
+    idCurso: {
+      primaryKey: true,
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: "cursos",
+        key: "idCurso",
+      },
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
+    },
+    idDisciplina: {
+      primaryKey: true,
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: "disciplinas",
+        key: "idDisciplina",
+      },
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
+    },
+  },
+  { tableName: "cursoDisciplina" },
 );
 
-Curso.belongsToMany(Disciplina, { through: CursoDisciplina, foreignKey: "idCurso" });
-Disciplina.belongsToMany(Curso, { through: CursoDisciplina, foreignKey: "idDisciplina" });
+/* Curso.belongsToMany(Disciplina, { through: CursoDisciplina, foreignKey: "idCurso" });
+Disciplina.belongsToMany(Curso, { through: CursoDisciplina, foreignKey: "idDisciplina" }); */
 
-/* Curso.hasMany(CursoDisciplina, {
+Curso.hasMany(CursoDisciplina, {
   foreignKey: "idCurso",
 });
 CursoDisciplina.belongsTo(Curso, {
   foreignKey: "idCurso",
+  as: "curso",
 });
 
 Disciplina.hasMany(CursoDisciplina, {
@@ -47,6 +48,7 @@ Disciplina.hasMany(CursoDisciplina, {
 });
 CursoDisciplina.belongsTo(Disciplina, {
   foreignKey: "idDisciplina",
-}); */
+  as: "disciplina",
+});
 
 module.exports = CursoDisciplina;

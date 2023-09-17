@@ -29,8 +29,8 @@ const GetProfessorLecionaController = async (req, res) => {
         return res.status(200).json({ length: result.length });
       }
 
-      const result = await ProfessorLeciona.findAll({
-        attributes: ["idProfessor", "professor.nome"],
+      const professores = await ProfessorLeciona.findAll({
+        attributes: ["idProfessor", "professor.nome", "idLeciona"],
         include: [
           { model: Usuario, as: "professor", attributes: [] },
           {
@@ -45,7 +45,7 @@ const GetProfessorLecionaController = async (req, res) => {
         nest: true,
       });
 
-      return res.status(200).json({ result });
+      return res.status(200).json({ professores });
     }
 
     return res.status(404).json({});
