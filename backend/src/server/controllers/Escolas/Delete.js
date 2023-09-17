@@ -13,7 +13,8 @@ const DeleteEscolasController = async (req, res) => {
   }
 
   try {
-    const foundSchool = await Escola.findOne({ where: { idGestor: idUsuario, idEscola } });
+    const foundSchool = await Escola.findByPk(idEscola);
+
     if (!foundSchool) {
       return res.status(404).json({
         error: {
@@ -21,6 +22,15 @@ const DeleteEscolasController = async (req, res) => {
         },
       });
     }
+
+    if (foundSchool.dataValues.idGestor !== idUsuario) {
+      return res.status(401).json({
+        error: {
+          message: "Você não possui permissão para fazer isto",
+        },
+      });
+    }
+
     await foundSchool.destroy();
     return res.status(200).json({ error: null });
   } catch (error) {

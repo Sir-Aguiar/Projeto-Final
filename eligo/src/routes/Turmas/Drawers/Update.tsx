@@ -20,7 +20,7 @@ const Update: React.FC = () => {
         return;
       }
       const RespectiveClass = TurmasState.find((turma) => turma.idTurma === selectedRows[0])!;
-      setTurmaIdCurso(RespectiveClass.idCurso.toString());
+      setTurmaIdCurso(RespectiveClass.curso.idCurso.toString());
       setTurmaNome(RespectiveClass.nome);
     }
   }, [DrawerUpdate.situation]);

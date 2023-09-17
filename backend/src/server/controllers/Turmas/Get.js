@@ -35,7 +35,7 @@ const GetTurmasController = async (req, res) => {
             },
           ],
         });
-        
+
         if (turmas.length < 1) {
           return res.status(401).json({});
         }
@@ -88,7 +88,7 @@ const GetTurmasController = async (req, res) => {
     // All classes
     const OWNED_CLASSES = await Turma.findAll({
       include: [
-        { model: Escola, as: "escola", attributes: [], where: { idGestor: idUsuario } },
+        { model: Escola, as: "escola", attributes: ["idEscola", "nome", "idGestor"], where: { idGestor: idUsuario } },
         { model: Curso, as: "curso", attributes: ["idCurso", "nome"] },
       ],
       raw: true,
@@ -109,6 +109,11 @@ const GetTurmasController = async (req, res) => {
               as: "curso",
               attributes: ["idCurso", "nome"],
             },
+            {
+              model: Escola,
+              as: "escola",
+              attributes: ["idEscola", "nome", "idGestor"],
+            },
           ],
         },
       ],
@@ -121,17 +126,17 @@ const GetTurmasController = async (req, res) => {
     const resultMap = new Map();
 
     OWNED_CLASSES.forEach((turma) => {
-      const { idTurma, nome, curso } = turma;
+      const { idTurma, nome, curso, escola } = turma;
       if (!resultMap.has(idTurma)) {
-        resultMap.set(idTurma, { idTurma, nome, curso });
+        resultMap.set(idTurma, { idTurma, nome, curso, escola });
       }
     });
 
     ASSOCIATED_CLASSES.forEach((result) => {
       const { turma } = result;
-      const { idTurma, nome, curso } = turma;
+      const { idTurma, nome, curso, escola } = turma;
       if (!resultMap.has(idTurma)) {
-        resultMap.set(idTurma, { idTurma, nome, curso });
+        resultMap.set(idTurma, { idTurma, nome, curso, escola });
       }
     });
 

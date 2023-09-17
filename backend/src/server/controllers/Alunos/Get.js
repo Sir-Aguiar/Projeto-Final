@@ -3,6 +3,7 @@ const Aluno = require("../../../database/models/Aluno");
 const Escola = require("../../../database/models/Escola");
 const Curso = require("../../../database/models/Curso");
 const Turma = require("../../../database/models/Turma");
+const ProfessorLeciona = require("../../../database/models/ProfessorLeciona");
 
 /** @type {import("express").RequestHandler}  */
 const GetAlunosController = async (req, res) => {
@@ -12,24 +13,31 @@ const GetAlunosController = async (req, res) => {
   try {
     // Todos alunos de uma turma
     if (idTurma && !isNaN(Number(idTurma))) {
-      const alunos = await Aluno.findAll({
-        where: { idTurma },
-        include: { model: Escola, as: "escola", where: { idGestor: idUsuario } },
+      const foundClass = await Turma.findByPk(idTurma, {
+        attributes: ["idTurma", "nome"],
+        include: [
+          { model: Escola, as: "escola", attributes: ["idGestor", "nome"] },
+          { model: Curso, as: "curso", attributes: ["idCurso", "nome"] },
+          { model: Aluno, as: "alunos", attributes: ["idAluno", "nome"] },
+        ],
       });
 
-      return res.status(200).json({ error: null, alunos });
-    }
-    // Todos alunos de turma
-    if (idEscola && !isNaN(Number(idEscola))) {
-      // Todos alunos de uma série/curso
-      if (idCurso && !isNaN(Number(idCurso))) {
-        const alunos = await Aluno.findAll({
-          where: { idCurso, idEscola },
-          include: { model: Escola, as: "escola", where: { idGestor: idUsuario } },
-        });
-        return res.status(200).json({ error: null, alunos });
+      if (!foundClass) {
+        return res.status(404).json({});
       }
 
+      if (foundClass.dataValues.escola.idGestor !== idUsuario) {
+        const foundProfessor = await ProfessorLeciona.findOne({ where: { idProfessor: idUsuario, idTurma } });
+        if (!foundProfessor) {
+          return res.status(401).json({});
+        }
+      }
+
+      return res.status(200).json({ error: null, alunos: foundClass.dataValues.alunos });
+    }
+
+    // Todos alunos de escola
+    if (idEscola && !isNaN(Number(idEscola))) {
       const alunos = await Aluno.findAndCountAll({
         where: { idEscola },
         include: [
@@ -65,6 +73,7 @@ const GetAlunosController = async (req, res) => {
       });
       return res.status(200).json({ error: null, aluno });
     }
+    
     // Todos alunos que pertencem às suas escolas
     const alunos = await Aluno.findAndCountAll({
       include: [

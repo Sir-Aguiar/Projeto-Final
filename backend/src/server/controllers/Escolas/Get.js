@@ -4,9 +4,20 @@ const Turma = require("../../../database/models/Turma");
 /** @type {import("express").RequestHandler}  */
 const GetEscolasController = async (req, res) => {
   const { idUsuario } = req.userData;
-  const { idEscola } = req.params;
+  const { idEscola } = req.query;
 
   try {
+    if (idEscola) {
+      const escola = await Escola.findByPk(idEscola, { raw: true, nest: true });
+      if (!escola) {
+        return res.status(404).json({});
+      }
+      if (escola.idGestor !== idUsuario) {
+        return res.status(401).json({});
+      }
+      return res.status(200).json({ error: null, escola });
+    }
+
     const SCHOOLS_OF_LESSON = await ProfessorLeciona.findAll({
       where: { idProfessor: idUsuario },
       include: [

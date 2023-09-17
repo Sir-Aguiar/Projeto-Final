@@ -1,157 +1,170 @@
 import axios, { AxiosInstance } from "axios";
 import React, { createContext, useState, useMemo, useContext, useEffect } from "react";
 import { useAuthHeader } from "react-auth-kit";
+import jwtDecode from "jwt-decode";
 
 interface IEscola {
-	idEscola: number;
-	idGestor: number;
-	nome: string;
+  idEscola: number;
+  idGestor: number;
+  nome: string;
 }
 
 interface ITurma {
-	idTurma: number;
-	idCurso: string;
-	idEscola: number;
-	nome: string;
+  idTurma: number;
+  idCurso: string;
+  idEscola: number;
+  nome: string;
 }
 
 type ProviderProps = {
-	children: React.ReactNode;
+  children: React.ReactNode;
 };
 
 interface IModalProps {
-	situation: boolean;
-	open: () => void;
-	close: () => void;
+  situation: boolean;
+  open: () => void;
+  close: () => void;
 }
-
+interface IUserTokenData {
+  email: string;
+  idUsuario: number;
+  iat: number;
+}
 interface IRouteContext {
-	RouteAPI: AxiosInstance;
-	DrawerCreate: IModalProps;
-	DrawerUpdate: IModalProps;
-	ModalDelete: IModalProps;
-	Escolas: IEscola[];
-	Turmas: ITurma[];
-	selectedRows: number[];
-	selectRow: (idEscola: number) => void;
+  RouteAPI: AxiosInstance;
+  DrawerCreate: IModalProps;
+  DrawerUpdate: IModalProps;
+  ModalDelete: IModalProps;
+  Escolas: IEscola[];
+  Turmas: ITurma[];
+  selectedRows: number[];
+  selectRow: (idEscola: number) => void;
+  TokenData: IUserTokenData;
 }
 
 const RouteContext = createContext<IRouteContext | null>(null);
 
 const EscolasProvider: React.FC<ProviderProps> = ({ children }) => {
-	const authHeader = useAuthHeader();
-	const [isCreateOpen, setCreateDrawer] = useState(false);
-	const [isUpdateOpen, setUpdateDrawer] = useState(false);
-	const [isDeleteOpen, setDeleteModal] = useState(false);
-	const [Turmas, setTurmas] = useState<ITurma[]>([]);
-	const [Escolas, setEscolas] = useState<IEscola[]>([]);
-	const [selectedRows, setRows] = useState<number[]>([]);
+  const authHeader = useAuthHeader();
+  const [isCreateOpen, setCreateDrawer] = useState(false);
+  const [isUpdateOpen, setUpdateDrawer] = useState(false);
+  const [isDeleteOpen, setDeleteModal] = useState(false);
+  const [Turmas, setTurmas] = useState<ITurma[]>([]);
+  const [Escolas, setEscolas] = useState<IEscola[]>([]);
+  const [selectedRows, setRows] = useState<number[]>([]);
 
-	// Axios instance
-	const RouteAPI = axios.create({
-		baseURL: import.meta.env.VITE_SERVER_URL,
-		headers: {
-			Authorization: authHeader(),
-		},
-	});
+  const TokenData = useMemo(() => {
+    const TOKEN = authHeader();
+    const TOKEN_DATA = jwtDecode(TOKEN) as IUserTokenData;
+    return TOKEN_DATA;
+  }, [authHeader()]);
 
-	const showClasses = async (idEscola: number) => {
-		const response = await RouteAPI.get(`/turma?idEscola=${idEscola}`);
-		setTurmas(response.data.turmas);
-	};
+  // Axios instance
+  const RouteAPI = axios.create({
+    baseURL: import.meta.env.VITE_SERVER_URL,
+    headers: {
+      Authorization: authHeader(),
+    },
+  });
 
-	const showSchools = async () => {
-		try {
-			const response = await RouteAPI.get("/escola");
-			setEscolas(response.data.escolas);
-		} catch (error: any) {
-			alert(error.response.data.error.message);
-		}
-	};
+  const showClasses = async (idEscola: number) => {
+    const response = await RouteAPI.get(`/turma?idEscola=${idEscola}`);
+    setTurmas(response.data.turmas);
+  };
 
-	const selectRow = (idEscola: number) => {
-		setRows((values) => {
-			let newValues: number[];
+  const showSchools = async () => {
+    try {
+      const response = await RouteAPI.get("/escola");
+      setEscolas(response.data.escolas);
+    } catch (error: any) {
+      alert(error.response.data.error.message);
+    }
+  };
 
-			if (values.includes(idEscola)) {
-				newValues = values.filter((value) => value !== idEscola);
-			} else {
-				newValues = [...values, idEscola];
-			}
-			if (newValues.length === 1) {
-				showClasses(newValues[0]);
-			} else {
-				setTurmas([]);
-			}
-			return newValues;
-		});
-	};
+  const selectRow = (idEscola: number) => {
+    setRows((values) => {
+      let newValues: number[];
 
-	const DrawerCreate: IModalProps = useMemo(() => {
-		return {
-			situation: isCreateOpen,
-			open: () => setCreateDrawer(true),
-			close: () => {
-				showSchools().then(() => {
-					setCreateDrawer(false);
-				});
-			},
-		};
-	}, [isCreateOpen]);
+      if (values.includes(idEscola)) {
+        newValues = values.filter((value) => value !== idEscola);
+      } else {
+        newValues = [...values, idEscola];
+      }
+      if (newValues.length === 1) {
+        showClasses(newValues[0]);
+      } else {
+        setTurmas([]);
+      }
+      return newValues;
+    });
+  };
 
-	const DrawerUpdate: IModalProps = useMemo(() => {
-		return {
-			situation: isUpdateOpen,
-			open: () => setUpdateDrawer(true),
-			close: () => {
-				showSchools().then(() => {
-					setUpdateDrawer(false);
-				});
-			},
-		};
-	}, [isUpdateOpen]);
+  const DrawerCreate: IModalProps = useMemo(() => {
+    return {
+      situation: isCreateOpen,
+      open: () => setCreateDrawer(true),
+      close: () => {
+        showSchools().then(() => {
+          setCreateDrawer(false);
+        });
+      },
+    };
+  }, [isCreateOpen]);
 
-	const ModalDelete: IModalProps = useMemo(() => {
-		return {
-			situation: isDeleteOpen,
-			open: () => setDeleteModal(true),
-			close: () => {
-				showSchools().then(() => {
-					setDeleteModal(false);
-					setRows([]);
-				});
-			},
-		};
-	}, [isDeleteOpen]);
+  const DrawerUpdate: IModalProps = useMemo(() => {
+    return {
+      situation: isUpdateOpen,
+      open: () => setUpdateDrawer(true),
+      close: () => {
+        showSchools().then(() => {
+          setUpdateDrawer(false);
+        });
+      },
+    };
+  }, [isUpdateOpen]);
 
-	useEffect(() => {
-		showSchools();
-	}, []);
+  const ModalDelete: IModalProps = useMemo(() => {
+    return {
+      situation: isDeleteOpen,
+      open: () => setDeleteModal(true),
+      close: () => {
+        showSchools().then(() => {
+          setDeleteModal(false);
+          setRows([]);
+        });
+      },
+    };
+  }, [isDeleteOpen]);
 
-	return (
-		<RouteContext.Provider
-			value={{
-				RouteAPI,
-				DrawerUpdate,
-				DrawerCreate,
-				ModalDelete,
-				Escolas,
-				Turmas,
-				selectedRows,
-				selectRow,
-			}}
-		>
-			{children}
-		</RouteContext.Provider>
-	);
+  useEffect(() => {
+    showSchools();
+  }, []);
+
+  return (
+    <RouteContext.Provider
+      value={{
+        RouteAPI,
+        DrawerUpdate,
+        DrawerCreate,
+        ModalDelete,
+        Escolas,
+        Turmas,
+        TokenData,
+        selectedRows,
+        selectRow,
+      }}
+    >
+      {children}
+    </RouteContext.Provider>
+  );
 };
 
 const useEscolasContext = () => {
-	const context = useContext(RouteContext);
+  const context = useContext(RouteContext);
 
-	if (!context) throw new Error("EscolasContext deve ser chamado dentro de EscolasProvider");
+  if (!context) throw new Error("EscolasContext deve ser chamado dentro de EscolasProvider");
 
-	return context;
+  return context;
 };
 
 export { EscolasProvider, useEscolasContext };
