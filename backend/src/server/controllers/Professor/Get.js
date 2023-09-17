@@ -3,17 +3,52 @@ const Disciplina = require("../../../database/models/Disciplina");
 const CursoDisciplina = require("../../../database/models/CursoDisciplina");
 const Curso = require("../../../database/models/Curso");
 const ProfessorLeciona = require("../../../database/models/ProfessorLeciona");
+const Turma = require("../../../database/models/Turma");
+const Usuario = require("../../../database/models/Usuario");
+const { Sequelize } = require("sequelize");
 /** @type {import("express").RequestHandler}  */
 const GetProfessorLecionaController = async (req, res) => {
   const { idUsuario } = req.userData;
-  const { idTurma } = req.params;
+  const { idTurma, idEscola, onlyLength } = req.query;
   try {
-    if (idTurma) {
-      const professorLeciona = await ProfessorLeciona.findAll({ where: { idTurma } });
-      return res.status(200).json({ error: null, professorLeciona });
+    if (idEscola) {
+      const foundSchool = await Escola.findByPk(idEscola);
+      if (!foundSchool) {
+        return res.status(404).json({});
+      }
+      if (foundSchool.dataValues.idGestor !== idUsuario) {
+        return res.status(401).json({});
+      }
+
+      if (onlyLength) {
+        const result = await ProfessorLeciona.count({
+          include: [{ model: Turma, as: "turma", attributes: [], where: { idEscola } }],
+          group: ["idProfessor"],
+          distinct: true,
+        });
+        return res.status(200).json({ length: result.length });
+      }
+
+      const result = await ProfessorLeciona.findAll({
+        attributes: ["idProfessor", "professor.nome"],
+        include: [
+          { model: Usuario, as: "professor", attributes: [] },
+          {
+            model: Turma,
+            as: "turma",
+            attributes: ["idTurma", "nome"],
+            where: { idEscola },
+          },
+          { model: Disciplina, as: "disciplina", attributes: ["idDisciplina", "nome"] },
+        ],
+        raw: true,
+        nest: true,
+      });
+
+      return res.status(200).json({ result });
     }
-    const professorLeciona = await ProfessorLeciona.findAll({});
-    return res.status(200).json({ error: null, professorLeciona });
+
+    return res.status(404).json({});
   } catch (error) {
     console.log(error);
     return res.status(500).json({

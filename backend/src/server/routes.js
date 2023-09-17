@@ -44,7 +44,6 @@ routes.post("/login", Login);
 
 routes.post("/escola", UserAuthMiddleware, CreateEscolasController);
 routes.get("/escola", UserAuthMiddleware, GetEscolasController);
-routes.get("/escola/:idEscola", UserAuthMiddleware, GetEscolasController);
 routes.put("/escola/:idEscola", UserAuthMiddleware, UpdateEscolasController);
 routes.delete("/escola/:idEscola", UserAuthMiddleware, DeleteEscolasController);
 
@@ -64,7 +63,7 @@ routes.delete("/curso-disciplina/:idCurso/:idDisciplina", UserAuthMiddleware, De
 routes.put("/curso-disciplina/:idCurso/:idDisciplina", UserAuthMiddleware, UpdateCursoDisciplinaController);
 
 routes.post("/professor-leciona", UserAuthMiddleware, CreateProfessorController);
-routes.get("/professor-leciona", UserAuthMiddleware, GetProfessorLecionaController);
+routes.get("/professor", UserAuthMiddleware, GetProfessorLecionaController);
 routes.get("/professor-leciona/:idTurma", UserAuthMiddleware, GetProfessorLecionaController);
 
 routes.delete(

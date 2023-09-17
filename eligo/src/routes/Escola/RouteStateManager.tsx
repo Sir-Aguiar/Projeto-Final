@@ -15,7 +15,6 @@ interface IProfessorState {
 }
 
 interface IDisciplinaState {
-  // Contagem de quantas disciplinas aquela escola tem associada à um ou mais cursos
   length: number;
   data: {
     idDisciplina: number;
@@ -24,6 +23,7 @@ interface IDisciplinaState {
 }
 
 interface IGradeState {
+  // Contagem de quantas disciplinas aquela escola tem associada à um ou mais cursos
   length: number;
   data: {
     idDisciplina: number;
