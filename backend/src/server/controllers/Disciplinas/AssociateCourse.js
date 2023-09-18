@@ -4,16 +4,8 @@ const CursoDisciplina = require("../../../database/models/CursoDisciplina");
 /** @type {import("express").RequestHandler}  */
 const AssociateCursoDiscipinaController = async (req, res) => {
 	const { idUsuario } = req.userData;
-	const { idCurso, idDisciplina } = req.body;
-
-	if (!idCurso || !idDisciplina || isNaN(Number(idDisciplina)) || isNaN(Number(idCurso))) {
-		return res.status(400).json({
-			error: {
-				message: "Não foram inseridos dados válidos para realizar esta ação",
-			},
-		});
-	}
-
+	const { cursos } = req.body;
+	const { idDisciplina } = req.query;
 	try {
 		const foundDiscipline = await Disciplina.findByPk(idDisciplina, {
 			include: [{ model: Escola, as: "escola", attributes: ["idGestor"] }],
@@ -35,7 +27,14 @@ const AssociateCursoDiscipinaController = async (req, res) => {
 			});
 		}
 
-		await CursoDisciplina.create({ idCurso, idDisciplina });
+		for (const idCurso of cursos) {
+			try {
+				await CursoDisciplina.create({ idDisciplina, idCurso });
+			} catch (error) {
+				console.log(error);
+			}
+		}
+
 		return res.status(200).json({ error: null });
 	} catch (error) {
 		return res.status(500).json({ error });
