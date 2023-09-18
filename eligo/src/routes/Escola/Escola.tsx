@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./Escola.module.css";
 import { useParams } from "react-router-dom";
 import { useEscolaContext } from "./RouteStateManager";
@@ -9,9 +9,21 @@ import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import ModalProfessor from "./Modals/Professor/ProfessorModal";
 import ModalDisciplina from "./Modals/Disciplinas/Disciplinas";
 import AddDiscipline from "./Drawers/Disciplines/AddDiscipline";
+import AddProfessor from "./Drawers/Professor/AddProfessor";
+
+
+
 const Escola: React.FC = () => {
-	const { SchoolData, professorsCount, disciplinesCount, ProfessorModal, DisciplineModal, DisciplineDrawer } =
-		useEscolaContext();
+	const {
+		SchoolData,
+		professorsCount,
+		disciplinesCount,
+		ProfessorModal,
+		DisciplineModal,
+		DisciplineDrawer,
+		ProfessorDrawer,
+	} = useEscolaContext();
+
 	return (
 		<div className={styles.content_container}>
 			<header className={styles.header}>
@@ -21,7 +33,7 @@ const Escola: React.FC = () => {
 						<img src={DisciplinaIcon} className="max-h-[20px]" />
 						Adicionar Disciplina
 					</button>
-					<button className={`${styles.button} ${styles.secundary_button}`}>
+					<button className={`${styles.button} ${styles.secundary_button}`} onClick={() => ProfessorDrawer.open()}>
 						<img src={ProfessorIcon} className="max-h-[18px]" />
 						Adicionar Professor
 					</button>
@@ -45,6 +57,7 @@ const Escola: React.FC = () => {
 			<ModalProfessor />
 			<ModalDisciplina />
 			<AddDiscipline />
+			<AddProfessor />
 		</div>
 	);
 };
