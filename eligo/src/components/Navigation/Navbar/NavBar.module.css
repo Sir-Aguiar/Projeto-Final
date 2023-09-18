@@ -4,6 +4,7 @@
   @apply flex py-2 px-5 mobile:px-2 justify-between items-center;
   @apply font-Roboto text-black-text;
   @apply border-b-2 border-black-text;
+  @apply z-50;
 }
 
 .nav_options {
@@ -48,19 +49,17 @@
   @apply hover:text-blue-600 hover:underline hover:underline-offset-2;
 }
 .profile {
-  @apply mobile:h-[30px];
-  @apply mobile:w-full;
-  @apply flex items-center justify-end mt-auto;
-  @apply h-full;
+  @apply w-[35px] h-[35px];
+  @apply flex items-center justify-center self-end mt-auto;
+  @apply p-[2px];
+  @apply hover:bg-gray-300 rounded-full;
 }
 .profile svg {
-  @apply h-[30px] w-[30px];
-  @apply my-[10px];
+  @apply h-[35px] w-[35px];
 }
 
 .mobile_menu {
-  @apply h-[30px] w-[30px];
-  @apply hidden mobile:flex mobile:flex-col gap-1 items-center justify-center;
+  @apply w-[30px] hidden mobile:flex mobile:flex-col gap-1 items-center justify-center;
 }
 .mobile_menu div {
   @apply bg-black-text h-[4px] w-full transition-all duration-300;

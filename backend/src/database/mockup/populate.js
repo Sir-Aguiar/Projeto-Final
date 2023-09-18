@@ -27,6 +27,7 @@ const PopulateSchools = async () => {
 			const insertedValue = await Escola.create(escola);
 			console.log(`${insertedValue.dataValues.idEscola} -> Inserido com sucesso`);
 		} catch (error) {
+			console.log(error)
 			console.log(`Falha ao inserir escola ${escola.nome}`);
 		}
 	}

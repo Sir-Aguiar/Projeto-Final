@@ -70,6 +70,7 @@ interface IRouteContext {
   DisciplineModal: IModalProps;
   loadDisciplineData: (initial?: boolean) => Promise<void>;
   loadGridData: () => Promise<void>;
+  loadProfessorData: (initial?: boolean) => Promise<void>;
   RouteAPI: AxiosInstance;
   DisciplineDrawer: IModalProps;
   ProfessorDrawer: IModalProps;
@@ -96,7 +97,7 @@ const EscolaProvider: React.FC<ProviderProps> = ({ children }) => {
     return {
       situation: isProfessorModalOpen,
       close() {
-        setProfessorModalOpen(false);
+        loadInitialData().then(() => setProfessorModalOpen(false));
       },
       open() {
         loadProfessorData(false).then(() => setProfessorModalOpen(true));
@@ -165,6 +166,10 @@ const EscolaProvider: React.FC<ProviderProps> = ({ children }) => {
       console.log(error);
       if (error instanceof AxiosError) {
         if (error.response?.status === 401) {
+          setUserAuthorized(false);
+          return;
+        }
+        if (error.response?.status === 404) {
           setUserAuthorized(false);
           return;
         }
@@ -250,6 +255,7 @@ const EscolaProvider: React.FC<ProviderProps> = ({ children }) => {
         ProfessorDrawer,
         DisciplineDrawer,
         loadDisciplineData,
+        loadProfessorData,
         professorsCount,
         ProfessorsData,
         SchoolData,

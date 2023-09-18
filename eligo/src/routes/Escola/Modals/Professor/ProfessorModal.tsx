@@ -8,8 +8,10 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
+import { AxiosError } from "axios";
 
 const ModalProfessor: React.FC = () => {
+  const { ProfessorModal, ProfessorsData, RouteAPI, loadProfessorData } = useEscolaContext();
   const [selectedRows, setSelectedRow] = useState<number[]>([]);
   const selectRow = (idLeciona: number) => {
     setSelectedRow((values) => {
@@ -28,15 +30,27 @@ const ModalProfessor: React.FC = () => {
       return newValues;
     });
   };
-
-  const { ProfessorModal, ProfessorsData } = useEscolaContext();
+  const handleProfessorDelete = async () => {
+    try {
+      for (const idLeciona of selectedRows) {
+        const { turma, disciplina, idProfessor } = ProfessorsData.find(
+          (professor) => professor.idLeciona === idLeciona,
+        )!;
+        await RouteAPI.delete(`/professor-leciona/${idProfessor}/${turma.idTurma}/${disciplina.idDisciplina}`);
+      }
+    } catch (error: any) {
+      if (error instanceof AxiosError) {
+        console.log(error);
+      }
+    }
+    await loadProfessorData(false);
+  };
+  const onClose = async () => {
+    setSelectedRow([]);
+    ProfessorModal.close();
+  };
   return (
-    <Modal
-      className="overflow-y-scroll"
-      open={ProfessorModal.situation}
-      onClose={() => ProfessorModal.close()}
-      closeAfterTransition
-    >
+    <Modal className="overflow-y-scroll" open={ProfessorModal.situation} onClose={onClose} closeAfterTransition>
       <Fade in={ProfessorModal.situation}>
         <div className={styles.modal_container}>
           <h1 className="text-xl font-bold text-black-text font-Montserrat">Professores em Atividade</h1>
@@ -84,7 +98,16 @@ const ModalProfessor: React.FC = () => {
                   <Select value={""} label="Professor"></Select>
                 </FormControl>
               </div>
-              <button className={styles.remove_button} disabled={selectedRows.length < 1}>
+              <button
+                className={styles.remove_button}
+                disabled={selectedRows.length < 1}
+                onClick={() => {
+                  const answer = window.confirm("Tem certeza desta ação?");
+                  if (answer) {
+                    handleProfessorDelete();
+                  }
+                }}
+              >
                 <DeleteForeverIcon className="h-[15px]" /> Remover Associação
               </button>
             </div>

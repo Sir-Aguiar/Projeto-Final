@@ -70,9 +70,11 @@ const AddProfessor: React.FC = () => {
   const { ProfessorDrawer, ProfessorsData, RouteAPI, SchoolData, DisciplinesData, GridData } = useEscolaContext();
   const [Turmas, setTurmas] = useState<any[]>([]);
   const [associationsToAdd, setAssociations] = useState([0]);
+  
   const addAssociation = () => {
     setAssociations((values) => [...values, 1]);
   };
+
   useEffect(() => {
     if (ProfessorDrawer.situation) {
       RouteAPI.get(`/turma?idEscola=${SchoolData.idEscola}`).then((res) => setTurmas(res.data.turmas));
