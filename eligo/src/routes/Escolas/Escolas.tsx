@@ -10,6 +10,7 @@ import { useEscolasContext } from "./RouteStateManager";
 import Create from "./Drawers/Create";
 import Update from "./Drawers/Update";
 import Delete from "./Modals/Delete";
+import { Link } from "react-router-dom";
 type ClassLinkProps = {
   name: string;
   link: string;
@@ -83,6 +84,7 @@ const Escolas: React.FC = () => {
           <thead className={styles.table_header}>
             <tr>
               <th className="min-w-[50px] w-[50px] max-w-[50px]"></th>
+              <th className="min-w-[50px] w-[50px] max-w-[50px]"></th>
               <th>Nome</th>
             </tr>
           </thead>
@@ -94,6 +96,11 @@ const Escolas: React.FC = () => {
                     checked={selectedRows.includes(escola.idEscola)}
                     onChange={() => selectRow(escola.idEscola)}
                   />
+                </td>
+                <td>
+                  <Link to={`/escola/${escola.idEscola}`}>
+                    <OpenInNewIcon fontSize="small" />
+                  </Link>
                 </td>
                 <td className="min-w-[450px]">{escola.nome}</td>
               </tr>
