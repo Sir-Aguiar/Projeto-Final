@@ -1,0 +1,5 @@
+.main_container {
+  @apply font-Montserrat text-center text-[#0B223F];
+  @apply flex flex-col items-center md:justify-center desktop:justify-center;
+  @apply h-full w-full gap-[5px];
+}

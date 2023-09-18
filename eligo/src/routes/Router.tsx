@@ -12,6 +12,7 @@ import { AlunosProvider } from "./Alunos/RouteStateManager";
 import Alunos from "./Alunos/Alunos";
 import { EscolaProvider } from "./Escola/RouteStateManager";
 import Escola from "./Escola/Escola";
+import NotFound from "./Errors/NotFound";
 
 const Router = () => {
   const isUserLogged = useIsAuthenticated();
@@ -66,6 +67,7 @@ const Router = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/registro" element={<Register />} />
         <Route path="/" element={isUserLogged() ? <></> : <LandingPage />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );
