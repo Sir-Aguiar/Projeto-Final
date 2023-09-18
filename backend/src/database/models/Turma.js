@@ -23,7 +23,7 @@ const Turma = Database.define(
     },
     nome: { type: DataTypes.STRING(15), allowNull: false },
   },
-  { tableName: "turmas", timestamps: false },
+  { tableName: "turmas" },
 );
 
 Turma.hasMany(Aluno, { foreignKey: "idTurma", as: "alunos" });

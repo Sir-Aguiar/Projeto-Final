@@ -8,12 +8,20 @@ const DeleteDisciplinasController = async (req, res) => {
   try {
     const foundDiscipline = await Disciplina.findOne({
       where: { idDisciplina },
-      include: { model: Escola, as: "escola", where: { idGestor: idUsuario } },
+      include: { model: Escola, as: "escola" },
     });
+
     if (!foundDiscipline) {
-      return res.status(400).json({
+      return res.status(404).json({
         error: {
-          message: "Você não tem permissão para realizar esta ação",
+          message: "Disciplina não encontrada",
+        },
+      });
+    }
+    if (foundDiscipline.dataValues.escola.idGestor !== idUsuario) {
+      return res.status(401).json({
+        error: {
+          message: "Você não possui permissão para fazer isto.",
         },
       });
     }

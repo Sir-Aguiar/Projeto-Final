@@ -11,7 +11,7 @@ interface IEscola {
 }
 
 interface IProfessor {
-  idLeciona:number;
+  idLeciona: number;
   idProfessor: number;
   nome: string;
   turma: {
@@ -24,6 +24,15 @@ interface IProfessor {
   };
 }
 
+interface IGrid {
+  idDisciplina: number;
+  nome: string;
+  curso: {
+    idCurso: number;
+    nome: string;
+  };
+}
+
 interface IProfessorState {
   length: number;
   data: IProfessor[] | null;
@@ -32,17 +41,6 @@ interface IProfessorState {
 interface IDisciplina {
   idDisciplina: number;
   nome: string;
-}
-
-interface IGradeState {
-  data: {
-    idDisciplina: number;
-    nome: string;
-    curso: {
-      idCurso: number;
-      nome: string;
-    };
-  }[];
 }
 
 interface IUserTokenData {
@@ -64,9 +62,15 @@ interface IRouteContext {
   SchoolData: IEscola;
   ProfessorsData: IProfessor[];
   DisciplinesData: IDisciplina[];
+  GridData: IGrid[];
   professorsCount: number;
   disciplinesCount: number;
   ProfessorModal: IModalProps;
+  DisciplineModal: IModalProps;
+  loadDisciplineData: (initial?: boolean) => Promise<void>;
+  loadGridData: () => Promise<void>;
+  RouteAPI: AxiosInstance;
+  DisciplineDrawer: IModalProps;
 }
 
 const RouteContext = createContext<IRouteContext | null>(null);
@@ -79,9 +83,11 @@ const EscolaProvider: React.FC<ProviderProps> = ({ children }) => {
   const [ProfessorsData, setProfessorsData] = useState<IProfessor[]>([]);
   const [disciplinesCount, setDisciplinesCount] = useState(0);
   const [DisciplinesData, setDisciplinesData] = useState<IDisciplina[]>([]);
+  const [GridData, setGridData] = useState<IGrid[]>([]);
 
   const [isProfessorModalOpen, setProfessorModalOpen] = useState(false);
-
+  const [isDisciplineModalOpen, setDisciplineModalOpen] = useState(false);
+  const [isDisciplineDrawerOpen, setDisciplineDrawerOpen] = useState(false);
   const ProfessorModal = useMemo(() => {
     return {
       situation: isProfessorModalOpen,
@@ -93,6 +99,34 @@ const EscolaProvider: React.FC<ProviderProps> = ({ children }) => {
       },
     };
   }, [isProfessorModalOpen]);
+
+  const DisciplineModal = useMemo(() => {
+    return {
+      situation: isDisciplineModalOpen,
+      close() {
+        setDisciplineModalOpen(false);
+      },
+      open() {
+        loadDisciplineData(false)
+          .then(() => loadGridData())
+          .then(() => setDisciplineModalOpen(true));
+      },
+    };
+  }, [isDisciplineModalOpen]);
+
+  const DisciplineDrawer = useMemo(() => {
+    return {
+      situation: isDisciplineDrawerOpen,
+      close() {
+        loadInitialData().then(() => setDisciplineDrawerOpen(false));
+      },
+      open() {
+        loadDisciplineData(false)
+          .then(() => loadGridData())
+          .then(() => setDisciplineDrawerOpen(true));
+      },
+    };
+  }, [isDisciplineDrawerOpen]);
 
   const TokenData = useMemo(() => {
     const TOKEN = authHeader();
@@ -185,13 +219,40 @@ const EscolaProvider: React.FC<ProviderProps> = ({ children }) => {
     await loadDisciplineData();
   };
 
+  const loadGridData = async () => {
+    try {
+      const response = await RouteAPI.get(`/grade?idEscola=${idEscola}`);
+      setGridData(response.data.grade);
+    } catch (error) {
+      console.log(error);
+      if (error instanceof AxiosError) {
+        if (error.response?.status === 401) {
+          return alert("Você não possui acesso à esta escola");
+        }
+      }
+    }
+  };
+
   useEffect(() => {
     loadInitialData();
   }, []);
 
   return (
     <RouteContext.Provider
-      value={{ disciplinesCount, DisciplinesData, professorsCount, ProfessorsData, SchoolData, ProfessorModal }}
+      value={{
+        disciplinesCount,
+        DisciplinesData,
+        DisciplineDrawer,
+        loadDisciplineData,
+        professorsCount,
+        ProfessorsData,
+        SchoolData,
+        ProfessorModal,
+        DisciplineModal,
+        loadGridData,
+        GridData,
+        RouteAPI,
+      }}
     >
       {children}
     </RouteContext.Provider>

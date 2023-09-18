@@ -43,10 +43,12 @@ const CreateTurmaController = async (req, res) => {
 		}
 
 		for (const turma of turmas) {
+			console.log(turma)
 			await Turma.create({ idEscola: Number(idEscola), idCurso: Number(turma.idCurso), nome: turma.nome });
 		}
 		return res.status(201).json({ error: null });
 	} catch (error) {
+		console.log(error)
 		if (error instanceof ValidationError) {
 			return res.status(404).json({
 				error: {

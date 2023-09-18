@@ -7,14 +7,17 @@ import ProfessorIcon from "../../assets/Escola/professor-icon.png";
 import OpenInFullIcon from "@mui/icons-material/OpenInFull";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import ModalProfessor from "./Modals/Professor/ProfessorModal";
+import ModalDisciplina from "./Modals/Disciplinas/Disciplinas";
+import AddDiscipline from "./Drawers/Disciplines/AddDiscipline";
 const Escola: React.FC = () => {
-  const { SchoolData, professorsCount, disciplinesCount, ProfessorModal } = useEscolaContext();
+  const { SchoolData, professorsCount, disciplinesCount, ProfessorModal, DisciplineModal, DisciplineDrawer } =
+    useEscolaContext();
   return (
     <div className={styles.content_container}>
       <header className={styles.header}>
         <h1 className="text-2xl font-bold text-black-text">{SchoolData.nome}</h1>
         <div className="flex items-center w-full gap-2">
-          <button className={`${styles.button}`}>
+          <button className={`${styles.button}`} onClick={() => DisciplineDrawer.open()}>
             <img src={DisciplinaIcon} className="max-h-[20px]" />
             Adicionar Disciplina
           </button>
@@ -30,7 +33,8 @@ const Escola: React.FC = () => {
             <OpenInFullIcon onClick={() => ProfessorModal.open()} /> Professores: <span>{professorsCount}</span>
           </div>
           <div className={`${styles.info_card}`}>
-            <OpenInFullIcon /> Disciplinas ministradas: <span>{disciplinesCount}</span>
+            <OpenInFullIcon onClick={() => DisciplineModal.open()} /> Disciplinas ministradas:{" "}
+            <span>{disciplinesCount}</span>
           </div>
           <div className={`${styles.info_card}`}>
             <HelpOutlineIcon /> Alunos cadastrados: <span>312</span>
@@ -39,6 +43,8 @@ const Escola: React.FC = () => {
         <div className={styles.today_classes}></div>
       </main>
       <ModalProfessor />
+      <ModalDisciplina />
+      <AddDiscipline />
     </div>
   );
 };

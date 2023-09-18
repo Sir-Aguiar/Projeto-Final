@@ -1,0 +1,46 @@
+.delete_container {
+  @apply min-w-[320px] w-[380px] mobile:w-[320px] min-h-[275px] h-[275px];
+  @apply bg-background;
+  @apply absolute left-1/2 -translate-x-1/2 top-[100px];
+  @apply flex flex-col items-center justify-center gap-6 px-3 mobile:px-2 py-3;
+  @apply rounded-md;
+}
+.delete_container header {
+  @apply font-Montserrat;
+  @apply w-full;
+  @apply flex flex-col gap-2;
+  @apply text-center text-black-text;
+}
+.delete_container main {
+  @apply bg-[#FFECE0];
+  @apply font-Montserrat;
+  @apply w-full;
+  @apply flex gap-2 p-2 items-center;
+  @apply text-black-text;
+  @apply border-l-[3px] border-[#ed622f] rounded-sm;
+  @apply shadow-sm shadow-slate-200;
+}
+.delete_container .warn_icon {
+  @apply h-[25px] w-[25px];
+  @apply fill-[#FF7C26];
+}
+.delete_container footer {
+  @apply w-full;
+  @apply flex items-center justify-center gap-2;
+}
+.delete_container footer button {
+  @apply w-full h-[40px] rounded-[3px];
+  @apply font-Roboto font-semibold text-[#FAEBEC] text-[15px];
+  @apply transition-all duration-300;
+  @apply hover:scale-[.985] hover:shadow-none;
+  @apply shadow-md;
+}
+.delete_container footer button:nth-child(1) {
+  @apply hover:brightness-110;
+}
+.delete_container footer button:nth-child(2) {
+  @apply hover:brightness-90;
+}
+.delete_container footer button:nth-child(2) svg {
+  @apply h-[18px] w-[18px];
+}

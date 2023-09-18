@@ -67,7 +67,7 @@ const Create: React.FC = () => {
       }
       turmas.push({ nome: ClassName.value, idCurso: Number(ClassYear.value) });
     });
-
+    console.log(turmas);
     try {
       await RouteAPI.post(`/turma?idEscola=${idEscola}`, { turmas });
       onClose();
