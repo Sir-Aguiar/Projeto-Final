@@ -49,9 +49,12 @@ const GetEscolasController = async (req, res) => {
     });
 
     const escolas = [];
-
+    const escolasMap = new Map();
     for (const escola of [...SCHOOLS_OF_ADM, ...SCHOOLS_OF_LESSON]) {
-      escolas.push(escola);
+      if (!escolasMap.has(escola.idEscola)) {
+        escolasMap.set(escola.idEscola, escola);
+        escolas.push(escola);
+      }
     }
 
     return res.status(200).json({ error: null, escolas });

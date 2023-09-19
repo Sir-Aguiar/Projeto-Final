@@ -13,6 +13,9 @@ import Alunos from "./Alunos/Alunos";
 import { EscolaProvider } from "./Escola/RouteStateManager";
 import Escola from "./Escola/Escola";
 import NotFound from "./Errors/NotFound";
+import Aula from "./Aula/Aula";
+import { AulaProvider } from "./Aula/RouteStateManager";
+import Footer from "../components/Footer/Footer";
 
 const Router = () => {
   const isUserLogged = useIsAuthenticated();
@@ -26,6 +29,7 @@ const Router = () => {
               <>
                 <Navbar />
                 <Outlet />
+                <Footer />
               </>
             </RequireAuth>
           }
@@ -60,6 +64,14 @@ const Router = () => {
               <EscolaProvider>
                 <Escola />
               </EscolaProvider>
+            }
+          />
+          <Route
+            path="/aula"
+            element={
+              <AulaProvider>
+                <Aula />
+              </AulaProvider>
             }
           />
         </Route>

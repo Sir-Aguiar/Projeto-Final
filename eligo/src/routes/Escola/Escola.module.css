@@ -7,6 +7,7 @@
   @apply overflow-x-hidden;
   @apply font-Roboto;
 }
+
 .header {
   @apply w-full h-[120px];
   @apply flex flex-col justify-center gap-2;

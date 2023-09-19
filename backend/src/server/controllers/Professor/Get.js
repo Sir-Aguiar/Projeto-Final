@@ -11,13 +11,51 @@ const GetProfessorLecionaController = async (req, res) => {
   const { idUsuario } = req.userData;
   const { idTurma, idEscola, onlyLength } = req.query;
   try {
+    if (idTurma) {
+      const professores = await ProfessorLeciona.findAll({
+        attributes: ["idProfessor", "professor.nome", "idLeciona"],
+        where: { idTurma, idProfessor: idUsuario },
+        include: [
+          { model: Usuario, as: "professor", attributes: [] },
+          {
+            model: Turma,
+            as: "turma",
+            attributes: ["idTurma", "nome"],
+          },
+          { model: Disciplina, as: "disciplina", attributes: ["idDisciplina", "nome"] },
+        ],
+        raw: true,
+        nest: true,
+      });
+
+      return res.status(200).json({ professores });
+    }
     if (idEscola) {
       const foundSchool = await Escola.findByPk(idEscola);
       if (!foundSchool) {
         return res.status(404).json({});
       }
       if (foundSchool.dataValues.idGestor !== idUsuario) {
-        return res.status(401).json({});
+        const professores = await ProfessorLeciona.findAll({
+          attributes: ["idProfessor", "professor.nome", "idLeciona"],
+          where: { idProfessor: idUsuario },
+          include: [
+            { model: Usuario, as: "professor", attributes: [] },
+            {
+              model: Turma,
+              as: "turma",
+              attributes: ["idTurma", "nome"],
+              where: { idEscola },
+            },
+            { model: Disciplina, as: "disciplina", attributes: ["idDisciplina", "nome"] },
+          ],
+          raw: true,
+          nest: true,
+        });
+        if (professores.length < 1) {
+          return res.status(401).json({});
+        }
+        return res.status(200).json({ professores });
       }
 
       if (onlyLength) {

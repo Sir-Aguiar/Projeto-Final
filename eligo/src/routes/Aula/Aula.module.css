@@ -1,0 +1,35 @@
+.content_container {
+  @apply flex mobile:flex-col mobile:items-center gap-2 pb-10;
+  @apply w-full h-auto  mt-[65px] mx-auto;
+  @apply desktop:max-w-[1120px];
+  @apply tablet:max-w-[770px];
+  @apply mobile:max-w-[328px];
+  @apply font-Roboto;
+  @apply overflow-hidden;
+}
+
+.controllers {
+  @apply w-full max-w-[300px] mobile:max-w-full;
+  @apply flex flex-col gap-3;
+  @apply font-Montserrat;
+}
+
+.presence_list {
+  @apply h-full w-full;
+  @apply flex flex-col gap-2;
+  @apply overflow-hidden;
+}
+.students_list {
+  @apply w-full h-full min-h-[600px] max-h-[600px];
+  @apply flex flex-col items-start gap-1 px-1 py-2;
+  @apply overflow-auto;
+  @apply border-[1px] border-black-text rounded-sm;
+}
+.student {
+  @apply h-[50px] max-h-[50px] min-h-[50px];
+  @apply w-full min-w-fit flex items-center gap-1;
+  @apply font-medium text-black-text;
+}
+.student p {
+  @apply w-full whitespace-nowrap;
+}
