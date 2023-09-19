@@ -36,7 +36,7 @@ const Login: React.FC = () => {
             },
           })
         ) {
-          navigate("/");
+          navigate("/escolas");
         }
       });
   };
