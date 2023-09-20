@@ -37,6 +37,9 @@ const ChamadaAluno = Database.define(
   { tableName: "chamadaAluno" },
 );
 
+Aluno.hasMany(ChamadaAluno, { foreignKey: "idAluno", as: "chamadas" });
+ChamadaAluno.belongsTo(Aluno, { foreignKey: "idAluno", as: "aluno" });
+
 Aluno.belongsToMany(Chamada, { through: ChamadaAluno, foreignKey: "idAluno" });
 Chamada.belongsToMany(Aluno, { through: ChamadaAluno, foreignKey: "idChamada" });
 

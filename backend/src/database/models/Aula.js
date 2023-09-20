@@ -1,6 +1,7 @@
 const { DataTypes } = require("sequelize");
 const Chamada = require("./Chamada");
 const Database = require("../database");
+
 const Aula = Database.define(
   "Aula",
   {

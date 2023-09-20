@@ -2,6 +2,7 @@ const { DataTypes } = require("sequelize");
 const Database = require("../database");
 const Escola = require("./Escola");
 const ProfessorLeciona = require("./ProfessorLeciona");
+const Aula = require("./Aula");
 
 const Usuario = Database.define(
   "Usuario",
@@ -40,5 +41,6 @@ Escola.belongsTo(Usuario, {
 
 Usuario.hasMany(ProfessorLeciona, { foreignKey: "idProfessor", as: "professorLeciona" });
 ProfessorLeciona.belongsTo(Usuario, { foreignKey: "idProfessor", as: "professor" });
-
+Usuario.hasMany(Aula, { foreignKey: "idProfessor", as: "aulas" });
+Aula.belongsTo(Usuario, { foreignKey: "idProfessor", as: "professor" });
 module.exports = Usuario;

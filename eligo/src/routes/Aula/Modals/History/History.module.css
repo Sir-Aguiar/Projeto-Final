@@ -1,71 +1,80 @@
 .modal_content {
-	@apply bg-background rounded-md;
-	@apply w-full h-[500px] mobile:h-fit;
-	@apply desktop:max-w-[1120px] tablet:max-w-[770px] mobile:max-w-[328px];
-	@apply absolute top-[65px] left-1/2 -translate-x-1/2;
-	@apply flex flex-col gap-2;
+  @apply bg-background rounded-md;
+  @apply w-full h-[550px] mobile:h-fit;
+  @apply desktop:max-w-[1120px] tablet:max-w-[770px] mobile:max-w-[328px];
+  @apply absolute top-[65px] left-1/2 -translate-x-1/2;
+  @apply flex flex-col gap-2;
 }
 .header {
-	@apply w-full h-[50px] min-h-[50px];
-	@apply bg-[#214F94] rounded-t-md;
+  @apply w-full h-[50px] min-h-[50px];
+  @apply bg-[#214F94] rounded-t-md;
 }
 .class_info {
-	@apply w-full h-full min-h-[450px] max-w-[276px];
-	@apply flex flex-col gap-1;
-	@apply overflow-hidden;
+  @apply w-full h-full min-h-[450px] max-w-[276px] min-w-[276px] mobile:max-w-full;
+  @apply flex flex-col gap-2;
+  @apply overflow-hidden;
 }
 .info_section {
-	@apply w-full;
-	@apply flex flex-col gap-[2px];
-	@apply font-Montserrat;
+  @apply w-full;
+  @apply flex flex-col gap-[2px];
+  @apply font-Montserrat;
 }
 .info_section h2 {
-	@apply text-[#2477B2];
-	@apply font-bold;
+  @apply text-[#2477B2];
+  @apply font-bold;
 }
 .info_section p {
-	@apply pl-2;
+  @apply pl-2;
 }
 .presents {
-	@apply border-[1px] border-black-text h-full w-full max-h-[240px] overflow-y-auto rounded-[3px];
+  @apply h-full w-full max-h-[240px] overflow-y-auto;
+  @apply border-[1px] border-black-text rounded-[3px];
+  @apply flex flex-col p-2 gap-2;
 }
 
 .main {
-	@apply w-full h-full min-h-[430px];
-	@apply flex mobile:flex-col justify-between;
-	@apply desktop:px-3 px-2 py-2 gap-3;
+  @apply w-full h-full min-h-[430px];
+  @apply flex mobile:flex-col justify-between;
+  @apply desktop:px-3 px-2 py-2 gap-6 overflow-auto;
 }
 .register_content {
-	@apply w-full h-full max-w-[575px];
-	@apply flex flex-col gap-2;
+  @apply w-full h-full;
+  @apply flex flex-col gap-2;
 }
 
 .table_container {
-	@apply w-full h-full min-h-[300px];
-	@apply overflow-auto;
-	@apply flex flex-col items-start;
-	@apply border-[1px] border-black-text border-opacity-50 rounded-[5px];
+  @apply w-full h-full min-h-[300px];
+  @apply overflow-auto;
+  @apply flex flex-col items-start;
+  @apply border-[1px] border-black-text border-opacity-50 rounded-[5px];
 }
 
 .content_table {
-	@apply w-full min-w-full;
-	@apply font-Roboto text-black-text;
+  @apply w-full min-w-full;
+  @apply font-Roboto text-black-text;
 }
 
 .table_header {
-	@apply bg-black-text text-background;
+  @apply bg-black-text text-background;
 }
 .table_header svg {
-	@apply cursor-pointer fill-background;
-	@apply transition-all duration-200;
-	@apply h-10 w-10 p-2 rounded-full;
-	@apply hover:bg-slate-500;
+  @apply cursor-pointer fill-background;
+  @apply transition-all duration-200;
+  @apply h-10 w-10 p-2 rounded-full;
+  @apply hover:bg-slate-500;
 }
 
 .table_header th {
-	@apply text-start;
-	@apply min-h-[50px] h-[50px] p-2;
+  @apply text-start;
+  @apply min-h-[50px] h-[50px] p-2;
 }
 .table_body td {
-	@apply min-h-[45px] h-[45px] p-2;
+  @apply min-h-[45px] h-[45px] p-2;
+}
+.actions {
+  @apply w-full h-[40px] min-h-[40px];
+  @apply flex items-center gap-2;
+}
+.actions button {
+  @apply h-full;
 }

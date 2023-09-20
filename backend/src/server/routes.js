@@ -79,7 +79,7 @@ routes.put(
 );
 
 routes.post("/aula", UserAuthMiddleware, CreateAulaController);
-routes.get("/aula/:idTurma", UserAuthMiddleware, GetAulasController);
+routes.get("/aula", UserAuthMiddleware, GetAulasController);
 routes.put("/aula/:idAula", UserAuthMiddleware, UdpateAulasController);
 routes.delete("/aula/:idAula", UserAuthMiddleware, DeleteAulasController);
 
