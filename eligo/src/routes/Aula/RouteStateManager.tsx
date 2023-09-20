@@ -37,6 +37,12 @@ type ProviderProps = {
 	children: React.ReactNode;
 };
 
+interface IModalProps {
+	situation: boolean;
+	open: () => void;
+	close: () => void;
+}
+
 interface IRouteContext {
 	Alunos: IAluno[];
 	Escolas: IEscola[];
@@ -56,6 +62,7 @@ interface IRouteContext {
 	setClassObservations: React.Dispatch<React.SetStateAction<string>>;
 	classObservations: string;
 	classStartTime?: Date;
+	HistoryModal: IModalProps;
 }
 
 const RouteContext = createContext<IRouteContext | null>(null);
@@ -65,6 +72,8 @@ const AulaProvider: React.FC<ProviderProps> = ({ children }) => {
 	const [Escolas, setEscolas] = useState<IEscola[]>([]);
 	const [Alunos, setAlunos] = useState<IAluno[]>([]);
 	const [SchoolData, setSchoolData] = useState<any[]>();
+
+	const [isHistoryModalOpen, setHistoryModal] = useState(false);
 
 	const [selectedSchool, setSelectedSchool] = useState("");
 	const [selectedClass, setSelectedClass] = useState("");
@@ -117,6 +126,18 @@ const AulaProvider: React.FC<ProviderProps> = ({ children }) => {
 			console.log(error);
 		}
 	};
+
+	const HistoryModal = useMemo(() => {
+		return {
+			situation: isHistoryModalOpen,
+			close() {
+				setHistoryModal(false);
+			},
+			open() {
+				setHistoryModal(true);
+			},
+		};
+	}, [isHistoryModalOpen]);
 
 	const Turmas: ITurma[] = useMemo(() => {
 		if (!SchoolData || !selectedSchool) return [];
@@ -220,6 +241,7 @@ const AulaProvider: React.FC<ProviderProps> = ({ children }) => {
 				selectedDiscipline,
 				studentPresence,
 				Alunos,
+				HistoryModal,
 				started,
 				startClass,
 				setSelectedDiscipline,
