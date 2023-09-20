@@ -10,7 +10,7 @@
   @apply bg-[#214F94] rounded-t-md;
 }
 .class_info {
-  @apply w-full h-full min-h-[450px] max-w-[276px] min-w-[276px] mobile:max-w-full;
+  @apply w-full h-full  max-w-[276px] min-w-[276px] mobile:max-w-full;
   @apply flex flex-col gap-2;
   @apply overflow-hidden;
 }
@@ -71,10 +71,25 @@
 .table_body td {
   @apply min-h-[45px] h-[45px] p-2;
 }
+
 .actions {
   @apply w-full h-[40px] min-h-[40px];
   @apply flex items-center gap-2;
 }
+
 .actions button {
-  @apply h-full;
+  @apply transition-all duration-300;
+  @apply h-full rounded-sm;
+  @apply disabled:opacity-75 disabled:cursor-not-allowed;
+  @apply flex items-center justify-center;
+  @apply text-background text-sm font-medium font-Montserrat;
+}
+
+.downloader {
+  @apply bg-black-text;
+  @apply w-[150px] gap-2;
+}
+.remover {
+  @apply w-[40px];
+  @apply bg-[#F25248];
 }

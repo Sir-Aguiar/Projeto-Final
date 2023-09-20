@@ -9,73 +9,79 @@ const Aluno = require("../../../database/models/Aluno");
 const Chamada = require("../../../database/models/Chamada");
 /** @type {import("express").RequestHandler}  */
 const CreateAulaController = async (req, res) => {
-	const { idUsuario } = req.userData;
-	const { idDisciplina, idTurma, idProfessor } = req.body;
-	const { observacoes, presentes } = req.body;
+  const { idUsuario } = req.userData;
+  const { idDisciplina, idTurma, idProfessor } = req.body;
+  const { observacoes, presentes } = req.body;
 
-	if (!idDisciplina || !idTurma || !idProfessor || !presentes) {
-		return res.status(400).json({});
-	}
+  if (!idDisciplina || !idTurma || !idProfessor || !presentes) {
+    return res.status(400).json({});
+  }
 
-	try {
-		if (idProfessor !== idUsuario) {
-			return res.status(401).json({
-				error: {
-					message: "Você não pode atribuir uma aula à outro usuário",
-				},
-			});
-		}
+  try {
+    const foundClass = await Turma.findByPk(idTurma, {
+      attributes: ["idTurma"],
+      include: [
+        { model: Escola, as: "escola", attributes: ["idGestor"] },
+        { model: Aluno, as: "alunos", attributes: ["idAluno"] },
+      ],
+    });
 
-		const foundRelation = await ProfessorLeciona.findOne({ where: { idProfessor, idDisciplina, idTurma } });
+    if (idProfessor !== idUsuario) {
+      return res.status(401).json({
+        error: {
+          message: "Você não pode atribuir uma aula à outro usuário",
+        },
+      });
+    }
 
-		if (!foundRelation) {
-			return res.status(401).json({
-				error: {
-					message: "Você não leciona à esta turma",
-				},
-			});
-		}
+    if (foundClass.dataValues.escola.dataValues.idGestor !== idUsuario) {
+			// Verifica se o professor está associado com aquela turma e disciplina
+      const foundRelation = await ProfessorLeciona.findOne({ where: { idProfessor, idDisciplina, idTurma } });
 
-		const foundClass = await Turma.findByPk(idTurma, {
-			attributes: ["idTurma"],
-			include: [{ model: Aluno, as: "alunos", attributes: ["idAluno"] }],
-		});
+      if (!foundRelation) {
+        return res.status(401).json({
+          error: {
+            message: "Você não leciona à esta turma",
+          },
+        });
+      }
+    }
 
-		const studentsFromClass = foundClass.dataValues.alunos.map((aluno) => aluno.dataValues.idAluno);
+    const studentsFromClass = foundClass.dataValues.alunos.map((aluno) => aluno.dataValues.idAluno);
 
-		for (const idAluno of presentes) {
-			if (!studentsFromClass.includes(idAluno)) {
-				res.status(401).json({
-					error: {
-						message: "Aluno não pertence à esta turma",
-					},
-				});
-				break;
-			}
-		}
+    for (const idAluno of presentes) {
+      if (!studentsFromClass.includes(idAluno)) {
+        res.status(401).json({
+          error: {
+            message: "Aluno não pertence à esta turma",
+          },
+        });
+        break;
+      }
+    }
 
-		const createdClass = await Aula.create({
-			idDisciplina,
-			idTurma,
-			idProfessor: idUsuario,
-			anotacao: observacoes || null,
-		});
+    const createdClass = await Aula.create({
+      idDisciplina,
+      idTurma,
+      idProfessor: idUsuario,
+      anotacao: observacoes || null,
+    });
 
-		const createdList = await Chamada.create({ idAula: createdClass.dataValues.idAula });
+    const createdList = await Chamada.create({ idAula: createdClass.dataValues.idAula });
 
-		for (const aluno of studentsFromClass) {
-			await ChamadaAluno.create({
-				idChamada: createdList.dataValues.idChamada,
-				idAluno: aluno,
-				situacao: presentes.includes(aluno),
-			});
-		}
+    for (const aluno of studentsFromClass) {
+      await ChamadaAluno.create({
+        idChamada: createdList.dataValues.idChamada,
+        idAluno: aluno,
+        situacao: presentes.includes(aluno),
+      });
+    }
 
-		return res.status(201).json({ error: null });
-	} catch (error) {
-		console.log(error);
-		return res.status(500).json({ error });
-	}
+    return res.status(201).json({ error: null });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error });
+  }
 };
 
 module.exports = CreateAulaController;
