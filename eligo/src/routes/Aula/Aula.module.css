@@ -19,17 +19,28 @@
   @apply flex flex-col gap-2;
   @apply overflow-hidden;
 }
+
 .students_list {
   @apply w-full h-full min-h-[600px] max-h-[600px];
-  @apply flex flex-col items-start gap-1 px-1 py-2;
+  @apply flex flex-col items-start gap-1 px-1 py-4;
   @apply overflow-auto;
-  @apply border-[1px] border-black-text rounded-sm;
+  @apply border-[1px] border-black-text rounded-md;
 }
+
 .student {
   @apply h-[50px] max-h-[50px] min-h-[50px];
   @apply w-full min-w-fit flex items-center gap-1;
-  @apply font-medium text-black-text;
+  @apply font-Montserrat font-medium text-black-text;
+  @apply whitespace-nowrap;
 }
-.student p {
-  @apply w-full whitespace-nowrap;
+
+.presence_warn {
+  @apply text-center font-light w-full;
+}
+
+.starter {
+  @apply w-full h-[43px];
+  @apply font-semibold text-background;
+  @apply bg-[#2D6DCC] rounded-[3px];
+  @apply disabled:opacity-60 disabled:cursor-not-allowed;
 }

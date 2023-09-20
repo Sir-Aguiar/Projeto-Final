@@ -48,6 +48,14 @@ interface IRouteContext {
   Disciplinas: IDisciplina[];
   setSelectedDiscipline: React.Dispatch<React.SetStateAction<string>>;
   selectedDiscipline: string;
+  started: boolean;
+  startClass: () => void;
+  toggleStudentPresence: (idAluno: number) => void;
+  studentPresence: number[];
+  endClass: () => void;
+  setClassObservations: React.Dispatch<React.SetStateAction<string>>;
+  classObservations: string;
+  classStartTime?: Date;
 }
 
 const RouteContext = createContext<IRouteContext | null>(null);
@@ -61,10 +69,45 @@ const AulaProvider: React.FC<ProviderProps> = ({ children }) => {
   const [selectedSchool, setSelectedSchool] = useState("");
   const [selectedClass, setSelectedClass] = useState("");
   const [selectedDiscipline, setSelectedDiscipline] = useState("");
+  const [started, setStarted] = useState(false);
+  const [studentPresence, setStudentPresence] = useState<number[]>([]);
+  const [classObservations, setClassObservations] = useState("");
+  const [classStartTime, setClassStartTime] = useState<Date>();
+  const TokenData = useMemo(() => {
+    const TOKEN = authHeader();
+    const TOKEN_DATA = jwtDecode(TOKEN) as IUserTokenData;
+    return TOKEN_DATA;
+  }, [authHeader()]);
+
+  const toggleStudentPresence = (idAluno: number) => {
+    setStudentPresence((values) => {
+      let newValues: number[];
+
+      if (values.includes(idAluno)) {
+        newValues = values.filter((value) => value !== idAluno);
+      } else {
+        newValues = [...values, idAluno];
+      }
+
+      return newValues;
+    });
+  };
+
+  const startClass = () => {
+    setStarted(true);
+    setClassStartTime(new Date());
+  };
+
+  const endClass = () => {
+    console.log(
+      `Aula para a turma: ${selectedClass} de disciplina ${selectedDiscipline} realizada pelo professor ${TokenData.idUsuario}`,
+    );
+    console.log(`Observações da aula ${classObservations}`);
+    console.log(`Os alunos presentes foram: ${studentPresence}`);
+  };
 
   const Turmas: ITurma[] = useMemo(() => {
     if (!SchoolData || !selectedSchool) return [];
-    console.log(`Todas as turmas de ${selectedSchool} já foram carregadas`);
     const uniqueClasses: any[] = [];
     const filterObject = new Map();
 
@@ -97,12 +140,6 @@ const AulaProvider: React.FC<ProviderProps> = ({ children }) => {
     }
     return disciplinas;
   }, [selectedClass]);
-
-  const TokenData = useMemo(() => {
-    const TOKEN = authHeader();
-    const TOKEN_DATA = jwtDecode(TOKEN) as IUserTokenData;
-    return TOKEN_DATA;
-  }, [authHeader()]);
 
   const RouteAPI = axios.create({
     baseURL: import.meta.env.VITE_SERVER_URL,
@@ -137,7 +174,6 @@ const AulaProvider: React.FC<ProviderProps> = ({ children }) => {
       RouteAPI.get(`/professor?idEscola=${selectedSchool}`)
         .then((response) => {
           setSchoolData(response.data.professores);
-          console.log(`Carregado os dados da escola ${selectedSchool}`);
         })
         .catch((error) => {
           console.log(error);
@@ -146,6 +182,7 @@ const AulaProvider: React.FC<ProviderProps> = ({ children }) => {
   }, [selectedSchool]);
 
   useEffect(() => {
+    setSelectedDiscipline("");
     loadStudents();
   }, [selectedClass]);
 
@@ -158,14 +195,22 @@ const AulaProvider: React.FC<ProviderProps> = ({ children }) => {
       value={{
         Escolas,
         selectedSchool,
+        endClass,
         setSelectedSchool,
         selectedClass,
         setSelectedClass,
+        classObservations,
+        setClassObservations,
         Turmas,
         Disciplinas,
         selectedDiscipline,
+        studentPresence,
         Alunos,
+        started,
+        startClass,
         setSelectedDiscipline,
+        toggleStudentPresence,
+        classStartTime,
       }}
     >
       {children}

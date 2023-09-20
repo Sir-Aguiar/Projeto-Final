@@ -15,6 +15,14 @@ const Aula: React.FC = () => {
     selectedDiscipline,
     setSelectedDiscipline,
     Alunos,
+    endClass,
+    started,
+    startClass,
+    studentPresence,
+    toggleStudentPresence,
+    classObservations,
+    setClassObservations,
+    classStartTime,
   } = useAulaContext();
   return (
     <div className={styles.content_container}>
@@ -54,28 +62,62 @@ const Aula: React.FC = () => {
             ))}
           </Select>
         </FormControl>
-        <Divider className="font-medium text-black-text">Observações</Divider>
-        <TextField multiline rows={5} placeholder="(Opcional)" />
+        <div
+          className="w-full flex flex-col gap-2 overflow-hidden transition-all duration-500"
+          style={{ maxHeight: started ? "200px" : "0" }}
+        >
+          <Divider className="font-medium text-black-text">Observações</Divider>
+          <TextField
+            multiline
+            rows={5}
+            placeholder="(Opcional)"
+            value={classObservations}
+            onChange={(e) => setClassObservations(e.target.value)}
+          />
+        </div>
         <div className="w-full flex flex-col items-center gap-2">
-          <button className="w-full h-[43px] bg-[#2D6DCC] rounded-[3px] font-semibold text-background">
-            Iniciar Aula
+          <button
+            className={`${styles.starter}`}
+            disabled={!selectedSchool || !selectedClass || !selectedDiscipline}
+            onClick={started ? () => endClass() : () => startClass()}
+          >
+            {started ? "Encerrar Aula" : "Iniciar Aula"}
           </button>
           <span className="text-[10px] flex items-center gap-1 text-black-text underline underline-offset-2 font-medium cursor-pointer">
             Histórico de Aulas <HistoryIcon fontSize="small" />
           </span>
         </div>
       </div>
-      {/* <Divider orientation="vertical"/> */}
+
       <div className={styles.presence_list}>
-        <Divider className="font-semibold text-black-text text-lg">Lista de chamada: 23/12/2023</Divider>
+        <Divider className="font-medium text-black-text text-lg">
+          {started
+            ? `Lista de chamada: ${classStartTime?.toLocaleString("pt-BR", { dateStyle: "short" })}`
+            : "Lista de Alunos"}
+        </Divider>
         <div className={styles.students_list}>
-          {Alunos.length < 1 && <p className="text-center font-medium text-black-text w-full">Nenhum aluno encontrado</p>}
-          {Alunos.map((aluno, index) => (
-            <div className={styles.student} key={index}>
-              <Checkbox />
-              {aluno.nome}
-            </div>
-          ))}
+          {Alunos.length > 1 && started && (
+            <p className={styles.presence_warn}>Marque os alunos para atribuir presença</p>
+          )}
+          {!selectedSchool ? (
+            <p className={styles.presence_warn}>Selecione uma escola</p>
+          ) : !selectedClass ? (
+            <p className={styles.presence_warn}>Selecione uma turma</p>
+          ) : Alunos.length < 1 ? (
+            <p className={styles.presence_warn}>Não foram encontrados alunos nesta turma</p>
+          ) : (
+            Alunos.map((aluno, index) => (
+              <div className={`${styles.student} px-2 mobile:${started ? "px-0" : "px-2"}`} key={index}>
+                {started && (
+                  <Checkbox
+                    checked={studentPresence.includes(aluno.idAluno)}
+                    onChange={() => toggleStudentPresence(aluno.idAluno)}
+                  />
+                )}
+                {aluno.nome}
+              </div>
+            ))
+          )}
         </div>
       </div>
     </div>
