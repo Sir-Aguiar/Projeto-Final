@@ -1,0 +1,13 @@
+.filter_container {
+  @apply min-w-[320px] w-[380px] mobile:w-[320px];
+  @apply bg-background;
+  @apply absolute left-1/2 -translate-x-1/2 top-[100px] mobile:top-[75px];
+  @apply flex flex-col items-center justify-center gap-3 px-3 mobile:px-2 py-3;
+  @apply rounded-md;
+  @apply font-Roboto  text-black-text;
+}
+
+.filter_container main {
+  @apply w-full h-full;
+  @apply flex flex-col gap-2 items-center;
+}

@@ -51,12 +51,19 @@ interface IRouteContext {
   DrawerCreate: IModalProps;
   DrawerUpdate: IModalProps;
   ModalDelete: IModalProps;
+  ModalFilter: IModalProps;
   TurmasState: ITurma[];
   EscolasState: IEscola[];
   AlunosTurmaState: IAluno[];
   selectedRows: number[];
   selectRow: (idTurma: number) => void;
   TokenData: IUserTokenData;
+  setSelectedCourse: React.Dispatch<React.SetStateAction<string>>;
+  setSelectedSchool: React.Dispatch<React.SetStateAction<string>>;
+  setClassNameFilter: React.Dispatch<React.SetStateAction<string>>;
+  selectedCourse: string;
+  selectedSchool: string;
+  classNameFilter: string;
 }
 
 const RouteContext = createContext<IRouteContext | null>(null);
@@ -66,10 +73,14 @@ const TurmasProvider: React.FC<ProviderProps> = ({ children }) => {
   const [isCreateOpen, setCreateDrawer] = useState(false);
   const [isUpdateOpen, setUpdateDrawer] = useState(false);
   const [isDeleteOpen, setDeleteModal] = useState(false);
+  const [isFilterOpen, setFilterModal] = useState(false);
   const [TurmasState, setTurmas] = useState<ITurma[]>([]);
   const [AlunosTurmaState, setAlunoTurma] = useState<IAluno[]>([]);
   const [EscolasState, setEscolas] = useState<IEscola[]>([]);
   const [selectedRows, setRows] = useState<number[]>([]);
+  const [classNameFilter, setClassNameFilter] = useState("");
+  const [selectedCourse, setSelectedCourse] = useState("");
+  const [selectedSchool, setSelectedSchool] = useState("");
 
   const TokenData = useMemo(() => {
     const TOKEN = authHeader();
@@ -162,6 +173,21 @@ const TurmasProvider: React.FC<ProviderProps> = ({ children }) => {
     };
   }, [isDeleteOpen]);
 
+  const ModalFilter: IModalProps = useMemo(() => {
+    return {
+      situation: isFilterOpen,
+      open: () => {
+        showSchools().then(() => setFilterModal(true));
+      },
+      close: () => {
+        showClasses().then(() => {
+          setFilterModal(false);
+          setRows([]);
+        });
+      },
+    };
+  }, [isFilterOpen]);
+
   useEffect(() => {
     showClasses();
     console.log(TokenData);
@@ -170,15 +196,22 @@ const TurmasProvider: React.FC<ProviderProps> = ({ children }) => {
   return (
     <RouteContext.Provider
       value={{
+        setSelectedSchool,
+        setSelectedCourse,
+        setClassNameFilter,
+        selectRow,
         RouteAPI,
+        selectedCourse,
+        selectedSchool,
         DrawerUpdate,
         TokenData,
+        classNameFilter,
         DrawerCreate,
         ModalDelete,
         TurmasState,
         EscolasState,
         selectedRows,
-        selectRow,
+        ModalFilter,
         AlunosTurmaState,
       }}
     >

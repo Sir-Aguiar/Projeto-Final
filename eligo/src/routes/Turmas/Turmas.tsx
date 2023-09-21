@@ -10,6 +10,7 @@ import Create from "./Drawers/Create";
 import Delete from "./Modals/Delete";
 import Update from "./Drawers/Update";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import Filter from "./Modals/Filter";
 
 const StudentLink: React.FC<{ link: string; name: string }> = ({ link, name }) => {
   return (
@@ -23,8 +24,35 @@ const StudentLink: React.FC<{ link: string; name: string }> = ({ link, name }) =
 };
 
 const Turmas: React.FC = () => {
-  const { TurmasState, selectRow, selectedRows, DrawerCreate, ModalDelete, DrawerUpdate, AlunosTurmaState, TokenData } =
-    useTurmasContext();
+  const {
+    TurmasState,
+    selectRow,
+    selectedRows,
+    DrawerCreate,
+    ModalDelete,
+    DrawerUpdate,
+    AlunosTurmaState,
+    TokenData,
+    ModalFilter,
+    selectedCourse,
+    selectedSchool,
+    classNameFilter,
+  } = useTurmasContext();
+
+  const applyFilters = () => {
+    let filtredData = TurmasState;
+
+    if (selectedCourse) {
+      filtredData = filtredData.filter((turma) => turma.curso.idCurso === Number(selectedCourse));
+    }
+    if (selectedSchool) {
+      filtredData = filtredData.filter((turma) => turma.escola.idEscola === Number(selectedSchool));
+    }
+    if (classNameFilter) {
+      filtredData = filtredData.filter((turma) => turma.nome.indexOf(classNameFilter) !== -1);
+    }
+    return filtredData;
+  };
 
   return (
     <div className={styles.content_container}>
@@ -56,7 +84,7 @@ const Turmas: React.FC = () => {
           >
             <DeleteForeverIcon />
           </button>
-          <button title="Filtrar turmas">
+          <button title="Filtrar turmas" onClick={() => ModalFilter.open()}>
             <FilterListIcon />
           </button>
         </header>
@@ -87,7 +115,7 @@ const Turmas: React.FC = () => {
             </tr>
           </thead>
           <tbody className={styles.table_body}>
-            {TurmasState.map((turma, index) => (
+            {applyFilters().map((turma, index) => (
               <tr key={index}>
                 <td className="min-w-[50px] w-[50px] max-w-[50px]">
                   <Checkbox checked={selectedRows.includes(turma.idTurma)} onChange={() => selectRow(turma.idTurma)} />
@@ -103,6 +131,7 @@ const Turmas: React.FC = () => {
       <Create />
       <Delete />
       <Update />
+      <Filter />
     </div>
   );
 };
