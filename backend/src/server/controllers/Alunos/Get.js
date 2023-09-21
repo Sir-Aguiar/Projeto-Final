@@ -91,6 +91,7 @@ const GetAlunosController = async (req, res) => {
 			offset: Number(skip) || 0,
 			order: [["nome", "ASC"]],
 		});
+
 		return res.status(200).json({ error: null, alunos: alunos.rows, qtd: alunos.count });
 	} catch (error) {
 		console.log(error);

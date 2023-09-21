@@ -10,8 +10,37 @@ import ModalProfessor from "./Modals/Professor/ProfessorModal";
 import ModalDisciplina from "./Modals/Disciplinas/Disciplinas";
 import AddDiscipline from "./Drawers/Disciplines/AddDiscipline";
 import AddProfessor from "./Drawers/Professor/AddProfessor";
+import Divider from "@mui/material/Divider";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import ListAltIcon from "@mui/icons-material/ListAlt";
+const ClassRoomCard: React.FC<{ aula: any }> = ({ aula }) => {
+	return (
+		<div className={styles.card_container}>
+			<header>
+				<h1>Turma: {aula.turma.nome}</h1>
+			</header>
+			<main>
+				<div className={styles.actions}>
+					<OpenInNewIcon />
+					Abrir
+				</div>
 
-
+				<div className={styles.actions}>
+					<ListAltIcon />
+					Lista de Chamada
+				</div>
+			</main>
+			<footer>
+				<h2>
+					<span className="font-semibold">Professor:</span> {aula.professor.nome}
+				</h2>
+				<h2>
+					<span className="font-semibold">Disciplina:</span> {aula.disciplina.nome}
+				</h2>
+			</footer>
+		</div>
+	);
+};
 
 const Escola: React.FC = () => {
 	const {
@@ -21,7 +50,9 @@ const Escola: React.FC = () => {
 		ProfessorModal,
 		DisciplineModal,
 		DisciplineDrawer,
+		todayDate,
 		ProfessorDrawer,
+		ToDayClassRooms,
 	} = useEscolaContext();
 
 	return (
@@ -52,7 +83,16 @@ const Escola: React.FC = () => {
 						<HelpOutlineIcon /> Alunos cadastrados: <span>312</span>
 					</div>
 				</aside>
-				<div className={styles.today_classes}></div>
+				<div className={styles.today_classes}>
+					<Divider className="font-Montserrat font-semibold text-lg text-black-text">
+						Aulas do dia {todayDate.toLocaleDateString("pt-BR", { dateStyle: "short" })}
+					</Divider>
+					<div className={styles.classes}>
+						{ToDayClassRooms.map((aula, index) => (
+							<ClassRoomCard aula={aula} key={index} />
+						))}
+					</div>
+				</div>
 			</main>
 			<ModalProfessor />
 			<ModalDisciplina />

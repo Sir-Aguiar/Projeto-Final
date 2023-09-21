@@ -151,8 +151,9 @@ const AlunosProvider: React.FC<ProviderProps> = ({ children }) => {
 		setTurmas(response.data.turmas);
 	};
 
-	const showStudent = async (idEscola?: number) => {
-		const response = await RouteAPI.get(`/aluno${idEscola ? `?idEscola=${idEscola}` : ""}`);
+	const showStudent = async () => {
+		const response = await RouteAPI.get(`/aluno`);
+		console.log(response.data.alunos);
 		setAlunos(response.data.alunos);
 		setAlunosQTD(response.data.qtd);
 	};
