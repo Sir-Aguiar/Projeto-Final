@@ -16,10 +16,9 @@ const { VerifySchoolPermission, VerifyClassPermission } = require("../../utils/V
 */
 
 /**
- @param {UserData} userData
- @param {number} idTurma
- @returns {Promise<Aluno[]>} 
- @description Retorna todos os alunos de uma turma
+ @param {UserData} userData Informações do usuário
+ @param {number} idTurma Identificador da turma
+ @returns {Promise<Aluno[]>}  Todos os alunos de uma turma
  */
 
 const FindStudentsByClass = async (userData, idTurma) => {
