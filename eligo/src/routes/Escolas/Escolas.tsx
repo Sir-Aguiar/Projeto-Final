@@ -98,9 +98,11 @@ const Escolas: React.FC = () => {
                   />
                 </td>
                 <td>
-                  <Link to={`/escola/${escola.idEscola}`}>
-                    <OpenInNewIcon fontSize="small" />
-                  </Link>
+                  {escola.idGestor === TokenData.idUsuario && (
+                    <Link to={`/escola/${escola.idEscola}`}>
+                      <OpenInNewIcon fontSize="small" />
+                    </Link>
+                  )}
                 </td>
                 <td className="min-w-[450px]">{escola.nome}</td>
               </tr>

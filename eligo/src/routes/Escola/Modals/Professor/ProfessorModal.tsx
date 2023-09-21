@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./ProfessorModal.module.css";
 import Modal from "@mui/material/Modal";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
@@ -11,7 +11,10 @@ import Select from "@mui/material/Select";
 import { AxiosError } from "axios";
 
 const ModalProfessor: React.FC = () => {
-  const { ProfessorModal, ProfessorsData, RouteAPI, loadProfessorData } = useEscolaContext();
+  const { ProfessorModal, ProfessorsData, RouteAPI, loadProfessorData, DisciplinesData, Classes } = useEscolaContext();
+  const [selectedProfessor, setSelectedProfessor] = useState("");
+  const [selectedClass, setSelectedClass] = useState("");
+  const [selectedDiscipline, setSelectedDiscipline] = useState("");
   const [selectedRows, setSelectedRow] = useState<number[]>([]);
   const selectRow = (idLeciona: number) => {
     setSelectedRow((values) => {
@@ -30,6 +33,7 @@ const ModalProfessor: React.FC = () => {
       return newValues;
     });
   };
+
   const handleProfessorDelete = async () => {
     try {
       for (const idLeciona of selectedRows) {
@@ -45,10 +49,29 @@ const ModalProfessor: React.FC = () => {
     }
     await loadProfessorData(false);
   };
+
   const onClose = async () => {
+    setSelectedClass("");
+    setSelectedDiscipline("");
+    setSelectedProfessor("");
     setSelectedRow([]);
     ProfessorModal.close();
   };
+
+  const applyFilters = () => {
+    let filtredData = ProfessorsData;
+    if (selectedClass) {
+      filtredData = filtredData.filter((data) => data.turma.idTurma === selectedClass);
+    }
+    if (selectedDiscipline) {
+      filtredData = filtredData.filter((data) => data.disciplina.idDisciplina === Number(selectedDiscipline));
+    }
+    if (selectedProfessor) {
+      filtredData = filtredData.filter((data) => data.idProfessor === Number(selectedProfessor));
+    }
+    return filtredData;
+  };
+
   return (
     <Modal className="overflow-y-scroll" open={ProfessorModal.situation} onClose={onClose} closeAfterTransition>
       <Fade in={ProfessorModal.situation}>
@@ -66,7 +89,7 @@ const ModalProfessor: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody className={styles.table_body}>
-                  {ProfessorsData.map((professor, index) => (
+                  {applyFilters().map((professor, index) => (
                     <tr key={index}>
                       <td>
                         <Checkbox
@@ -87,15 +110,45 @@ const ModalProfessor: React.FC = () => {
                 <h1 className="font-semibold">Filtros</h1>
                 <FormControl fullWidth>
                   <InputLabel>Turma</InputLabel>
-                  <Select value={""} label="Turma"></Select>
+                  <Select value={selectedClass} label="Turma" onChange={(e: any) => setSelectedClass(e.target.value)}>
+                    <MenuItem value="">Selecione...</MenuItem>
+                    {Classes.map((turma, index) => (
+                      <MenuItem key={index} value={turma.idTurma}>
+                        {turma.nome}
+                      </MenuItem>
+                    ))}
+                  </Select>
                 </FormControl>
                 <FormControl fullWidth>
                   <InputLabel>Disciplina</InputLabel>
-                  <Select value={""} label="Disciplina"></Select>
+                  <Select
+                    value={selectedDiscipline}
+                    label="Disciplina"
+                    onChange={(e: any) => setSelectedDiscipline(e.target.value)}
+                  >
+                    <MenuItem value="">Selecione...</MenuItem>
+                    {DisciplinesData.map((disciplina, index) => (
+                      <MenuItem key={index} value={disciplina.idDisciplina}>
+                        {disciplina.nome}
+                      </MenuItem>
+                    ))}
+                  </Select>
                 </FormControl>
                 <FormControl fullWidth>
                   <InputLabel>Professor</InputLabel>
-                  <Select value={""} label="Professor"></Select>
+                  <Select
+                    value={selectedProfessor}
+                    label="Professor"
+                    onChange={(e: any) => setSelectedProfessor(e.target.value)}
+                  >
+                    <MenuItem value="">Selecione...</MenuItem>
+                    {ProfessorsData.filter(
+                      (value, index, self) =>
+                        index === self.findIndex((t) => t.idProfessor === value.idProfessor && t.nome === value.nome),
+                    ).map((v, a) => (
+                      <MenuItem value={v.idProfessor}>{v.nome}</MenuItem>
+                    ))}
+                  </Select>
                 </FormControl>
               </div>
               <button

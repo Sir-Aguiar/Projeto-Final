@@ -11,6 +11,13 @@ interface IEscola {
   nome: string;
 }
 
+interface ITurma {
+  idTurma: number;
+  nome: string;
+  idEscola: number;
+  idCurso: number;
+}
+
 interface IProfessor {
   idLeciona: number;
   idProfessor: number;
@@ -32,11 +39,6 @@ interface IGrid {
     idCurso: number;
     nome: string;
   };
-}
-
-interface IProfessorState {
-  length: number;
-  data: IProfessor[] | null;
 }
 
 interface IDisciplina {
@@ -74,6 +76,7 @@ interface IRouteContext {
   RouteAPI: AxiosInstance;
   DisciplineDrawer: IModalProps;
   ProfessorDrawer: IModalProps;
+  Classes: ITurma[];
 }
 
 const RouteContext = createContext<IRouteContext | null>(null);
@@ -88,6 +91,7 @@ const EscolaProvider: React.FC<ProviderProps> = ({ children }) => {
   const [disciplinesCount, setDisciplinesCount] = useState(0);
   const [DisciplinesData, setDisciplinesData] = useState<IDisciplina[]>([]);
   const [GridData, setGridData] = useState<IGrid[]>([]);
+  const [Classes, setClasses] = useState<ITurma[]>([]);
 
   const [isProfessorModalOpen, setProfessorModalOpen] = useState(false);
   const [isDisciplineModalOpen, setDisciplineModalOpen] = useState(false);
@@ -100,7 +104,9 @@ const EscolaProvider: React.FC<ProviderProps> = ({ children }) => {
         loadInitialData().then(() => setProfessorModalOpen(false));
       },
       open() {
-        loadProfessorData(false).then(() => setProfessorModalOpen(true));
+        loadSchoolClasses().then(() =>
+          loadDisciplineData(false).then(() => loadProfessorData(false).then(() => setProfessorModalOpen(true))),
+        );
       },
     };
   }, [isProfessorModalOpen]);
@@ -157,6 +163,16 @@ const EscolaProvider: React.FC<ProviderProps> = ({ children }) => {
       Authorization: authHeader(),
     },
   });
+
+  const loadSchoolClasses = async () => {
+    try {
+      const response = await RouteAPI.get(`/turma?idEscola=${idEscola}`);
+      console.log(response.data.turmas);
+      setClasses(response.data.turmas);
+    } catch (error: any) {
+      console.log(error);
+    }
+  };
 
   const loadSchoolData = async () => {
     try {
@@ -262,6 +278,7 @@ const EscolaProvider: React.FC<ProviderProps> = ({ children }) => {
         ProfessorModal,
         DisciplineModal,
         loadGridData,
+        Classes,
         GridData,
         RouteAPI,
       }}

@@ -88,6 +88,7 @@ const Aula: React.FC = () => {
           <button
             className="disabled:opacity-60 disabled:cursor-not-allowed text-[10px] flex items-center gap-1 text-black-text underline underline-offset-2 font-medium cursor-pointer"
             onClick={() => HistoryModal.open()}
+            disabled={!!started}
           >
             Histórico de Aulas <HistoryIcon fontSize="small" />
           </button>

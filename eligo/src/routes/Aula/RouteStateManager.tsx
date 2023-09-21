@@ -63,8 +63,6 @@ interface IRouteContext {
   classObservations: string;
   classStartTime?: Date;
   HistoryModal: IModalProps;
-  setAulaSelecionada: React.Dispatch<React.SetStateAction<number | undefined>>;
-  aulaSelecionada?: number;
   RouteAPI: AxiosInstance;
 }
 
@@ -76,7 +74,6 @@ const AulaProvider: React.FC<ProviderProps> = ({ children }) => {
   const [Alunos, setAlunos] = useState<IAluno[]>([]);
   const [SchoolData, setSchoolData] = useState<any[]>();
   const [isHistoryModalOpen, setHistoryModal] = useState(false);
-  const [aulaSelecionada, setAulaSelecionada] = useState<number>();
   const [selectedSchool, setSelectedSchool] = useState("");
   const [selectedClass, setSelectedClass] = useState("");
   const [selectedDiscipline, setSelectedDiscipline] = useState("");
@@ -134,9 +131,9 @@ const AulaProvider: React.FC<ProviderProps> = ({ children }) => {
     return {
       situation: isHistoryModalOpen,
       close() {
-        setSelectedDiscipline("")
-        setSelectedClass("")
-        setSelectedSchool("")
+        setSelectedDiscipline("");
+        setSelectedClass("");
+        setSelectedSchool("");
         setHistoryModal(false);
       },
       open() {
@@ -251,8 +248,6 @@ const AulaProvider: React.FC<ProviderProps> = ({ children }) => {
         Alunos,
         HistoryModal,
         started,
-        setAulaSelecionada,
-        aulaSelecionada,
         startClass,
         setSelectedDiscipline,
         toggleStudentPresence,
