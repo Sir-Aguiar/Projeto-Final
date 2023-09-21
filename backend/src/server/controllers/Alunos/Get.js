@@ -9,7 +9,6 @@ const ProfessorLeciona = require("../../../database/models/ProfessorLeciona");
 const GetAlunosController = async (req, res) => {
 	const { idUsuario } = req.userData;
 	const { idEscola, idTurma, idCurso, idAluno, take, skip } = req.query;
-
 	try {
 		// Todos alunos de uma turma
 		if (idTurma && !isNaN(Number(idTurma))) {
