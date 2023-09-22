@@ -39,6 +39,7 @@ const CreateAlunoChamadaController = require("./controllers/AlunoChamada/Create"
 const GetAlunoChamadaController = require("./controllers/AlunoChamada/Get");
 const UpdateAlunoChamadaController = require("./controllers/AlunoChamada/Update");
 const DeleteAlunoChamadaController = require("./controllers/AlunoChamada/Delete");
+const GetProfessorsStatsByClassRooms = require("./controllers/Stats/aulas-professor-turma");
 routes.post("/registro", RegisterUser);
 routes.post("/login", Login);
 
@@ -67,15 +68,15 @@ routes.get("/professor", UserAuthMiddleware, GetProfessorLecionaController);
 routes.get("/professor-leciona/:idTurma", UserAuthMiddleware, GetProfessorLecionaController);
 
 routes.delete(
-  "/professor-leciona/:idProfessor/:idTurma/:idDisciplina",
-  UserAuthMiddleware,
-  DeleteProfessorLecionaController,
+	"/professor-leciona/:idProfessor/:idTurma/:idDisciplina",
+	UserAuthMiddleware,
+	DeleteProfessorLecionaController,
 );
 
 routes.put(
-  "/professor-leciona/:idProfessor/:idTurma/:idDisciplina",
-  UserAuthMiddleware,
-  UpdateProfessorLecionaController,
+	"/professor-leciona/:idProfessor/:idTurma/:idDisciplina",
+	UserAuthMiddleware,
+	UpdateProfessorLecionaController,
 );
 
 routes.post("/aula", UserAuthMiddleware, CreateAulaController);
@@ -97,5 +98,7 @@ routes.post("/aluno-chamada", UserAuthMiddleware, CreateAlunoChamadaController);
 routes.get("/aluno-chamada/:idChamada", UserAuthMiddleware, GetAlunoChamadaController);
 routes.delete("/aluno-chamada/:idAluno/:idChamada", UserAuthMiddleware, DeleteAlunoChamadaController);
 routes.put("/aluno-chamada/:idAluno/:idChamada", UserAuthMiddleware, UpdateAlunoChamadaController);
+
+routes.get("/aulas-professor-turma", UserAuthMiddleware, GetProfessorsStatsByClassRooms);
 
 module.exports = routes;

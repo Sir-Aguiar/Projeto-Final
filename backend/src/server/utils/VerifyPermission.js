@@ -10,20 +10,20 @@ const ServerError = require("./ServerError");
 */
 
 const VerifySchoolPermission = async (idEscola, idUsuario) => {
-  if (!idEscola || typeof idEscola !== "number" || isNaN(Number(idEscola))) {
-    throw new ServerError("O identificador da escola está ausente ou em formato inválido", 400, new Error().stack);
-  }
+	if (!idEscola || typeof idEscola !== "number" || isNaN(Number(idEscola))) {
+		throw new ServerError("O identificador da escola está ausente ou em formato inválido", 400, new Error().stack);
+	}
 
-  if (!idUsuario || typeof idUsuario !== "number" || isNaN(Number(idUsuario))) {
-    throw new ServerError("O identificador do usuário está ausente ou em formato inválido", 400, new Error().stack);
-  }
+	if (!idUsuario || typeof idUsuario !== "number" || isNaN(Number(idUsuario))) {
+		throw new ServerError("O identificador do usuário está ausente ou em formato inválido", 400, new Error().stack);
+	}
 
-  const foundSchool = await Escola.findByPk(idEscola, { raw: true, nest: true });
+	const foundSchool = await Escola.findByPk(idEscola, { raw: true, nest: true });
 
-  if (!foundSchool) throw new ServerError("Nenhuma escola foi encontrada com este identificador", 404);
+	if (!foundSchool) throw new ServerError("Nenhuma escola foi encontrada com este identificador", 404);
 
-  if (foundSchool.idGestor === idUsuario) return true;
-  return false;
+	if (foundSchool.idGestor === idUsuario) return true;
+	return false;
 };
 
 /**
@@ -33,23 +33,27 @@ const VerifySchoolPermission = async (idEscola, idUsuario) => {
 */
 
 const VerifyClassPermission = async (idTurma, idUsuario) => {
-  if (!idTurma || typeof idTurma !== "number" || isNaN(Number(idTurma))) {
-    throw new ServerError("O identificador da turma está ausente ou em formato inválido", 400);
-  }
+	if (!idTurma || typeof idTurma !== "number" || isNaN(Number(idTurma))) {
+		throw new ServerError("O identificador da turma está ausente ou em formato inválido", 400);
+	}
 
-  if (!idUsuario || typeof idUsuario !== "number" || isNaN(Number(idUsuario))) {
-    throw new ServerError("O identificador do usuário está ausente ou em formato inválido", 400);
-  }
+	if (!idUsuario || typeof idUsuario !== "number" || isNaN(Number(idUsuario))) {
+		throw new ServerError("O identificador do usuário está ausente ou em formato inválido", 400);
+	}
 
-  const foundRelation = await ProfessorLeciona.findOne({
-    where: { idProfessor: idUsuario, idTurma },
-    attributes: ["idLeciona"],
-    raw: true,
-    nest: true,
-  });
+	const foundClass = await Turma.findByPk(idTurma, { raw: true, nest: true, attributes: ["idEscola"] });
+	const isUserAdmin = await VerifySchoolPermission(foundClass.idEscola, idUsuario);
+	if (isUserAdmin) return true;
 
-  if (!foundRelation) return false;
-  return true;
+	const foundRelation = await ProfessorLeciona.findOne({
+		where: { idProfessor: idUsuario, idTurma },
+		attributes: ["idLeciona"],
+		raw: true,
+		nest: true,
+	});
+
+	if (!foundRelation) return false;
+	return true;
 };
 
 module.exports = { VerifySchoolPermission, VerifyClassPermission };
