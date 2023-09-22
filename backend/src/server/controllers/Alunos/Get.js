@@ -11,7 +11,7 @@ const FindStudentsByUser = require("../../use-cases/Alunos/FindByUser");
 /** @type {import("express").RequestHandler}  */
 const GetAlunosController = async (req, res) => {
   const { idUsuario } = req.userData;
-  const { idEscola, idTurma, idCurso, idAluno, take, skip } = req.query;
+  const { idEscola, idTurma, idAluno, onlyLength, take, skip } = req.query;
 
   // Todos alunos de uma turma
   if (idTurma) {
@@ -33,7 +33,7 @@ const GetAlunosController = async (req, res) => {
   // Todos alunos de escola
   if (idEscola) {
     try {
-      const alunos = await FindStudentsBySchool(req.userData, Number(idEscola));
+      const alunos = await FindStudentsBySchool(req.userData, Number(idEscola), Boolean(onlyLength));
       return res.status(200).json({ error: null, alunos });
     } catch (error) {
       if (error instanceof ServerError) {

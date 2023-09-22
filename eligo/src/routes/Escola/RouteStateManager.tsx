@@ -91,6 +91,7 @@ interface IRouteContext {
   Classes: ITurma[];
   ToDayClassRooms: IAula[];
   todayDate: Date;
+  StudentLength: number;
 }
 
 const RouteContext = createContext<IRouteContext | null>(null);
@@ -112,6 +113,7 @@ const EscolaProvider: React.FC<ProviderProps> = ({ children }) => {
   const [isDisciplineDrawerOpen, setDisciplineDrawerOpen] = useState(false);
   const [isProfessorDrawerOpen, setProfessorDrawerOpen] = useState(false);
   const [todayDate, setTodayDate] = useState<Date>(new Date());
+  const [StudentLength, setStudentLength] = useState(0);
   const ProfessorModal = useMemo(() => {
     return {
       situation: isProfessorModalOpen,
@@ -263,8 +265,17 @@ const EscolaProvider: React.FC<ProviderProps> = ({ children }) => {
       console.log(error);
     }
   };
+  const loadStudentsLength = async () => {
+    try {
+      const response = await RouteAPI.get(`/aluno?idEscola=${idEscola}&onlyLength=true`);
+      setStudentLength(response.data.alunos);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const loadInitialData = async () => {
     await loadSchoolData();
+    await loadStudentsLength();
     await loadProfessorData();
     await loadDisciplineData();
     await loadTodayClassRooms();
@@ -295,6 +306,7 @@ const EscolaProvider: React.FC<ProviderProps> = ({ children }) => {
         disciplinesCount,
         DisciplinesData,
         ProfessorDrawer,
+        StudentLength,
         DisciplineDrawer,
         loadDisciplineData,
         loadProfessorData,
