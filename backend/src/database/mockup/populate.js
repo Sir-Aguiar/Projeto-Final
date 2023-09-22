@@ -9,66 +9,60 @@ const Disciplina = require("../models/Disciplina");
 const { Usuarios, Escolas, Cursos, Turmas, Disciplinas } = require("./data.json");
 
 const PopulateUser = async () => {
-	for (const usuario of Usuarios) {
-		const { email, nome, senha } = usuario;
-		const HASHED_PASSWORD = hashSync(senha, Number(process.env.SALT));
-		try {
-			const insertedValue = await Usuario.create({ email, nome, senha: HASHED_PASSWORD });
-			console.log(`${insertedValue.dataValues.idUsuario} -> Inserido com sucesso`);
-		} catch (error) {
-			console.log(`Falha ao inserir usuário ${usuario.nome}`);
-		}
-	}
+  for (const usuario of Usuarios) {
+    const { email, nome, senha } = usuario;
+    const HASHED_PASSWORD = hashSync(senha, Number(process.env.SALT));
+    try {
+      const insertedValue = await Usuario.create({ email, nome, senha: HASHED_PASSWORD });
+      console.log(`${insertedValue.dataValues.idUsuario} -> Inserido com sucesso`);
+    } catch (error) {
+      console.log(`Falha ao inserir usuário ${usuario.nome}`);
+    }
+  }
 };
 
 const PopulateSchools = async () => {
-	for (const escola of Escolas) {
-		try {
-			const insertedValue = await Escola.create(escola);
-			console.log(`${insertedValue.dataValues.idEscola} -> Inserido com sucesso`);
-		} catch (error) {
-			console.log(error)
-			console.log(`Falha ao inserir escola ${escola.nome}`);
-		}
-	}
+  for (const escola of Escolas) {
+    try {
+      const insertedValue = await Escola.create(escola);
+      console.log(`${insertedValue.dataValues.idEscola} -> Inserido com sucesso`);
+    } catch (error) {
+      console.log(error);
+      console.log(`Falha ao inserir escola ${escola.nome}`);
+    }
+  }
 };
 
 const PopulateCourses = async () => {
-	for (const curso of Cursos) {
-		try {
-			const insertedValue = await Curso.create(curso);
-			console.log(`${insertedValue.dataValues.idCurso} -> Inserido com sucesso`);
-		} catch (error) {
-			console.log(`Falha ao inserir escola ${curso.nome}`);
-		}
-	}
+  for (const curso of Cursos) {
+    try {
+      const insertedValue = await Curso.create(curso);
+      console.log(`${insertedValue.dataValues.idCurso} -> Inserido com sucesso`);
+    } catch (error) {
+      console.log(`Falha ao inserir escola ${curso.nome}`);
+    }
+  }
 };
 
 const PopulateClasses = async () => {
-	for (const turma of Turmas) {
-		try {
-			const insertedValue = await Turma.create(turma);
-			console.log(`${insertedValue.dataValues.idTurma} -> Inserido com sucesso`);
-		} catch (error) {
-			console.log(`Falha ao inserir escola ${turma.nome}`);
-		}
-	}
+  for (const turma of Turmas) {
+    try {
+      const insertedValue = await Turma.create(turma);
+      console.log(`${insertedValue.dataValues.idTurma} -> Inserido com sucesso`);
+    } catch (error) {
+      console.log(`Falha ao inserir escola ${turma.nome}`);
+    }
+  }
 };
 const PopulateDisciplines = async () => {
-	for (const disciplina of Disciplinas) {
-		try {
-			const insertedValue = await Disciplina.create(disciplina);
-			console.log(`${insertedValue.dataValues.idDisciplina} -> Inserido com sucesso`);
-		} catch (error) {
-			console.log(`Falha ao inserir escola ${disciplina.nome}`);
-		}
-	}
+  for (const disciplina of Disciplinas) {
+    try {
+      const insertedValue = await Disciplina.create(disciplina);
+      console.log(`${insertedValue.dataValues.idDisciplina} -> Inserido com sucesso`);
+    } catch (error) {
+      console.log(`Falha ao inserir escola ${disciplina.nome}`);
+    }
+  }
 };
 
-PopulateUser().then(() =>
-	PopulateSchools().then(() =>
-		PopulateCourses()
-			.then(() => PopulateClasses())
-			.then(() => PopulateDisciplines()),
-	),
-);
+PopulateUser().then(() => PopulateSchools().then(() => PopulateCourses().then(() => PopulateClasses())));

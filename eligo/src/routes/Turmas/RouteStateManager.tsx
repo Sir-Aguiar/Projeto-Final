@@ -64,6 +64,10 @@ interface IRouteContext {
   selectedCourse: string;
   selectedSchool: string;
   classNameFilter: string;
+  setSnackBarState: React.Dispatch<React.SetStateAction<boolean>>;
+  SnackBarState: boolean;
+  setSnackBarMessage: React.Dispatch<React.SetStateAction<string>>;
+  SnackBarMessage: string;
 }
 
 const RouteContext = createContext<IRouteContext | null>(null);
@@ -81,7 +85,8 @@ const TurmasProvider: React.FC<ProviderProps> = ({ children }) => {
   const [classNameFilter, setClassNameFilter] = useState("");
   const [selectedCourse, setSelectedCourse] = useState("");
   const [selectedSchool, setSelectedSchool] = useState("");
-
+  const [SnackBarState, setSnackBarState] = useState(false);
+  const [SnackBarMessage, setSnackBarMessage] = useState("");
   const TokenData = useMemo(() => {
     const TOKEN = authHeader();
     const TOKEN_DATA = jwtDecode(TOKEN) as IUserTokenData;
@@ -213,6 +218,10 @@ const TurmasProvider: React.FC<ProviderProps> = ({ children }) => {
         selectedRows,
         ModalFilter,
         AlunosTurmaState,
+        setSnackBarState,
+        SnackBarState,
+        setSnackBarMessage,
+        SnackBarMessage,
       }}
     >
       {children}

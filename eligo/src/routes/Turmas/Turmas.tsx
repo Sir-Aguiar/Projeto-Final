@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./Turmas.module.css";
-import { Checkbox, Divider, Typography } from "@mui/material";
+import { Checkbox, Divider, Typography, Snackbar } from "@mui/material";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import LibraryAddIcon from "@mui/icons-material/LibraryAdd";
 import EditIcon from "@mui/icons-material/Edit";
@@ -18,7 +18,9 @@ const StudentLink: React.FC<{ link: string; name: string }> = ({ link, name }) =
       <a href={link} className="transition-all duration-300 rounded-full hover:bg-slate-200 p-1 group ">
         <OpenInNewIcon className="transition-all duration-300 group-hover:text-blue-icon group-hover:scale-95 " />
       </a>
-      <span title={name} className="font-medium text-sm whitespace-nowrap overflow-hidden text-ellipsis">{name}</span>
+      <span title={name} className="font-medium text-sm whitespace-nowrap overflow-hidden text-ellipsis">
+        {name}
+      </span>
     </div>
   );
 };
@@ -37,6 +39,9 @@ const Turmas: React.FC = () => {
     selectedCourse,
     selectedSchool,
     classNameFilter,
+    SnackBarState,
+    SnackBarMessage,
+    setSnackBarState,
   } = useTurmasContext();
 
   const applyFilters = () => {
@@ -56,6 +61,13 @@ const Turmas: React.FC = () => {
 
   return (
     <div className={styles.content_container}>
+      <Snackbar
+        open={SnackBarState}
+        onClose={() => {
+          setSnackBarState(false);
+        }}
+        message={SnackBarMessage}
+      />
       <div className={styles.controllers}>
         <header className={styles.actions}>
           <button title="Cadastrar turma" onClick={() => DrawerCreate.open()}>
@@ -103,6 +115,7 @@ const Turmas: React.FC = () => {
             </Typography>
           )}
         </div>
+        S
       </div>
       <div className={styles.table_container}>
         <table className={styles.content_table}>

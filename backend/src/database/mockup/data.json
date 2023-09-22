@@ -90,51 +90,51 @@
 	"Cursos": [
 		{
 			"idCurso": 1,
-			"nome": "1ª Série"
+			"nome": "1º Ano (EF)"
 		},
 		{
 			"idCurso": 2,
-			"nome": "2ª Série"
+			"nome": "2º Ano (EF)"
 		},
 		{
 			"idCurso": 3,
-			"nome": "3ª Série"
+			"nome": "3º Ano (EF)"
 		},
 		{
 			"idCurso": 4,
-			"nome": "4ª Série"
+			"nome": "4º Ano (EF)"
 		},
 		{
 			"idCurso": 5,
-			"nome": "5ª Série"
+			"nome": "5º Ano (EF)"
 		},
 		{
 			"idCurso": 6,
-			"nome": "6ª Série"
+			"nome": "6º Ano (EF)"
 		},
 		{
 			"idCurso": 7,
-			"nome": "7ª Série"
+			"nome": "7º Ano (EF)"
 		},
 		{
 			"idCurso": 8,
-			"nome": "8ª Série"
+			"nome": "8º Ano (EF)"
 		},
 		{
 			"idCurso": 9,
-			"nome": "9ª Série"
+			"nome": "9º Ano (EF)"
 		},
 		{
 			"idCurso": 10,
-			"nome": "1º Ano"
+			"nome": "1º Ano (EM)"
 		},
 		{
 			"idCurso": 11,
-			"nome": "2º Ano"
+			"nome": "2º Ano (EM)"
 		},
 		{
 			"idCurso": 12,
-			"nome": "3º Ano"
+			"nome": "3º Ano (EM)"
 		}
 	],
 	"Turmas": [
@@ -482,172 +482,6 @@
 			"idCurso": 5,
 			"idEscola": 6,
 			"nome": "5 Ano C"
-		}
-	],
-	"Disciplinas": [
-		{
-			"idEscola": 3,
-			"nome": "Português 1º Ano"
-		},
-		{
-			"idEscola": 3,
-			"nome": "Português 2º Ano"
-		},
-		{
-			"idEscola": 3,
-			"nome": "Português 3º Ano"
-		},
-		{
-			"idEscola": 3,
-			"nome": "Matemática 1º Ano"
-		},
-		{
-			"idEscola": 3,
-			"nome": "Matemática 2º Ano"
-		},
-		{
-			"idEscola": 3,
-			"nome": "Matemática 3º Ano"
-		},
-		{
-			"idEscola": 3,
-			"nome": "Física 1º Ano"
-		},
-		{
-			"idEscola": 3,
-			"nome": "Física 2º Ano"
-		},
-		{
-			"idEscola": 3,
-			"nome": "Física 3º Ano"
-		},
-		{
-			"idEscola": 3,
-			"nome": "Química 1º Ano"
-		},
-		{
-			"idEscola": 3,
-			"nome": "Química 2º Ano"
-		},
-		{
-			"idEscola": 3,
-			"nome": "Química 3º Ano"
-		},
-		{
-			"idEscola": 2,
-			"nome": "Matemática 1ª Série"
-		},
-		{
-			"idEscola": 2,
-			"nome": "Matemática 2ª Série"
-		},
-		{
-			"idEscola": 2,
-			"nome": "Matemática 3ª Série"
-		},
-		{
-			"idEscola": 2,
-			"nome": "Matemática 4ª Série"
-		},
-		{
-			"idEscola": 2,
-			"nome": "Matemática 5ª Série"
-		},
-		{
-			"idEscola": 2,
-			"nome": "Português 1ª Série"
-		},
-		{
-			"idEscola": 2,
-			"nome": "Português 2ª Série"
-		},
-		{
-			"idEscola": 2,
-			"nome": "Português 3ª Série"
-		},
-		{
-			"idEscola": 2,
-			"nome": "Português 4ª Série"
-		},
-		{
-			"idEscola": 2,
-			"nome": "Português 5ª Série"
-		},
-		{
-			"idEscola": 2,
-			"nome": "Português 1ª Série"
-		},
-		{
-			"idEscola": 2,
-			"nome": "Português 2ª Série"
-		},
-		{
-			"idEscola": 2,
-			"nome": "Português 3ª Série"
-		},
-		{
-			"idEscola": 2,
-			"nome": "Português 4ª Série"
-		},
-		{
-			"idEscola": 2,
-			"nome": "Português 6ª Série"
-		},
-		{
-			"idEscola": 2,
-			"nome": "Português 7ª Série"
-		},
-		{
-			"idEscola": 2,
-			"nome": "Português 8ª Série"
-		},
-		{
-			"idEscola": 2,
-			"nome": "Física 8ª Série"
-		},
-		{
-			"idEscola": 2,
-			"nome": "Química 8ª Série"
-		},
-		{
-			"idEscola": 6,
-			"nome": "Português 1ª Série"
-		},
-		{
-			"idEscola": 6,
-			"nome": "Português 2ª Série"
-		},
-		{
-			"idEscola": 6,
-			"nome": "Português 3ª Série"
-		},
-		{
-			"idEscola": 6,
-			"nome": "Português 4ª Série"
-		},
-		{
-			"idEscola": 6,
-			"nome": "Português 5ª Série"
-		},
-		{
-			"idEscola": 6,
-			"nome": "Matemática 1ª Série"
-		},
-		{
-			"idEscola": 6,
-			"nome": "Matemática 2ª Série"
-		},
-		{
-			"idEscola": 6,
-			"nome": "Matemática 3ª Série"
-		},
-		{
-			"idEscola": 6,
-			"nome": "Matemática 4ª Série"
-		},
-		{
-			"idEscola": 6,
-			"nome": "Matemática 5ª Série"
 		}
 	]
 }

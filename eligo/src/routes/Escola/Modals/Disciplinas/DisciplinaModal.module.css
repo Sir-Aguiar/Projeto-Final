@@ -38,7 +38,7 @@
 }
 
 .table_container {
-  @apply w-full h-full min-h-[450px];
+  @apply w-full h-full min-h-[450px] max-h-[450px];
   @apply overflow-auto;
   @apply flex flex-col items-start;
   @apply border-[1px] border-black-text border-opacity-50 rounded-[5px];

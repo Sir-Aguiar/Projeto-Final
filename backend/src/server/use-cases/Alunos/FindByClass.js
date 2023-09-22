@@ -11,7 +11,7 @@ const { VerifySchoolPermission, VerifyClassPermission } = require("../../utils/V
 
 /**
   @typedef {object} Aluno
-  @property {number} idTurma
+  @property {number} idAluno
   @property {string} nome
 */
 
@@ -47,7 +47,7 @@ const FindStudentsByClass = async (userData, idTurma) => {
 
   const foundStudents = await Aluno.findAll({
     where: { idTurma },
-    attributes: ["idTurma", "nome"],
+    attributes: ["idAluno", "nome"],
     order: [["nome", "ASC"]],
     raw: true,
     nest: true,
