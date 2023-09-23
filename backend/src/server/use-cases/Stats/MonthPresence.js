@@ -5,6 +5,7 @@ const Chamada = require("../../../database/models/Chamada");
 const Aula = require("../../../database/models/Aula");
 const Turma = require("../../../database/models/Turma");
 const Aluno = require("../../../database/models/Aluno");
+const Disciplina = require("../../../database/models/Disciplina");
 /* 
   Gráfico de faltas por mês ->
   Mês 01: 0 faltas;
@@ -27,7 +28,7 @@ const Aluno = require("../../../database/models/Aluno");
 /**
  *
  * @param {number} idAluno Identificador do aluno
- * @returns {(string | number)[][]} Retorna uma matriz, onde cada array representa um mês. O primeiro termo deste array é o mês, o segundo representa a quantidade de faltas que o aluno informado tem neste mês
+ * @returns {Promise<(string | number)[][]>} Retorna um array contendo as faltas mensais do aluno informado.
  */
 
 const MonthlyPresence = async (idAluno) => {
@@ -61,14 +62,19 @@ const MonthlyPresence = async (idAluno) => {
   return faltasPorMes;
 };
 
+/**
+ * @param {number} idAluno Identificador do aluno
+ * @param {number} month Número do mês desejado, onde 0 = Janeiro e 11 = Dezembro
+ * @description Esta função informará a quantidade de faltas do aluno no mês
+ */
 const MonthPresence = async (idAluno, month) => {
   const currentDate = new Date();
 
   const currentYear = currentDate.getFullYear();
   const startMonth = new Date(currentYear, month, 1);
   const endMonth = new Date(currentYear, month + 1, 0);
-/* Why not a count? */
-  const faltas = await ChamadaAluno.findAll({
+
+  const faltas = await ChamadaAluno.count({
     where: {
       idAluno,
       situacao: false,
@@ -77,13 +83,36 @@ const MonthPresence = async (idAluno, month) => {
         [Op.lte]: endMonth,
       },
     },
-    raw: true,
-    nest: true,
   });
 
-  return faltas.length;
+  return faltas;
 };
 
+const MonthPresenceComparation = async (idAluno, finalValue, month) => {
+  const currentDate = new Date();
+
+  const currentYear = currentDate.getFullYear();
+  const startMonth = new Date(currentYear, month, 1);
+  const endMonth = new Date(currentYear, month + 1, 0);
+
+  const currentMonthPresence = await ChamadaAluno.count({
+    where: {
+      idAluno,
+      situacao: false,
+      createdAt: {
+        [Op.gte]: startMonth,
+        [Op.lte]: endMonth,
+      },
+    },
+  });
+  return finalValue - currentMonthPresence;
+};
+
+/**
+ * @param {number} idCurso Identificador do curso
+ * @param {number} month Número do mês desejado, onde 0 = Janeiro e 11 = Dezembro
+ * @description Está função retorna a média de faltas dos alunos do curso informado, no mês informado
+ */
 const AvarageMonthPresenceInCourse = async (idCurso, month) => {
   const currentDate = new Date();
 
@@ -99,7 +128,6 @@ const AvarageMonthPresenceInCourse = async (idCurso, month) => {
         [Op.lte]: endMonth,
       },
     },
-    attributes: ["idAluno"],
     include: [
       {
         model: Chamada,
@@ -112,7 +140,6 @@ const AvarageMonthPresenceInCourse = async (idCurso, month) => {
             required: true,
           },
         ],
-        attributes: [],
         required: true,
       },
     ],
@@ -129,12 +156,87 @@ const AvarageMonthPresenceInCourse = async (idCurso, month) => {
     }
   });
 
-  return faltas.length / uniqueStudents.length;
+  return Number((faltas.length / uniqueStudents.length).toFixed(2));
 };
 
-MonthPresence(1759, 8).then((res) => console.log(`Faltou ${res} neste mês`));
-AvarageMonthPresenceInCourse(4, 8).then((res) =>
-  console.log(`A média de faltas dos alunos deste curso é de ${res}`),
-);
+const TotalPresence = async (idAluno) => {
+  const currentDate = new Date();
 
-module.exports = { AvarageMonthPresenceInCourse, MonthlyPresence, MonthPresence };
+  const currentYear = currentDate.getFullYear();
+  const startYear = new Date(currentYear, 0, 1);
+  const endYear = new Date(currentYear + 1, 0, 1);
+  const faltas = await ChamadaAluno.count({
+    where: {
+      idAluno,
+      situacao: false,
+      createdAt: {
+        [Op.gte]: startYear,
+        [Op.lt]: endYear,
+      },
+    },
+  });
+
+  return faltas;
+};
+
+/* Faltas por disciplina (em mês) */
+
+const PersenceByDisciplines = async (idAluno, month) => {
+  const currentDate = new Date();
+
+  const currentYear = currentDate.getFullYear();
+  const startMonth = new Date(currentYear, month, 1);
+  const endMonth = new Date(currentYear, month + 1, 0);
+
+  const faltas = await ChamadaAluno.findAll({
+    where: {
+      idAluno,
+      situacao: false,
+      createdAt: {
+        [Op.gte]: startMonth,
+        [Op.lte]: endMonth,
+      },
+    },
+    include: [
+      {
+        attributes: [],
+        model: Chamada,
+        as: "chamada",
+        required: true,
+        include: [
+          {
+            model: Aula,
+            as: "aula",
+            include: [{ model: Disciplina, as: "disciplina", required: true, attributes: [] }],
+            required: true,
+            attributes: [],
+          },
+        ],
+        attributes: [],
+      },
+    ],
+    attributes: ["chamada.aula.idDisciplina", "chamada.aula.disciplina.nome"],
+    raw: true,
+    nest: true,
+  });
+
+  const disciplinesMap = new Map();
+  const disciplinasFalta = [];
+  const uniqueDisciplines = faltas.filter((falta) => {
+    if (!disciplinesMap.has(falta.idDisciplina)) {
+      disciplinesMap.set(falta.idDisciplina, falta);
+      return falta;
+    }
+  });
+
+  for (const disciplina of uniqueDisciplines) {
+    disciplinasFalta.push([
+      disciplina.nome,
+      faltas.filter((falta) => falta.idDisciplina === disciplina.idDisciplina).length,
+    ]);
+  }
+  return disciplinasFalta;
+};
+module.exports = { AvarageMonthPresenceInCourse, MonthlyPresence, MonthPresence, TotalPresence, PersenceByDisciplines };
+/* Todas as disciplinas que este aluno faltou */
+/* [disciplina, faltas] */

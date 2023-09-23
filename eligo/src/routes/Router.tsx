@@ -16,6 +16,8 @@ import NotFound from "./Errors/NotFound";
 import Aula from "./Aula/Aula";
 import { AulaProvider } from "./Aula/RouteStateManager";
 import Footer from "../components/Footer/Footer";
+import { StudentDashboardProvider } from "./Dashboards/Aluno/RouteStateManager";
+import Aluno from "./Dashboards/Aluno/Aluno";
 
 const Router = () => {
   const isUserLogged = useIsAuthenticated();
@@ -72,6 +74,14 @@ const Router = () => {
               <AulaProvider>
                 <Aula />
               </AulaProvider>
+            }
+          />
+          <Route
+            path="/aluno/:idAluno"
+            element={
+              <StudentDashboardProvider>
+                <Aluno />
+              </StudentDashboardProvider>
             }
           />
         </Route>
