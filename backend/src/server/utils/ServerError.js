@@ -1,3 +1,6 @@
+/**
+ * Esta é uma classe que ajuda na identificação e apresentação de erros que acontecem no servidor e devem ser notificados ao usuário
+ */
 class ServerError {
   /**
    @param {string} message Mensagem de erro que deve ser exibida

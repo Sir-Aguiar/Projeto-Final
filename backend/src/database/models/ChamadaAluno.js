@@ -43,4 +43,6 @@ ChamadaAluno.belongsTo(Aluno, { foreignKey: "idAluno", as: "aluno" });
 Aluno.belongsToMany(Chamada, { through: ChamadaAluno, foreignKey: "idAluno" });
 Chamada.belongsToMany(Aluno, { through: ChamadaAluno, foreignKey: "idChamada" });
 
+Chamada.hasMany(ChamadaAluno, { foreignKey: "idChamada", as: "alunos" });
+ChamadaAluno.belongsTo(Chamada, { foreignKey: "idChamada", as: "chamada" });
 module.exports = ChamadaAluno;
