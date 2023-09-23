@@ -47,8 +47,8 @@ const Aluno: React.FC = () => {
         </main>
         <footer className={styles.presence_infograph}>
           <div className={styles.info_card}>
-            <h1>{MonthlyPresence && MonthlyPresence[MonthlyPresence!.length - 1][1]}</h1>
-            <h2>Faltas no mês de {MonthlyPresence && MonthlyPresence[MonthlyPresence!.length - 1][0]}</h2>
+            <h1>{MonthPresence}</h1>
+            <h2>Faltas no mês de {currentDate.toLocaleDateString("pt-br", { month: "long" })}</h2>
           </div>
           <div className={styles.info_card}>
             <h1>{AvarageMonthPresence}</h1>
