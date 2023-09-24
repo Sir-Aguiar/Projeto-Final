@@ -3,8 +3,10 @@ const Turma = require("../../../database/models/Turma");
 const Aluno = require("../../../database/models/Aluno");
 const Aula = require("../../../database/models/Aula");
 const Chamada = require("../../../database/models/Chamada");
+const Curso = require("../../../database/models/Curso");
 const ChamadaAluno = require("../../../database/models/ChamadaAluno");
-const { Op } = require("sequelize");
+const Escola = require("../../../database/models/Escola");
+const { Op, Sequelize } = require("sequelize");
 /**
  * @param {number} idTurma Identificador da turma desejada
  * @returns {Promise<{turma:number,curso:number}>}
@@ -80,4 +82,40 @@ const AvarageMonthlyAbsence = async (idTurma) => {
   return media;
 };
 
-module.exports = { ClassPopulation, AvarageMonthlyAbsence };
+const ClassInfo = async (idTurma) => {
+  const turma = await Turma.findByPk(idTurma, {
+    attributes: ["idTurma", "nome"],
+    include: [
+      {
+        model: Escola,
+        as: "escola",
+        attributes: ["idEscola", "nome"],
+      },
+      {
+        model: Curso,
+        as: "curso",
+        attributes: ["idCurso", "nome"],
+      },
+    ],
+    raw: true,
+    nest: true,
+  });
+
+  const alunos = await Aluno.findAll({
+    where: {
+      idTurma,
+    },
+    attributes: ["idAluno", "nome"],
+    include: [{ model: ChamadaAluno, as: "chamadas" }],
+  });
+
+  return {
+    turma,
+    alunos: alunos.map((aluno) => ({
+      idAluno: aluno.idAluno,
+      nome: aluno.nome,
+      faltas: aluno.chamadas.filter((chamada) => !chamada.dataValues.situacao).length,
+    })),
+  };
+};
+module.exports = { ClassPopulation, AvarageMonthlyAbsence, ClassInfo };

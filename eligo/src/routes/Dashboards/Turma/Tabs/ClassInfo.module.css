@@ -1,0 +1,19 @@
+.class_info {
+  @apply flex flex-col gap-2 px-4 mobile:px-1 py-1;
+  @apply font-Roboto text-black-text;
+}
+.class_info header {
+  @apply w-full;
+  @apply flex flex-col gap-1 py-1;
+}
+.class_info header h1 {
+  @apply font-Roboto font-medium;
+}
+.student_sec {
+  @apply flex flex-col gap-1 p-1  overflow-y-auto;
+  @apply border-[1.5px] border-[#6f6f6f] border-opacity-40 rounded-md;
+  @apply w-full h-full max-h-[235px] tablet:max-h-[216px];
+}
+.student_row {
+  @apply h-10 min-h-[40px] w-full flex items-center px-5 mobile:px-2 mobile:py-5 justify-between font-medium;
+}

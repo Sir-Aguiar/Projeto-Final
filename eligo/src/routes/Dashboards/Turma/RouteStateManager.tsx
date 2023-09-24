@@ -3,14 +3,30 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import { useAuthHeader } from "react-auth-kit";
 import { useParams } from "react-router-dom";
 
-interface IClassPopulation {
-  turma: number;
-  curso: number;
+interface ITurma {
+  idTurma: number;
+  nome: string;
+  escola: {
+    idGestor: number;
+    idEscola: number;
+    nome: string;
+  };
+  curso: {
+    idCurso: number;
+    nome: string;
+  };
+}
+
+interface IAluno {
+  idAluno: number;
+  nome: string;
+  faltas: number;
 }
 
 type Context = {
   ClassPopulation?: any[];
   AvarageAbsence?: any[];
+  ClassInfo?: { turma: ITurma; alunos: IAluno[] };
 };
 
 const ClassDashboardContext = createContext<Context | null>(null);
@@ -26,15 +42,9 @@ export const ClassDashboardProvider: React.FC<{ children: React.ReactNode }> = (
     },
   });
 
-  /* 
-    [
-      ["Faltas", "Janeiro"]
-      []
-    ]
-  */
-
   const [ClassPopulation, setClassPopulation] = useState<any[]>();
   const [AvarageAbsence, setAvarageAbsence] = useState<any[]>();
+  const [ClassInfo, setClassInfo] = useState<{ turma: ITurma; alunos: IAluno[] }>();
   const loadClassStats = async () => {
     try {
       const response = await RouteAPI.get(`/class-stats?idTurma=${idTurma}`);
@@ -44,6 +54,7 @@ export const ClassDashboardProvider: React.FC<{ children: React.ReactNode }> = (
         ["Curso", response.data.populacao.curso],
       ]);
       setAvarageAbsence([["Mês", "Ausências"], ...response.data.media_faltas]);
+      setClassInfo(response.data.turma_info);
       console.log(response);
     } catch (error: any) {
       console.log(error);
@@ -55,7 +66,7 @@ export const ClassDashboardProvider: React.FC<{ children: React.ReactNode }> = (
   }, []);
 
   return (
-    <ClassDashboardContext.Provider value={{ ClassPopulation, AvarageAbsence }}>
+    <ClassDashboardContext.Provider value={{ ClassPopulation, AvarageAbsence, ClassInfo }}>
       {children}
     </ClassDashboardContext.Provider>
   );
