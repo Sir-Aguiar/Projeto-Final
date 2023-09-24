@@ -108,11 +108,6 @@ const Alunos: React.FC = () => {
               </tr>
             </thead>
             <tbody className={styles.table_body}>
-              {isLoading && (
-                <tr>
-                  <td colSpan={6}></td>
-                </tr>
-              )}
               {Alunos.map((aluno, index) => (
                 <tr key={index}>
                   <td>

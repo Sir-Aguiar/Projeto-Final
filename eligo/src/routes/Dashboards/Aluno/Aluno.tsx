@@ -8,7 +8,6 @@ import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import firstLetterUpper from "../../../utils/firstLetterUpper";
 
 const Aluno: React.FC = () => {
-
   const {
     StudentData,
     MonthPresenceComparation,
@@ -57,13 +56,30 @@ const Aluno: React.FC = () => {
         </aside>
         <main className={styles.presence_info}>
           <main className={styles.monthly_presence}>
-            <h1 className="text-center font-semibold text-sm">Faltas em {currentDate.getFullYear()}</h1>
             <Chart
               chartType="LineChart"
               width="100%"
               height="95%"
               data={MonthlyPresence}
-              options={{ legend: { position: "bottom" } }}
+              options={{
+                title: `Faltas em ${currentDate.getFullYear()}`,
+                legend: { position: "bottom" },
+                curveType: "function",
+                animation: {
+                  duration: 300,
+                  startup: true,
+                },
+                chartArea: {
+                  width: "90%",
+                  height: "65%",
+                },
+                fontSize: 10,
+                vAxis: {
+                  viewWindow: {
+                    min: 0,
+                  },
+                },
+              }}
             />
           </main>
           <footer className={styles.presence_infograph}>

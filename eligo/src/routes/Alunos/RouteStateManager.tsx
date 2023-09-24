@@ -165,7 +165,7 @@ const AlunosProvider: React.FC<ProviderProps> = ({ children }) => {
 
   const loadMore = async () => {
     const skip = Alunos.length;
-    const response = await RouteAPI.get(`/aluno?skip=${skip}`);
+    const response = await RouteAPI.get(`/aluno`);
     setAlunos((values) => [...values, ...response.data.alunos]);
     setAlunosQTD(response.data.qtd);
   };

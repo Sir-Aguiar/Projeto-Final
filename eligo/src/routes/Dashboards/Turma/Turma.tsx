@@ -24,7 +24,7 @@ const Turma: React.FC = () => {
           {currentTab === 1 && <div className={`${styles.tab_section} bg-red-300`}></div>}
           {currentTab === 2 && <div className={`${styles.tab_section} bg-green-300`}></div>}
         </div>
-        <div className={`${styles.third_grid} bg-yellow-300`}></div>
+        <div className={`${styles.third_grid} `}></div>
         <div className={`${styles.third_grid} ${styles.population}`}>
           {ClassPopulation &&
             (ClassPopulation[1][1] < 1 ? (
@@ -65,9 +65,6 @@ const Turma: React.FC = () => {
               data={AvarageAbsence}
               options={{
                 title: "Taxa de ausência nas aulas (média mensal)",
-                lines: {
-                  0: { color: "#49c85c" },
-                },
                 curveType: "function",
                 legend: { position: "bottom" },
                 animation: {
@@ -76,7 +73,7 @@ const Turma: React.FC = () => {
                 },
                 chartArea: {
                   width: "90%",
-                  height:"65%"
+                  height: "65%",
                 },
                 fontSize: 10,
                 vAxis: {
