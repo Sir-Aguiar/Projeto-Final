@@ -18,6 +18,8 @@ import { AulaProvider } from "./Aula/RouteStateManager";
 import Footer from "../components/Footer/Footer";
 import { StudentDashboardProvider } from "./Dashboards/Aluno/RouteStateManager";
 import Aluno from "./Dashboards/Aluno/Aluno";
+import Turma from "./Dashboards/Turma/Turma";
+import { ClassDashboardProvider } from "./Dashboards/Turma/RouteStateManager";
 
 const Router = () => {
   const isUserLogged = useIsAuthenticated();
@@ -82,6 +84,14 @@ const Router = () => {
               <StudentDashboardProvider>
                 <Aluno />
               </StudentDashboardProvider>
+            }
+          />
+          <Route
+            path="/turma/:idTurma"
+            element={
+              <ClassDashboardProvider>
+                <Turma />
+              </ClassDashboardProvider>
             }
           />
         </Route>

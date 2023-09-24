@@ -29,7 +29,7 @@
 
 .search_bar input {
   @apply h-full w-full;
-  @apply border-[1px] border-black-text border-opacity-50 rounded-sm outline-none;
+  @apply border-2 border-black-text border-opacity-40 rounded-[3px] outline-none;
   @apply p-2;
   @apply text-[12px] placeholder:font-medium;
   @apply backdrop-blur-[2px] bg-transparent;

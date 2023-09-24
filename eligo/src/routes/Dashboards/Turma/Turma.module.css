@@ -1,0 +1,40 @@
+.content_section {
+  @apply flex items-center mobile:items-start tablet:items-start;
+  @apply w-full h-[464px] tablet:h-[656px] mobile:h-[1144px];
+  @apply py-2 mt-[50px] mx-auto;
+  @apply desktop:max-w-[1120px];
+  @apply tablet:max-w-[770px];
+  @apply mobile:max-w-[328px];
+  @apply overflow-hidden;
+  @apply font-Roboto text-icon-black;
+}
+
+.content_grid {
+  @apply h-full w-full;
+  @apply grid gap-4 tablet:gap-2 mobile:gap-1;
+  @apply grid-cols-4 tablet:grid-cols-3 mobile:grid-cols-1;
+  @apply grid-rows-2 tablet:grid-rows-3 mobile:grid-rows-4;
+}
+
+.main_grid {
+  @apply col-span-2 row-span-2 mobile:col-span-1 mobile:row-span-1;
+}
+.second_grid {
+  @apply col-span-2 row-span-1 mobile:col-span-1 mobile:row-span-1 tablet:col-span-3;
+}
+.third_grid {
+  @apply col-span-1 row-span-1 mobile:row-span-1;
+}
+
+
+.population {
+  @apply p-2;
+  @apply border-2 border-black-text rounded-md border-opacity-60;
+  @apply overflow-hidden
+}
+
+.monthly_avarage {
+  @apply p-2;
+  @apply border-2 border-black-text rounded-md border-opacity-60;
+  @apply overflow-hidden
+}

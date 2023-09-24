@@ -13,6 +13,7 @@ export default {
       fontFamily: {
         Montserrat: ["Montserrat", "sans-serif"],
         Roboto: ["Roboto", "sans-serif"],
+        Lato: ["Lato", "sans-serif"],
       },
       backgroundImage: {
         "blue-gradient": "linear-gradient(90deg, #3973E5 9.38%, #3695D9 90.07%)",

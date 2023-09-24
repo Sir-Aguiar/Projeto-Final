@@ -300,6 +300,10 @@ const EscolaProvider: React.FC<ProviderProps> = ({ children }) => {
     setTodayDate(new Date());
   }, []);
 
+  useEffect(() => {
+    document.title = `Eligo  ${`| ${SchoolData.nome || ""}`}`;
+  }, [SchoolData]);
+
   return (
     <RouteContext.Provider
       value={{

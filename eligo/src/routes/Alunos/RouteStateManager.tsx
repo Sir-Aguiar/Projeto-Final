@@ -71,6 +71,7 @@ const RouteContext = createContext<IRouteContext | null>(null);
 
 const AlunosProvider: React.FC<ProviderProps> = ({ children }) => {
   const authHeader = useAuthHeader();
+
   const [isCreateOpen, setCreateDrawer] = useState(false);
   const [isUpdateOpen, setUpdateDrawer] = useState(false);
   const [isDeleteOpen, setDeleteModal] = useState(false);
@@ -80,6 +81,7 @@ const AlunosProvider: React.FC<ProviderProps> = ({ children }) => {
   const [TurmasState, setTurmas] = useState<ITurma[]>([]);
   const [EscolasState, setEscolas] = useState<IEscola[]>([]);
   const [isLoading, setLoading] = useState(false);
+
   // Axios instance
   const RouteAPI = axios.create({
     baseURL: import.meta.env.VITE_SERVER_URL,
@@ -169,6 +171,7 @@ const AlunosProvider: React.FC<ProviderProps> = ({ children }) => {
   };
 
   useEffect(() => {
+    document.title = "Eligo | Alunos";
     showStudent();
     showSchools();
   }, []);

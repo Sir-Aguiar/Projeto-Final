@@ -205,6 +205,7 @@ const AulaProvider: React.FC<ProviderProps> = ({ children }) => {
 
   useEffect(() => {
     loadSchools();
+    document.title = "Eligo | Aula";
   }, []);
 
   return (

@@ -138,6 +138,7 @@ const EscolasProvider: React.FC<ProviderProps> = ({ children }) => {
 
   useEffect(() => {
     showSchools();
+    document.title = "Eligo | Escolas"
   }, []);
 
   return (

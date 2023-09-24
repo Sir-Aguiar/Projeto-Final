@@ -108,14 +108,15 @@ const Turmas: React.FC = () => {
               Selecione <span className="font-bold">uma</span> turma
             </Typography>
           ) : AlunosTurmaState.length > 0 ? (
-            AlunosTurmaState.map((aluno, index) => <StudentLink key={index} name={aluno.nome} link="#" />)
+            AlunosTurmaState.map((aluno, index) => (
+              <StudentLink key={index} name={aluno.nome} link={`/aluno/${aluno.idAluno}`} />
+            ))
           ) : (
             <Typography variant="subtitle2" textAlign={"center"} component="span">
               Esta turma ainda não possui alunos
             </Typography>
           )}
         </div>
-        S
       </div>
       <div className={styles.table_container}>
         <table className={styles.content_table}>

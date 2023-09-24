@@ -79,6 +79,9 @@ export const StudentDashboardProvider: React.FC<{ children: React.ReactNode }> =
   useEffect(() => {
     loadStudentStats();
   }, [month]);
+  useEffect(() => {
+    document.title = `Eligo ${`| ${StudentData?.nome}` || ""}`;
+  }, [StudentData]);
   return (
     <StudentDashboardContext.Provider
       value={{

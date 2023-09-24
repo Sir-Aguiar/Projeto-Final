@@ -195,7 +195,7 @@ const TurmasProvider: React.FC<ProviderProps> = ({ children }) => {
 
   useEffect(() => {
     showClasses();
-    console.log(TokenData);
+    document.title = "Eligo | Turmas"
   }, []);
 
   return (

@@ -1,6 +1,6 @@
 .content_container {
   @apply flex mobile:flex-col gap-2 p-2;
-  @apply w-full h-full mt-[65px] mx-auto;
+  @apply w-full h-[625px] mobile:h-[1000px] mt-[65px] mx-auto;
   @apply desktop:max-w-[1120px];
   @apply tablet:max-w-[770px];
   @apply mobile:max-w-[328px];

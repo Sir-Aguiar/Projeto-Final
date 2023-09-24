@@ -8,7 +8,6 @@ import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import firstLetterUpper from "../../../utils/firstLetterUpper";
 
 const Aluno: React.FC = () => {
-  document.title = "Eligo | Aluno";
 
   const {
     StudentData,
@@ -52,7 +51,7 @@ const Aluno: React.FC = () => {
               width="100%"
               height="100%"
               data={MonthPresenceComparation}
-              options={{ legend: { position: "bottom" }, title: "Média do curso" }}
+              options={{ legend: { position: "bottom" }, title: "Em relação ao curso" }}
             />
           </main>
         </aside>
@@ -69,18 +68,22 @@ const Aluno: React.FC = () => {
           </main>
           <footer className={styles.presence_infograph}>
             <div className={styles.info_card}>
-              <h1>{MonthPresence}</h1>
               <h2>Faltas no mês de {firstLetterUpper(monthName)}</h2>
+              <h1>{MonthPresence}</h1>
             </div>
             <div className={styles.info_card}>
+              <div className="flex flex-col items-start">
+                <h2>Média de faltas ({firstLetterUpper(monthName)})</h2>
+                <span>Entre alunos do {StudentData?.turma.curso.nome}</span>
+              </div>
               <h1>{AvarageMonthPresence}</h1>
-              <h2>Média de faltas ({firstLetterUpper(monthName)})</h2>
-              <span>Entre alunos do {StudentData?.turma.curso.nome}</span>
             </div>
             <div className={styles.info_card}>
+              <div className="flex flex-col items-start">
+                <h2>Faltas acumuladas</h2>
+                <span>No ano de {currentDate.getFullYear()}</span>
+              </div>
               <h1>{TotalPresence}</h1>
-              <h2>Faltas acumuladas</h2>
-              <span>No ano de {currentDate.getFullYear()}</span>
             </div>
           </footer>
         </main>
