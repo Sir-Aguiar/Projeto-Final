@@ -14,7 +14,7 @@ const Disciplina = require("../../../database/models/Disciplina");
  */
 
 const MonthlyAbsence = async (idAluno) => {
-  const aluno = await FindStudentById(idAluno);
+  /* const aluno = await FindStudentById(idAluno); */
 
   const faltas = await ChamadaAluno.findAll({
     where: { idAluno, situacao: false },
@@ -51,7 +51,7 @@ const MonthlyAbsence = async (idAluno) => {
  *
  * @param {number} idAluno Identificador do aluno
  * @param {number} month Número do mês desejado, onde 0 = Janeiro e 11 = Dezembro
- * @returns {{faltas:number, disciplinas:Disciplina[]}} Esta função informará a quantidade de faltas do aluno no mês, contendo também a disposição por disciplinas
+ * @returns {Promise<{faltas:number, disciplinas:Disciplina[]}>} Esta função informará a quantidade de faltas do aluno no mês, contendo também a disposição por disciplinas
  */
 
 const MonthAbscence = async (idAluno, month) => {
@@ -116,12 +116,10 @@ const MonthAbscence = async (idAluno, month) => {
   };
 };
 
-MonthAbscence(1759, 8).then((res) => console.dir(res, { depth: 50 }));
-
 /**
  * @param {number} idCurso Identificador do curso
  * @param {number} month Número do mês desejado, onde 0 = Janeiro e 11 = Dezembro
- * @description Está função retorna a média de faltas dos alunos do curso informado, no mês informado
+ * @description Esta função retorna a média de faltas dos alunos do curso informado, no mês informado
  */
 const AvarageMonthAbscenceInCourse = async (idCurso, month) => {
   const currentDate = new Date();
@@ -165,7 +163,7 @@ const AvarageMonthAbscenceInCourse = async (idCurso, month) => {
       return true;
     }
   });
-
+  if (faltas.length === 0) return 0
   return Number((faltas.length / uniqueStudents.length).toFixed(2));
 };
 
@@ -189,62 +187,4 @@ const TotalAbscence = async (idAluno) => {
   return faltas;
 };
 
-const PersenceByDisciplines = async (idAluno, month) => {
-  const currentDate = new Date();
-
-  const currentYear = currentDate.getFullYear();
-  const startMonth = new Date(currentYear, month, 1);
-  const endMonth = new Date(currentYear, month + 1, 0);
-
-  const faltas = await ChamadaAluno.findAll({
-    where: {
-      idAluno,
-      situacao: false,
-      createdAt: {
-        [Op.gte]: startMonth,
-        [Op.lte]: endMonth,
-      },
-    },
-    include: [
-      {
-        attributes: [],
-        model: Chamada,
-        as: "chamada",
-        required: true,
-        include: [
-          {
-            model: Aula,
-            as: "aula",
-            include: [{ model: Disciplina, as: "disciplina", required: true, attributes: [] }],
-            required: true,
-            attributes: [],
-          },
-        ],
-        attributes: [],
-      },
-    ],
-    attributes: ["chamada.aula.idDisciplina", "chamada.aula.disciplina.nome"],
-    raw: true,
-    nest: true,
-  });
-
-  const disciplinesMap = new Map();
-  const disciplinasFalta = [];
-  const uniqueDisciplines = faltas.filter((falta) => {
-    if (!disciplinesMap.has(falta.idDisciplina)) {
-      disciplinesMap.set(falta.idDisciplina, falta);
-      return falta;
-    }
-  });
-
-  for (const disciplina of uniqueDisciplines) {
-    disciplinasFalta.push([
-      disciplina.nome,
-      faltas.filter((falta) => falta.idDisciplina === disciplina.idDisciplina).length,
-    ]);
-  }
-
-  return disciplinasFalta;
-};
-
-module.exports = { MonthlyAbsence };
+module.exports = { TotalAbscence, AvarageMonthAbscenceInCourse, MonthAbscence, MonthlyAbsence };

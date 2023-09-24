@@ -1,40 +1,40 @@
 const FindStudentById = require("../../use-cases/Alunos/FindById");
 const {
-  MonthlyPresence,
-  MonthPresence,
-  AvarageMonthPresenceInCourse,
-  TotalPresence,
-  PersenceByDisciplines,
+  MonthAbscence,
+  AvarageMonthAbscenceInCourse,
+  MonthlyAbsence,
+  TotalAbscence,
 } = require("../../use-cases/Stats/MonthPresence");
 
 /** @type {import("express").RequestHandler}  */
 const MonthlyPresenceController = async (req, res) => {
-  const { idAluno } = req.query;
+  let { idAluno, month } = req.query;
 
+  const CurrentDate = new Date();
+
+  if (!month) month = CurrentDate.getMonth();
+  month = Number(month)
   try {
     const aluno = await FindStudentById(Number(idAluno));
-    const CurrentMonth = new Date().getMonth();
-    const CurrentMonthPresence = await MonthPresence(aluno.idAluno, CurrentMonth);
 
-    const AvarageMonthPresence = await AvarageMonthPresenceInCourse(aluno.turma.curso.idCurso, CurrentMonth);
+    const faltas_mes = await MonthAbscence(aluno.idAluno, month);
 
-    const Monthly = await MonthlyPresence(Number(idAluno));
-    const Total = await TotalPresence(Number(idAluno));
+    const media_falta_mes = await AvarageMonthAbscenceInCourse(aluno.turma.curso.idCurso, month);
 
-    const DisciplinesPresence = await PersenceByDisciplines(Number(idAluno), CurrentMonth);
+    const faltas_ano = await MonthlyAbsence(Number(idAluno));
+    const faltas_total = await TotalAbscence(Number(idAluno));
+
     return res.status(200).json({
       aluno,
-      media_comparacao: {
-        faltas: CurrentMonthPresence,
-        media: AvarageMonthPresence,
-      },
-      faltas_ano: Monthly,
-      falta_media_mes: AvarageMonthPresence,
-      faltas_mes: CurrentMonthPresence,
-      faltas_total: Total,
-      disciplinas: DisciplinesPresence,
+      faltas_ano,
+      media_falta_mes,
+      faltas_mes,
+      faltas_total,
     });
-  } catch (error) {}
+  } catch (error) {
+    res.status(500).json({ error });
+    console.log(error);
+  }
 };
 
 module.exports = MonthlyPresenceController;

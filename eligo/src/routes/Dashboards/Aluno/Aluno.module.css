@@ -1,6 +1,6 @@
 .content_section {
-  @apply flex gap-6 mobile:flex-col mobile:gap-3;
-  @apply w-full h-[400px] mobile:h-[1500px];
+  @apply flex items-center mobile:items-start tablet:items-start;
+  @apply w-full h-[650px] tablet:h-[900px] mobile:h-[1550px];
   @apply py-2 mt-[50px] mx-auto;
   @apply desktop:max-w-[1120px];
   @apply tablet:max-w-[770px];
@@ -9,18 +9,23 @@
   @apply font-Roboto text-icon-black;
 }
 
+.data_sec {
+  @apply flex tablet:flex-wrap tablet:justify-between gap-6 tablet:gap-2 mobile:flex-col mobile:gap-3;
+  @apply w-full h-[425px] mobile:h-full;
+}
+
 .student_info {
-  @apply flex flex-col gap-4;
-  @apply w-full max-w-[256px] mobile:max-w-full h-full min-h-[384px];
+  @apply flex flex-col gap-2;
+  @apply w-full max-w-[256px] min-w-[256px] mobile:max-w-full h-full min-h-[384px];
 }
 
 .aside_header {
   @apply w-full h-full;
-  @apply flex flex-col gap-2 py-3;
+  @apply flex flex-col gap-2 py-1;
 }
 
 .presence_compare {
-  @apply w-full h-full min-h-[256px];
+  @apply w-full h-full min-h-[256px] min-w-[256px];
   @apply overflow-hidden;
   @apply border-2 border-black-text border-opacity-60 rounded-md;
   @apply flex flex-col gap-2 p-2;
@@ -30,13 +35,15 @@
   @apply font-Montserrat font-bold text-sm;
   @apply text-[#3973E5];
 }
+
 .presence_info {
   @apply flex flex-col gap-4;
-  @apply w-full h-full;
+  @apply w-full h-full tablet:max-w-[505px];
 }
 
 .monthly_presence {
-  @apply w-full h-full mobile:min-h-[328px] mobile:max-h-[328px] mobile:min-w-[328px] mobile:max-w-[328px];
+  @apply w-full h-full;
+  @apply mobile:min-h-[328px] mobile:max-h-[328px] mobile:min-w-[328px] mobile:max-w-[328px];
   @apply flex flex-col p-2 items-center;
   @apply border-2 border-black-text border-opacity-60 rounded-md;
 }
@@ -44,7 +51,7 @@
 .presence_infograph {
   @apply w-full h-full max-h-[96px] mobile:max-h-full mobile:min-h-[300px];
   @apply overflow-hidden;
-  @apply flex mobile:flex-col gap-6 mobile:gap-3;
+  @apply flex mobile:flex-col gap-6 tablet:gap-3 mobile:gap-3;
 }
 
 .info_card {
@@ -62,7 +69,7 @@
   @apply text-[10px] font-light;
 }
 .discipline_presence {
-  @apply w-full max-w-[256px] mobile:max-w-full h-full min-h-[384px] max-h-[384px];
+  @apply w-full max-w-[256px] min-w-[256px] mobile:max-w-full h-full min-h-[384px];
   @apply border-2 border-black-text border-opacity-60 rounded-md;
   @apply flex flex-col gap-1 p-2;
   @apply overflow-y-auto;

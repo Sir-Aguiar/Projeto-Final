@@ -24,6 +24,8 @@ type Context = {
   AvarageMonthPresence: number;
   TotalPresence: number;
   currentDate: Date;
+  month: number;
+  setMonth: React.Dispatch<React.SetStateAction<number>>;
 };
 
 const StudentDashboardContext = createContext<Context | null>(null);
@@ -48,32 +50,35 @@ export const StudentDashboardProvider: React.FC<{ children: React.ReactNode }> =
   const [MonthPresence, setMonthPresence] = useState(0);
   const [AvarageMonthPresence, setAvarageMonthPresence] = useState(0);
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [month, setMonth] = useState(currentDate.getMonth());
   const loadStudentStats = async () => {
-    const response = await RouteAPI.get(`/students-stat?idAluno=${idAluno}`);
+    const response = await RouteAPI.get(`/students-stat?idAluno=${idAluno}&month=${month}`);
+    const { aluno, faltas_ano, media_falta_mes, faltas_mes, faltas_total } = response.data;
 
-    setStudentData(response.data.aluno);
-    setTotalPresence(response.data.faltas_total);
-    setMonthPresence(response.data.faltas_mes);
-    setAvarageMonthPresence(response.data.falta_media_mes);
+    setStudentData(aluno);
+    setMonthlyPresence([["Mês", "Faltas"], ...faltas_ano]);
+
+    setTotalPresence(faltas_total);
+    setMonthPresence(faltas_mes.faltas);
+    setAvarageMonthPresence(media_falta_mes);
+
     setMonthPresenceComparation([
       ["Elemento", "Faltas", { role: "style" }],
-      ["Aluno", response.data.media_comparacao.faltas, "#F75C45"],
-      ["Média", response.data.media_comparacao.media, "#7944e4"],
+      ["Aluno", faltas_mes.faltas, "#F75C45"],
+      ["Média", media_falta_mes, "#7944e4"],
     ]);
 
-    setMonthlyPresence([["Mês", "Faltas"], ...response.data.faltas_ano]);
-
     setDisciplinesPresence(
-      response.data.disciplinas.map((disciplina: any) => [
-        disciplina[0],
-        disciplina[1] / (response.data.faltas_total / 100),
+      faltas_mes.disciplinas.map((disciplina: any) => [
+        disciplina.disciplina.nome,
+        Number((disciplina.faltas / (faltas_mes.faltas / 100)).toFixed(2)),
       ]),
     );
   };
 
   useEffect(() => {
     loadStudentStats();
-  }, []);
+  }, [month]);
   return (
     <StudentDashboardContext.Provider
       value={{
@@ -85,6 +90,8 @@ export const StudentDashboardProvider: React.FC<{ children: React.ReactNode }> =
         AvarageMonthPresence,
         MonthPresence,
         TotalPresence,
+        month,
+        setMonth,
       }}
     >
       {children}
