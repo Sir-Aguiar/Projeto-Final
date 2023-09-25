@@ -18,11 +18,9 @@ const Turma: React.FC = () => {
           <Tabs value={currentTab} onChange={changeTab} textColor="primary" indicatorColor="primary">
             <Tab value={0} label="Informações" />
             <Tab value={1} label="Aulas" />
-            <Tab value={2} label="Professores" />
           </Tabs>
           {currentTab === 0 && <ClassInfo />}
           {currentTab === 1 && <div className={`${styles.tab_section} bg-red-300`}></div>}
-          {currentTab === 2 && <div className={`${styles.tab_section} bg-green-300`}></div>}
         </div>
         <div className={`${styles.third_grid} `}></div>
         <div className={`${styles.third_grid} ${styles.population}`}>

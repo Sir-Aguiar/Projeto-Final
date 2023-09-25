@@ -9,6 +9,8 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { AxiosError } from "axios";
+import GppMaybeIcon from "@mui/icons-material/GppMaybe";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const ModalProfessor: React.FC = () => {
   const { ProfessorModal, ProfessorsData, RouteAPI, loadProfessorData, DisciplinesData, Classes } = useEscolaContext();
@@ -16,6 +18,8 @@ const ModalProfessor: React.FC = () => {
   const [selectedClass, setSelectedClass] = useState("");
   const [selectedDiscipline, setSelectedDiscipline] = useState("");
   const [selectedRows, setSelectedRow] = useState<number[]>([]);
+  const [isDeleteOpen, setDeleteOpen] = useState(false);
+
   const selectRow = (idLeciona: number) => {
     setSelectedRow((values) => {
       let newValues: number[];
@@ -34,7 +38,15 @@ const ModalProfessor: React.FC = () => {
     });
   };
 
-  const handleProfessorDelete = async () => {
+  const onClose = async () => {
+    setSelectedClass("");
+    setSelectedDiscipline("");
+    setSelectedProfessor("");
+    setSelectedRow([]);
+    ProfessorModal.close();
+  };
+
+  const handleDelete = async () => {
     try {
       for (const idLeciona of selectedRows) {
         const { turma, disciplina, idProfessor } = ProfessorsData.find(
@@ -42,20 +54,13 @@ const ModalProfessor: React.FC = () => {
         )!;
         await RouteAPI.delete(`/professor-leciona/${idProfessor}/${turma.idTurma}/${disciplina.idDisciplina}`);
       }
+      setDeleteOpen(false);
     } catch (error: any) {
       if (error instanceof AxiosError) {
         console.log(error);
       }
     }
     await loadProfessorData(false);
-  };
-
-  const onClose = async () => {
-    setSelectedClass("");
-    setSelectedDiscipline("");
-    setSelectedProfessor("");
-    setSelectedRow([]);
-    ProfessorModal.close();
   };
 
   const applyFilters = () => {
@@ -155,16 +160,55 @@ const ModalProfessor: React.FC = () => {
                 className={styles.remove_button}
                 disabled={selectedRows.length < 1}
                 onClick={() => {
-                  const answer = window.confirm("Tem certeza desta ação?");
-                  if (answer) {
-                    handleProfessorDelete();
-                  }
+                  setDeleteOpen(true);
                 }}
               >
                 <DeleteForeverIcon className="h-[15px]" /> Remover Associação
               </button>
             </div>
           </div>
+          <Modal open={isDeleteOpen} onClose={() => setDeleteOpen(false)} closeAfterTransition>
+            <Fade in={isDeleteOpen}>
+              <div className={styles.delete_container}>
+                <header>
+                  <h1 className="font-semibold text-xl">Remover Escolas</h1>
+                  <div className="w-full flex flex-col items-center gap-[2px]">
+                    <h3 className="text-[12px] ">
+                      Você tem certeza que deseja excluir {selectedRows.length} escola
+                      {selectedRows.length > 1 ? "s" : ""}?
+                    </h3>
+                    <p className="text-[12px] font-medium text-icon-black">Esta ação não poderá ser revertida</p>
+                  </div>
+                </header>
+                <main>
+                  <div className="flex items-start h-full py-1">
+                    <GppMaybeIcon className={styles.warn_icon} />
+                  </div>
+                  <div className="flex flex-col gap-1 h-full">
+                    <h1 className="text-lg font-bold text-[#D94F3B]">Cuidado</h1>
+                    <p className="text-[12px] leading-4 text-icon-black">
+                      Todas as turmas, das respectivas escolas, serão apagadas assim como seus dados.
+                    </p>
+                  </div>
+                </main>
+                <footer>
+                  <button className="bg-black-text" onClick={() => setDeleteOpen(false)}>
+                    Cancelar
+                  </button>
+                  <button className="bg-[#EB4B4B] flex items-center justify-center gap-[2px]" onClick={handleDelete}>
+                    Excluir
+                    {/*  {isLoading ? (
+                      <CircularProgress size={25} color="inherit" />
+                    ) : (
+                      <>
+                        Excluir <DeleteIcon />
+                      </>
+                    )} */}
+                  </button>
+                </footer>
+              </div>
+            </Fade>
+          </Modal>
         </div>
       </Fade>
     </Modal>
