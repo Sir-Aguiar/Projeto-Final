@@ -10,58 +10,62 @@ import analytics from "../../assets/LandingPage/analytics-icon.svg";
 import peace from "../../assets/LandingPage/peace.svg";
 import launch from "../../assets/LandingPage/launch.jpeg";
 import management from "../../assets/LandingPage/management.jpeg";
+import DefaultLogo from "../../assets/Eligo/PNG/default.png";
+import { Link } from "react-router-dom";
 const LandingPage: React.FC = () => {
   return (
     <>
       <NoLoginNavbar />
       <div className={styles.content_container}>
         <div className={styles.apresentation_banner}>
-          <div className={styles.banner}></div>
+          <img className={styles.banner} src={DefaultLogo}></img>
           <div className={styles.apresentation_message}>
-            <h1 className={styles.apresentation_title}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed at neque aliquam, sodales turpis id,
-              porttitor eros.
-            </h1>
+            <h1 className={styles.apresentation_title}>Gestão de Séries/Turmas Escolares</h1>
+
             <div className={styles.invite}>
-              <p className={styles.cta_invite}>Lorem ipsum dolor sit amet.</p>
+              <p className={styles.cta_invite}>Modernize-se, conecte sua instituição.</p>
               <div className={styles.CTAs}>
-                <button className={styles.secundary}></button>
-                <button className={styles.primary}></button>
+                <Link to="/login" className={styles.secundary}>
+                  Já possuo uma conta
+                </Link>
+                <Link to="/registro" className={styles.primary}>
+                  Cadastre-se
+                </Link>
               </div>
             </div>
           </div>
         </div>
 
         <div className={styles.promotions}>
-          <LandingCard image={cloud} text="Lorem ipsum dolor sit et." />
-          <LandingCard image={student} text="Lorem ipsum dolor sit et." />
-          <LandingCard image={support} text="Lorem ipsum dolor sit et." />
+          <LandingCard image={cloud} text="Conecte dezenas de professores" />
+          <LandingCard image={student} text="Gerencie dados de seus alunos" />
+          <LandingCard image={support} text="Suporte à sua disposição" />
         </div>
 
         <div className={styles.features}>
           <Paragraph
             direction="left"
             image={analytics}
-            title="Lorem ipsum dolor sit in."
-            paragraph="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam pulvinar, orci at aliquet egestas, mauris augue molestie diam, a hendrerit nisi ligula pellentesque quam. "
+            title="Painel Analítico"
+            paragraph="Relatórios detalhados de suas escolas, turmas e professores. Tudo pensado para tornar seu trabalho mais simples e preciso."
           />
           <Paragraph
             direction="right"
             image={management}
-            title="Lorem ipsum dolor sit in."
-            paragraph="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam pulvinar, orci at aliquet egestas, mauris augue molestie diam, a hendrerit nisi ligula pellentesque quam. "
+            title="Não se sobrecarregue mais"
+            paragraph="Traga seus professores e alunos à nossa plataforma. Cuidaremos da gestão de sua instituição da melhor maneira, aprimore seu ambiente de trabalho."
           />
           <Paragraph
             direction="left"
             image={launch}
-            title="Lorem ipsum dolor sit in."
-            paragraph="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam pulvinar, orci at aliquet egestas, mauris augue molestie diam, a hendrerit nisi ligula pellentesque quam. "
+            title="Alcance suas metas"
+            paragraph="Juntos seremos capazes de produzir um ambiente saudável e eficaz. Planeje suas aulas e distribua suas turmas da melhor maneira possível"
           />
           <Paragraph
             direction="right"
             image={peace}
-            title="Lorem ipsum dolor sit in."
-            paragraph="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam pulvinar, orci at aliquet egestas, mauris augue molestie diam, a hendrerit nisi ligula pellentesque quam. "
+            title="No seu conforto"
+            paragraph="Monitore de onde estiver. Conte conosco, estaremos sempre melhorando nossas tecnologias e funcionalidades para lhe oferecer um serviço da melhor qualidade"
           />
         </div>
       </div>

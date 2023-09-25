@@ -1,15 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "./Login.module.css";
 import { TextField, Checkbox } from "@mui/material";
 import LoginBackground from "../../assets/login-bg.jpg";
 import logo from "../../assets/logo.png";
 import axios from "axios";
-import { useSignIn } from "react-auth-kit";
+import { useIsAuthenticated, useSignIn } from "react-auth-kit";
 import { useNavigate } from "react-router-dom";
 const Login: React.FC = () => {
   const signIn = useSignIn();
   const navigate = useNavigate();
-
+  const isUserAuthenticated = useIsAuthenticated();
   const logIn = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -36,11 +36,18 @@ const Login: React.FC = () => {
             },
           })
         ) {
-          navigate("/escolas");
+          navigate("/");
         }
       });
   };
 
+  useEffect(() => {
+    if (isUserAuthenticated()) {
+      navigate("/");
+    }
+  }, [isUserAuthenticated()]);
+
+  if (isUserAuthenticated()) return <></>;
   return (
     <div className="w-full h-full flex">
       <div className="flex-1 h-full w-full ">

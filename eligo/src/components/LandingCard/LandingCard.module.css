@@ -19,5 +19,5 @@
 }
 
 .text {
-  @apply font-Roboto font-bold text-black-text;
+  @apply font-Roboto text-[13px] font-bold text-black-text;
 }

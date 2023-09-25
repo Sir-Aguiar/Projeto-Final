@@ -65,4 +65,4 @@ const PopulateDisciplines = async () => {
   }
 };
 
-PopulateUser().then(() => PopulateSchools().then(() => PopulateCourses().then(() => PopulateClasses())));
+PopulateCourses()

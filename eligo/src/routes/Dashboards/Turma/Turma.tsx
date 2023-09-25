@@ -17,7 +17,7 @@ const Turma: React.FC = () => {
         <div className={`${styles.main_grid} ${styles.class_tabs}`}>
           <Tabs value={currentTab} onChange={changeTab} textColor="primary" indicatorColor="primary">
             <Tab value={0} label="Informações" />
-            <Tab value={1} label="Aulas" />
+            {/* <Tab value={1} label="Aulas" /> */}
           </Tabs>
           {currentTab === 0 && <ClassInfo />}
           {currentTab === 1 && <div className={`${styles.tab_section} bg-red-300`}></div>}
@@ -38,8 +38,8 @@ const Turma: React.FC = () => {
                   is3D: true,
                   sliceVisibilityThreshold: 0.2,
                   slices: {
-                    0: { color: "#5a49c8", offset: 0.1 },
-                    1: { color: "#da5528" },
+                    0: { color: "#5a49c8" },
+                    1: { color: "#923a3a" },
                   },
                   legend: { position: "bottom", textStyle: { color: "black", fontSize: 12 } },
                   chartArea: { top: 20, width: "80%", height: "80%" },
