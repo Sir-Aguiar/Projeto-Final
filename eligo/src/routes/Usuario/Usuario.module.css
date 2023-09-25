@@ -1,0 +1,44 @@
+.content_section {
+	@apply flex mobile:flex-col gap-2 p-2;
+	@apply w-full h-[625px] mobile:h-[1000px] mt-[65px] mx-auto;
+	@apply desktop:max-w-[1120px];
+	@apply tablet:max-w-[770px];
+	@apply mobile:max-w-[328px];
+	@apply font-Roboto;
+}
+.data_container {
+	display: flex;
+	width: 300px;
+	height: 300px;
+	padding: 10px;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+	flex-shrink: 0;
+	border-radius: 5px;
+	border: 1px solid #3992e5;
+}
+.input_container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 8px;
+	align-self: stretch;
+}
+.dater {
+	display: flex;
+	height: 75%;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+	flex-shrink: 0;
+	align-self: stretch;
+}
+.sender {
+	height: 40px;
+	flex-shrink: 0;
+	align-self: stretch;
+	border-radius: 2px;
+	background: #3695d9;
+	@apply text-background font-semibold;
+}

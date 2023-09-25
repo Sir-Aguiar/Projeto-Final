@@ -42,6 +42,9 @@ const DeleteAlunoChamadaController = require("./controllers/AlunoChamada/Delete"
 const GetProfessorsStatsByClassRooms = require("./controllers/Stats/aulas-professor-turma");
 const MonthlyPresenceController = require("./controllers/Stats/StudentMontlyPresnce");
 const GetTurmaStatsController = require("./controllers/Stats/turma-stats");
+const GetUserController = require("./controllers/User/Get");
+const DeleteUserController = require("./controllers/User/Delete");
+const UpdateUserController = require("./controllers/User/Update");
 routes.post("/registro", RegisterUser);
 routes.post("/login", Login);
 
@@ -70,15 +73,15 @@ routes.get("/professor", UserAuthMiddleware, GetProfessorLecionaController);
 routes.get("/professor-leciona/:idTurma", UserAuthMiddleware, GetProfessorLecionaController);
 
 routes.delete(
-  "/professor-leciona/:idProfessor/:idTurma/:idDisciplina",
-  UserAuthMiddleware,
-  DeleteProfessorLecionaController,
+	"/professor-leciona/:idProfessor/:idTurma/:idDisciplina",
+	UserAuthMiddleware,
+	DeleteProfessorLecionaController,
 );
 
 routes.put(
-  "/professor-leciona/:idProfessor/:idTurma/:idDisciplina",
-  UserAuthMiddleware,
-  UpdateProfessorLecionaController,
+	"/professor-leciona/:idProfessor/:idTurma/:idDisciplina",
+	UserAuthMiddleware,
+	UpdateProfessorLecionaController,
 );
 
 routes.post("/aula", UserAuthMiddleware, CreateAulaController);
@@ -101,6 +104,9 @@ routes.get("/aluno-chamada/:idChamada", UserAuthMiddleware, GetAlunoChamadaContr
 routes.delete("/aluno-chamada/:idAluno/:idChamada", UserAuthMiddleware, DeleteAlunoChamadaController);
 routes.put("/aluno-chamada/:idAluno/:idChamada", UserAuthMiddleware, UpdateAlunoChamadaController);
 
+routes.get("/usuario", UserAuthMiddleware, GetUserController);
+routes.delete("/usuario", UserAuthMiddleware, DeleteUserController)
+routes.put("/usuario", UserAuthMiddleware, UpdateUserController)
 routes.get("/aulas-professor-turma", UserAuthMiddleware, GetProfessorsStatsByClassRooms);
 routes.get("/students-stat", UserAuthMiddleware, MonthlyPresenceController);
 routes.get("/class-stats", UserAuthMiddleware, GetTurmaStatsController);

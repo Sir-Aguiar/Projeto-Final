@@ -20,89 +20,99 @@ import { StudentDashboardProvider } from "./Dashboards/Aluno/RouteStateManager";
 import Aluno from "./Dashboards/Aluno/Aluno";
 import Turma from "./Dashboards/Turma/Turma";
 import { ClassDashboardProvider } from "./Dashboards/Turma/RouteStateManager";
+import { UsuarioProvider } from "./Usuario/RouteStateManager";
+import Usuario from "./Usuario/Usuario";
 
 const Router = () => {
-  const isUserLogged = useIsAuthenticated();
+	const isUserLogged = useIsAuthenticated();
 
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route
-          element={
-            <RequireAuth loginPath={"/login"}>
-              <>
-                <Navbar />
-                <Outlet />
-                <Footer />
-              </>
-            </RequireAuth>
-          }
-        >
-          <Route
-            path="/escolas"
-            element={
-              <EscolasProvider>
-                <Escolas />
-              </EscolasProvider>
-            }
-          />
-          <Route
-            path="/turmas"
-            element={
-              <TurmasProvider>
-                <Turmas />
-              </TurmasProvider>
-            }
-          />
-          <Route
-            path="/alunos"
-            element={
-              <AlunosProvider>
-                <Alunos />
-              </AlunosProvider>
-            }
-          />
-          <Route
-            path="/escola/:idEscola"
-            element={
-              <EscolaProvider>
-                <Escola />
-              </EscolaProvider>
-            }
-          />
-          <Route
-            path="/aula"
-            element={
-              <AulaProvider>
-                <Aula />
-              </AulaProvider>
-            }
-          />
-          <Route
-            path="/aluno/:idAluno"
-            element={
-              <StudentDashboardProvider>
-                <Aluno />
-              </StudentDashboardProvider>
-            }
-          />
-          <Route
-            path="/turma/:idTurma"
-            element={
-              <ClassDashboardProvider>
-                <Turma />
-              </ClassDashboardProvider>
-            }
-          />
-        </Route>
+	return (
+		<BrowserRouter>
+			<Routes>
+				<Route
+					element={
+						<RequireAuth loginPath={"/login"}>
+							<>
+								<Navbar />
+								<Outlet />
+								<Footer />
+							</>
+						</RequireAuth>
+					}
+				>
+					<Route
+						path="/escolas"
+						element={
+							<EscolasProvider>
+								<Escolas />
+							</EscolasProvider>
+						}
+					/>
+					<Route
+						path="/turmas"
+						element={
+							<TurmasProvider>
+								<Turmas />
+							</TurmasProvider>
+						}
+					/>
+					<Route
+						path="/alunos"
+						element={
+							<AlunosProvider>
+								<Alunos />
+							</AlunosProvider>
+						}
+					/>
+					<Route
+						path="/escola/:idEscola"
+						element={
+							<EscolaProvider>
+								<Escola />
+							</EscolaProvider>
+						}
+					/>
+					<Route
+						path="/aula"
+						element={
+							<AulaProvider>
+								<Aula />
+							</AulaProvider>
+						}
+					/>
+					<Route
+						path="/aluno/:idAluno"
+						element={
+							<StudentDashboardProvider>
+								<Aluno />
+							</StudentDashboardProvider>
+						}
+					/>
+					<Route
+						path="/turma/:idTurma"
+						element={
+							<ClassDashboardProvider>
+								<Turma />
+							</ClassDashboardProvider>
+						}
+					/>
+					<Route
+						path="/usuario"
+						element={
+							<UsuarioProvider>
+								<Usuario />
+							</UsuarioProvider>
+						}
+					/>
+				</Route>
 
-        <Route path="/login" element={<Login />} />
-        <Route path="/registro" element={<Register />} />
-        <Route path="/" element={isUserLogged() ? <></> : <LandingPage />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </BrowserRouter>
-  );
+				<Route path="/login" element={<Login />} />
+				<Route path="/registro" element={<Register />} />
+				<Route path="/" element={isUserLogged() ? <></> : <LandingPage />} />
+				<Route path="*" element={<NotFound />} />
+			</Routes>
+		</BrowserRouter>
+	);
 };
 
 export { Router };
