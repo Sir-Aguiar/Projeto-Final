@@ -1,0 +1,75 @@
+.content_section {
+	@apply flex mobile:flex-col gap-2;
+	@apply w-full h-[625px] mobile:h-[1000px] mt-[65px] mx-auto;
+	@apply desktop:max-w-[1120px];
+	@apply tablet:max-w-[770px];
+	@apply mobile:max-w-[328px];
+	@apply font-Roboto;
+}
+
+.home_header {
+	@apply w-full h-[256px];
+	@apply grid grid-cols-4 grid-rows-1 py-3 gap-6;
+	@apply font-Montserrat text-[#272C2E];
+}
+.invite_section {
+	@apply flex flex-col items-center justify-between;
+}
+.invite_section .head {
+	@apply w-full text-start;
+	@apply flex flex-col items-start;
+}
+
+.head h1 {
+	@apply font-bold;
+}
+.head p {
+	@apply text-[12px];
+}
+
+.student_input {
+	@apply h-[40px] w-full px-2;
+	@apply border-[1.5px] border-black-text border-opacity-50 rounded-sm outline-none;
+	@apply text-[12px] font-Roboto;
+}
+
+.invite_button {
+	@apply w-full h-[40px];
+	@apply rounded-[3px];
+	@apply bg-[#272C2E];
+	@apply text-background  text-[15px] font-semibold;
+}
+.clipped_wave {
+	@apply bg-clip-text text-transparent bg-[url('../../assets/Homepage/wave.png')];
+}
+.main_panel {
+	@apply col-span-2;
+	@apply flex flex-col gap-2;
+}
+.pane_content {
+	@apply flex p-3 justify-between;
+	border-radius: 5px;
+	border: 1px solid #3992e5;
+}
+.lesson_warn {
+	display: flex;
+	width: 100%;
+	height: 60px;
+	padding: 6px 12px;
+	align-items: center;
+	gap: 6px;
+	align-self: stretch;
+	border-radius: 2px;
+	border-left: 4px solid #3992e5;
+	background: rgba(57, 146, 229, 0.12);
+}
+.panel_head h1 {
+	@apply font-bold;
+}
+.panel_head p {
+	@apply text-[12px];
+}
+.panel_head {
+	@apply w-full max-w-[320px] text-start;
+	@apply flex flex-col items-start;
+}

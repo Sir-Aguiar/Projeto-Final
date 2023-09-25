@@ -22,6 +22,7 @@ import Turma from "./Dashboards/Turma/Turma";
 import { ClassDashboardProvider } from "./Dashboards/Turma/RouteStateManager";
 import { UsuarioProvider } from "./Usuario/RouteStateManager";
 import Usuario from "./Usuario/Usuario";
+import Homepage from "./Homepage/Homepage";
 
 const Router = () => {
 	const isUserLogged = useIsAuthenticated();
@@ -108,7 +109,20 @@ const Router = () => {
 
 				<Route path="/login" element={<Login />} />
 				<Route path="/registro" element={<Register />} />
-				<Route path="/" element={isUserLogged() ? <></> : <LandingPage />} />
+				<Route
+					path="/"
+					element={
+						isUserLogged() ? (
+							<>
+								<Navbar />
+								<Homepage />
+								<Footer />
+							</>
+						) : (
+							<LandingPage />
+						)
+					}
+				/>
 				<Route path="*" element={<NotFound />} />
 			</Routes>
 		</BrowserRouter>
