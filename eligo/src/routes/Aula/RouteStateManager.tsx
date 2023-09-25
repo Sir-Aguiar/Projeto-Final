@@ -140,7 +140,9 @@ const AulaProvider: React.FC<ProviderProps> = ({ children }) => {
       situation: isHistoryModalOpen,
       close() {
         setSelectedDiscipline("");
+        setDisciplinas([])
         setSelectedClass("");
+        setTurmas([])
         setSelectedSchool("");
         setHistoryModal(false);
       },

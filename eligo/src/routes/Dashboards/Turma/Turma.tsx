@@ -40,14 +40,14 @@ const Turma: React.FC = () => {
                   is3D: true,
                   sliceVisibilityThreshold: 0.2,
                   slices: {
-                    0: { color: "#5a49c8", offset: 0.2 },
+                    0: { color: "#5a49c8", offset: 0.1 },
                     1: { color: "#da5528" },
                   },
                   legend: { position: "bottom", textStyle: { color: "black", fontSize: 12 } },
                   chartArea: { top: 20, width: "80%", height: "80%" },
                   fontName: "Montserrat",
                   fontSize: 12,
-                  pieStartAngle: 65,
+                  pieStartAngle: 45,
                   animation: {
                     duration: 300,
                     startup: true,

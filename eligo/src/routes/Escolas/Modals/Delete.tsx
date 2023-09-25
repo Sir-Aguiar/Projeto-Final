@@ -5,10 +5,10 @@ import GppMaybeIcon from "@mui/icons-material/GppMaybe";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useEscolasContext } from "../RouteStateManager";
 import { AxiosError } from "axios";
-import { Fade } from "@mui/material";
+import { CircularProgress, Fade } from "@mui/material";
 
 const Delete: React.FC = () => {
-  const { ModalDelete, RouteAPI, selectedRows } = useEscolasContext();
+  const { ModalDelete, RouteAPI, selectedRows, setLoading, isLoading } = useEscolasContext();
 
   const handleDelete = async () => {
     try {
@@ -56,7 +56,13 @@ const Delete: React.FC = () => {
               Cancelar
             </button>
             <button className="bg-[#EB4B4B] flex items-center justify-center gap-[2px]" onClick={handleDelete}>
-              Excluir <DeleteIcon />
+              {isLoading ? (
+                <CircularProgress size={25} color="inherit" />
+              ) : (
+                <>
+                  Excluir <DeleteIcon />
+                </>
+              )}
             </button>
           </footer>
         </div>

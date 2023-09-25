@@ -13,6 +13,12 @@ const { FindClassesFromSchoolByProfessor } = require("../Turmas/FindByProfessor"
 const ServerError = require("../../utils/ServerError");
 
 /**
+  @typedef {object} Escola
+  @property {number} idEscola
+  @property {number} idGestor
+  @property {string} nome
+*/
+/**
   @typedef {object} Turma
   @property {number} idTurma
   @property {string} nome
@@ -74,6 +80,11 @@ const FindStudentsBySchool = async (userData, idEscola, onlyLength = false) => {
           attributes: ["idTurma", "nome"],
           include: [{ model: Curso, as: "curso", attributes: ["idCurso", "nome"] }],
         },
+        {
+          model: Escola,
+          as: "escola",
+          attributes: ["idEscola", "idGestor", "nome"],
+        },
       ],
       order: [["nome", "ASC"]],
     });
@@ -95,6 +106,11 @@ const FindStudentsBySchool = async (userData, idEscola, onlyLength = false) => {
         as: "turma",
         attributes: ["idTurma", "nome"],
         include: [{ model: Curso, as: "curso", attributes: ["idCurso", "nome"] }],
+      },
+      {
+        model: Escola,
+        as: "escola",
+        attributes: ["idEscola", "idGestor", "nome"],
       },
     ],
     order: [["nome", "ASC"]],

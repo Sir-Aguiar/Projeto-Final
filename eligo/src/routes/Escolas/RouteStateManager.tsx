@@ -40,6 +40,8 @@ interface IRouteContext {
   selectedRows: number[];
   selectRow: (idEscola: number) => void;
   TokenData: IUserTokenData;
+  isLoading: boolean;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const RouteContext = createContext<IRouteContext | null>(null);
@@ -52,7 +54,7 @@ const EscolasProvider: React.FC<ProviderProps> = ({ children }) => {
   const [Turmas, setTurmas] = useState<ITurma[]>([]);
   const [Escolas, setEscolas] = useState<IEscola[]>([]);
   const [selectedRows, setRows] = useState<number[]>([]);
-
+  const [isLoading, setLoading] = useState(false);
   const TokenData = useMemo(() => {
     const TOKEN = authHeader();
     const TOKEN_DATA = jwtDecode(TOKEN) as IUserTokenData;
@@ -138,7 +140,7 @@ const EscolasProvider: React.FC<ProviderProps> = ({ children }) => {
 
   useEffect(() => {
     showSchools();
-    document.title = "Eligo | Escolas"
+    document.title = "Eligo | Escolas";
   }, []);
 
   return (
@@ -153,6 +155,8 @@ const EscolasProvider: React.FC<ProviderProps> = ({ children }) => {
         TokenData,
         selectedRows,
         selectRow,
+        isLoading,
+        setLoading,
       }}
     >
       {children}

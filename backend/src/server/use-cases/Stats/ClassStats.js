@@ -115,7 +115,7 @@ const ClassInfo = async (idTurma) => {
       idAluno: aluno.idAluno,
       nome: aluno.nome,
       faltas: aluno.chamadas.filter((chamada) => !chamada.dataValues.situacao).length,
-    })),
+    })).sort((a,b) => b.faltas - a.faltas),
   };
 };
 module.exports = { ClassPopulation, AvarageMonthlyAbsence, ClassInfo };

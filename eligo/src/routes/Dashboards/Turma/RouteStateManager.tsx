@@ -51,7 +51,7 @@ export const ClassDashboardProvider: React.FC<{ children: React.ReactNode }> = (
       setClassPopulation([
         ["Grupo", "Populacao"],
         ["Turma", response.data.populacao.turma],
-        ["Curso", response.data.populacao.curso],
+        ["Curso", response.data.populacao.curso - response.data.populacao.turma],
       ]);
       setAvarageAbsence([["Mês", "Ausências"], ...response.data.media_faltas]);
       setClassInfo(response.data.turma_info);

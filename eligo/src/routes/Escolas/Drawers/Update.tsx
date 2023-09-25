@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 import styles from "./Update.module.css";
-import { Divider, Drawer, TextField } from "@mui/material";
+import { CircularProgress, Divider, Drawer, TextField } from "@mui/material";
 import { useEscolasContext } from "../RouteStateManager";
 import { AxiosError } from "axios";
 
 const Update: React.FC = () => {
-  const { selectedRows, DrawerUpdate, Escolas, RouteAPI } = useEscolasContext();
+  const { selectedRows, DrawerUpdate, Escolas, RouteAPI, isLoading, setLoading } = useEscolasContext();
 
   useEffect(() => {
     if (selectedRows.length !== 1) {
@@ -14,6 +14,7 @@ const Update: React.FC = () => {
   }, [open]);
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    setLoading(true);
     e.preventDefault();
     const nome = e.currentTarget.querySelector<HTMLInputElement>("#nome")?.value;
     try {
@@ -22,6 +23,7 @@ const Update: React.FC = () => {
     } catch (error: any) {
       console.log(error);
     }
+    setLoading(false);
   };
 
   return (
@@ -52,7 +54,9 @@ const Update: React.FC = () => {
           <button onClick={() => DrawerUpdate.close()} className={styles.cancel}>
             Cancelar
           </button>
-          <input type="submit" value="Atualizar" form="update-school" className={styles.submiter} />
+          <button className={styles.submiter} type="submit" form="update-school">
+            {isLoading ? <CircularProgress size={30} color="inherit" /> : "Atualizar"}
+          </button>
         </footer>
       </div>
     </Drawer>

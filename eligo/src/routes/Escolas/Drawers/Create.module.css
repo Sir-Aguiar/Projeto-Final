@@ -16,6 +16,7 @@
   @apply w-[150px] h-full;
   @apply cursor-pointer transition-all duration-200;
   @apply hover:brightness-95;
+  @apply flex items-center justify-center;
 }
 
 .cancel {

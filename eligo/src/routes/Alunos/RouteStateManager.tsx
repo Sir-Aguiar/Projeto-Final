@@ -65,6 +65,10 @@ interface IRouteContext {
   showStudent: (idEscola?: number) => Promise<void>;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   isLoading: boolean;
+  selectedSchool: string;
+  selectedClass: string;
+  setSelectedSchool: React.Dispatch<React.SetStateAction<string>>;
+  setSelectedClass: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const RouteContext = createContext<IRouteContext | null>(null);
@@ -76,8 +80,12 @@ const AlunosProvider: React.FC<ProviderProps> = ({ children }) => {
   const [isUpdateOpen, setUpdateDrawer] = useState(false);
   const [isDeleteOpen, setDeleteModal] = useState(false);
   const [selectedRows, setRows] = useState<number[]>([]);
+
   const [Alunos, setAlunos] = useState<IAluno[]>([]);
+  const [selectedSchool, setSelectedSchool] = useState("");
+  const [selectedClass, setSelectedClass] = useState("");
   const [AlunosQTD, setAlunosQTD] = useState(0);
+
   const [TurmasState, setTurmas] = useState<ITurma[]>([]);
   const [EscolasState, setEscolas] = useState<IEscola[]>([]);
   const [isLoading, setLoading] = useState(false);
@@ -157,9 +165,19 @@ const AlunosProvider: React.FC<ProviderProps> = ({ children }) => {
 
   const showStudent = async () => {
     setLoading(true);
-    const response = await RouteAPI.get(`/aluno`);
-    setAlunos(response.data.alunos);
-    setAlunosQTD(response.data.qtd);
+
+    if (selectedSchool) {
+      const response = await RouteAPI.get(`/aluno?idEscola=${selectedSchool}`);
+      setAlunos(response.data.alunos);
+      setAlunosQTD(response.data.qtd);
+    }
+
+    if (selectedClass) {
+      const response = await RouteAPI.get(`/aluno?idTurma=${selectedClass}`);
+      setAlunos(response.data.alunos);
+      setAlunosQTD(response.data.qtd);
+    }
+
     setLoading(false);
   };
 
@@ -172,9 +190,12 @@ const AlunosProvider: React.FC<ProviderProps> = ({ children }) => {
 
   useEffect(() => {
     document.title = "Eligo | Alunos";
-    showStudent();
     showSchools();
   }, []);
+
+  useEffect(() => {
+    showStudent();
+  }, [selectedSchool, selectedClass]);
 
   return (
     <RouteContext.Provider
@@ -195,6 +216,10 @@ const AlunosProvider: React.FC<ProviderProps> = ({ children }) => {
         showStudent,
         isLoading,
         setLoading,
+        selectedClass,
+        selectedSchool,
+        setSelectedClass,
+        setSelectedSchool,
       }}
     >
       {children}

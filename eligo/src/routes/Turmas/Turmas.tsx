@@ -11,6 +11,7 @@ import Delete from "./Modals/Delete";
 import Update from "./Drawers/Update";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import Filter from "./Modals/Filter";
+import { Link } from "react-router-dom";
 
 const StudentLink: React.FC<{ link: string; name: string }> = ({ link, name }) => {
   return (
@@ -123,6 +124,7 @@ const Turmas: React.FC = () => {
           <thead className={styles.table_header}>
             <tr>
               <th className="min-w-[50px] w-[50px] max-w-[50px]"></th>
+              <th className="min-w-[50px] w-[50px] max-w-[50px]"></th>
               <th className="min-w-[150px] w-[150px]">Turma</th>
               <th className="min-w-[150px] w-[150px]">Série</th>
               <th className="min-w-[350px] w-[350px]">Escola</th>
@@ -131,8 +133,15 @@ const Turmas: React.FC = () => {
           <tbody className={styles.table_body}>
             {applyFilters().map((turma, index) => (
               <tr key={index}>
-                <td className="min-w-[50px] w-[50px] max-w-[50px]">
+                <td>
                   <Checkbox checked={selectedRows.includes(turma.idTurma)} onChange={() => selectRow(turma.idTurma)} />
+                </td>
+                <td>
+                  {turma.escola.idGestor === TokenData.idUsuario && (
+                    <Link to={`/turma/${turma.idTurma}`}>
+                      <OpenInNewIcon fontSize="small" />
+                    </Link>
+                  )}
                 </td>
                 <td>{turma.nome}</td>
                 <td>{turma.curso.nome}</td>

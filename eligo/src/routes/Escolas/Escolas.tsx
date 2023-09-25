@@ -70,7 +70,7 @@ const Escolas: React.FC = () => {
                 Selecione <span className="font-bold">uma</span> escola
               </Typography>
             ) : Turmas.length > 0 ? (
-              Turmas.map((turma, index) => <ClassLink key={index} link="#" name={turma.nome} />)
+              Turmas.map((turma, index) => <ClassLink key={index} link={`/turma/${turma.idTurma}`} name={turma.nome} />)
             ) : (
               <Typography variant="subtitle2" textAlign={"center"} component="span">
                 Esta escola ainda não possui turmas
