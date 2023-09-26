@@ -4,6 +4,7 @@ const Curso = require("../../../database/models/Curso");
 const CursoDisciplina = require("../../../database/models/CursoDisciplina");
 const Turma = require("../../../database/models/Turma");
 const ProfessorLeciona = require("../../../database/models/ProfessorLeciona");
+const { Op } = require("sequelize");
 /** @type {import("express").RequestHandler}  */
 const GetDisciplinasController = async (req, res) => {
 	const { idUsuario } = req.userData;
@@ -51,6 +52,12 @@ const GetDisciplinasController = async (req, res) => {
 		}
 
 		if (idTurma) {
+			/* 
+				Achar todas as disciplinas daquela escola
+				Achar todas as disciplinas da escola relacionadas com o curso
+				Retornar estas disciplinas.
+			*/
+
 			const foundClass = await Turma.findByPk(idTurma, {
 				attributes: ["idTurma", "idCurso", "nome"],
 				include: [{ model: Escola, as: "escola", attributes: ["idGestor", "idEscola"] }],
@@ -59,8 +66,23 @@ const GetDisciplinasController = async (req, res) => {
 			});
 
 			if (foundClass.escola.idGestor === idUsuario) {
+				// Todas as disciplinas da escola em questão
+				const schoolDisciplines = await Disciplina.findAll({
+					where: {
+						idEscola: foundClass.escola.idEscola,
+					},
+					attributes: ["idDisciplina"],
+				});
+
+				const disciplinasDaEscola = schoolDisciplines.map((disciplina) => disciplina.dataValues.idDisciplina);
+
 				const foundGrids = await CursoDisciplina.findAll({
-					where: { idCurso: foundClass.idCurso },
+					where: {
+						idCurso: foundClass.idCurso,
+						idDisciplina: {
+							[Op.in]: disciplinasDaEscola,
+						},
+					},
 					include: [{ model: Disciplina, as: "disciplina", attributes: [] }],
 					attributes: ["disciplina.idDisciplina", "disciplina.nome"],
 					group: ["disciplina.idDisciplina"],
@@ -79,6 +101,7 @@ const GetDisciplinasController = async (req, res) => {
 				raw: true,
 				nest: true,
 			});
+
 			return res.status(200).json({ error: null, disciplinas: foundRelations });
 		}
 

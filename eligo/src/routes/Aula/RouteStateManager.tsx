@@ -198,7 +198,7 @@ const AulaProvider: React.FC<ProviderProps> = ({ children }) => {
     if (selectedClass) {
       setSelectedDiscipline("");
       RouteAPI.get(`/disciplina?idTurma=${selectedClass}`).then((response) => {
-        console.log();
+        console.log(response.data);
         setDisciplinas(response.data.disciplinas);
         loadStudents();
       });
