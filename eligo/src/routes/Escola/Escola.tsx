@@ -19,7 +19,7 @@ const ClassRoomCard: React.FC<{ aula: any }> = ({ aula }) => {
       <header>
         <h1>Turma: {aula.turma.nome}</h1>
       </header>
-      <main>
+{/*       <main>
         <div className={styles.actions}>
           <OpenInNewIcon />
           Abrir
@@ -29,7 +29,7 @@ const ClassRoomCard: React.FC<{ aula: any }> = ({ aula }) => {
           <ListAltIcon />
           Lista de Chamada
         </div>
-      </main>
+      </main> */}
       <footer>
         <h2>
           <span className="font-semibold">Professor:</span> {aula.professor.nome}
