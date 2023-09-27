@@ -8,6 +8,7 @@ const {
 
 /** @type {import("express").RequestHandler}  */
 const MonthlyPresenceController = async (req, res) => {
+	const { idUsuario } = req.userData;
 	let { idAluno, month } = req.query;
 
 	const CurrentDate = new Date();
@@ -17,6 +18,14 @@ const MonthlyPresenceController = async (req, res) => {
 
 	try {
 		const aluno = await FindStudentById(Number(idAluno));
+
+		if (aluno.escola.idGestor !== idUsuario) {
+			return res.status(401).json({
+				error: {
+					message: "Você não possui acesso à estas informações",
+				},
+			});
+		}
 
 		const faltas_mes = await MonthAbscence(aluno.idAluno, month);
 

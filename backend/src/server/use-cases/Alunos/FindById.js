@@ -14,12 +14,19 @@ const Escola = require("../../../database/models/Escola");
  * @property {string} nome
  * @property {Curso} curso
  */
+/**
+ * @typedef {object} Escola
+ *  @property {number} idEscola
+ *  @property {number} idGestor
+ * @property {string} nome
+ */
 
 /**
  * @typedef {object} Aluno
  * @property {number} idAluno
  * @property {string} nome
  * @property {Turma} turma
+ * @property {Escola} escola
  */
 
 /**

@@ -1,7 +1,9 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { useAuthHeader } from "react-auth-kit";
 import { useParams } from "react-router-dom";
+import { FindStudentsStats } from "../../../services/Alunos";
+import NotFound from "../../Errors/NotFound";
 
 interface IAluno {
 	idAluno: number;
@@ -26,7 +28,7 @@ const StudentDashboardContext = createContext<Context | null>(null);
 export const StudentDashboardProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 	const { idAluno } = useParams();
 	const authHeader = useAuthHeader();
-
+	const [isUserAuthorized, setAuthorization] = useState(true);
 	const RouteAPI = axios.create({
 		baseURL: import.meta.env.VITE_SERVER_URL,
 		headers: {
@@ -44,28 +46,50 @@ export const StudentDashboardProvider: React.FC<{ children: React.ReactNode }> =
 	const [AvarageMonthPresence, setAvarageMonthPresence] = useState(0);
 	const [currentDate, setCurrentDate] = useState(new Date());
 	const [month, setMonth] = useState(currentDate.getMonth());
+
 	const loadStudentStats = async () => {
-		const response = await RouteAPI.get(`/students-stat?idAluno=${idAluno}&month=${month}`);
-		const { aluno, faltas_ano, media_falta_mes, faltas_mes, faltas_total } = response.data;
+		try {
+			const { aluno, faltas_ano, faltas_mes, faltas_total, media_falta_mes } = await FindStudentsStats(
+				RouteAPI,
+				Number(idAluno),
+				month,
+			);
 
-		setStudentData(aluno);
-		setMonthlyPresence([["Mês", "Faltas"], ...faltas_ano]);
-		setTotalPresence(faltas_total);
-		setMonthPresence(faltas_mes.faltas);
-		setAvarageMonthPresence(media_falta_mes);
+			setStudentData(aluno);
+			setMonthlyPresence([["Mês", "Faltas"], ...faltas_ano]);
+			setTotalPresence(faltas_total);
+			setMonthPresence(faltas_mes.faltas);
+			setAvarageMonthPresence(media_falta_mes);
 
-		setMonthPresenceComparation([
-			["Elemento", "Faltas", { role: "style" }],
-			["Aluno", faltas_mes.faltas, "#F75C45"],
-			["Média", media_falta_mes, "#7944e4"],
-		]);
+			setMonthPresenceComparation([
+				["Elemento", "Faltas", { role: "style" }],
+				["Aluno", faltas_mes.faltas, "#F75C45"],
+				["Média", media_falta_mes, "#7944e4"],
+			]);
 
-		setDisciplinesPresence(
-			faltas_mes.disciplinas.map((disciplina: any) => [
-				disciplina.disciplina.nome,
-				Number((disciplina.faltas / (faltas_mes.faltas / 100)).toFixed(2)),
-			]),
-		);
+			setDisciplinesPresence(
+				faltas_mes.disciplinas.map((disciplina: any) => [
+					disciplina.disciplina.nome,
+					Number((disciplina.faltas / (faltas_mes.faltas / 100)).toFixed(2)),
+				]),
+			);
+		} catch (error: any) {
+			if (error instanceof AxiosError) {
+				const response = error.response;
+
+				if (response) {
+					if (response.status === 401) {
+						setAuthorization(false);
+						return;
+					}
+					alert(response.data.error.message);
+				}
+
+				if (error.status === 500) {
+					return;
+				}
+			}
+		}
 	};
 
 	useEffect(() => {
@@ -89,7 +113,7 @@ export const StudentDashboardProvider: React.FC<{ children: React.ReactNode }> =
 				setMonth,
 			}}
 		>
-			{children}
+			{isUserAuthorized ? children : <NotFound />}
 		</StudentDashboardContext.Provider>
 	);
 };
