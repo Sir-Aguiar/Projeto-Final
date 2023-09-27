@@ -64,5 +64,3 @@ const PopulateDisciplines = async () => {
     }
   }
 };
-
-PopulateCourses()

@@ -1,4 +1,5 @@
 const Curso = require("../../../database/models/Curso");
+const Escola = require("../../../database/models/Escola");
 const ProfessorLeciona = require("../../../database/models/ProfessorLeciona");
 const Turma = require("../../../database/models/Turma");
 
@@ -7,12 +8,19 @@ const Turma = require("../../../database/models/Turma");
   @property {number} idCurso
   @property {string} nome
 */
+/**
+  @typedef {object} Escola
+  @property {number} idEscola
+  @property {number} idGestor
+  @property {string} nome
+*/
 
 /**
   @typedef {object} Turma
   @property {number} idTurma
   @property {string} nome
   @property {Curso} curso
+  @property {Escola} escola
 */
 
 /**
@@ -31,16 +39,18 @@ const FindClassesByProfessor = async (idProfessor) => {
       {
         model: Turma,
         as: "turma",
-        attributes: [],
-        include: [{ model: Curso, as: "curso", attributes: ["idCurso", "nome"] }],
+        attributes: ["idTurma", "nome"],
+        include: [
+          { model: Curso, as: "curso", attributes: ["idCurso", "nome"] },
+          { model: Escola, as: "escola", attributes: ["idEscola", "idGestor", "nome"] },
+        ],
       },
     ],
-    attributes: ["turma.idTurma", "turma.nome"],
     raw: true,
     nest: true,
   });
 
-  return foundRelations.map(({ idTurma, nome, turma }) => ({ idTurma, nome, curso: turma.curso }));
+  return foundRelations.map(({ turma }) => turma);
 };
 
 /**
@@ -65,6 +75,7 @@ const FindClassesFromSchoolByProfessor = async (idEscola, idProfessor) => {
     include: [
       { model: ProfessorLeciona, as: "professores", where: { idProfessor }, attributes: [] },
       { model: Curso, as: "curso", attributes: ["idCurso", "nome"] },
+      { model: Escola, as: "escola", attributes: ["idEscola", "idGestor", "nome"] },
     ],
     raw: true,
     nest: true,

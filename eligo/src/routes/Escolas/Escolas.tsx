@@ -11,18 +11,25 @@ import Create from "./Drawers/Create";
 import Update from "./Drawers/Update";
 import Delete from "./Modals/Delete";
 import { Link } from "react-router-dom";
+import { ITurma } from "../../@types/Turmas";
+
 type ClassLinkProps = {
-  name: string;
-  link: string;
+  turma: ITurma;
+  link?: boolean;
 };
 
-const ClassLink: React.FC<ClassLinkProps> = ({ link, name }) => {
+const ClassLink: React.FC<ClassLinkProps> = ({ turma, link = false }) => {
   return (
     <div className=" w-full h-[50px] min-h-[50px] flex items-center justify-start gap-4 px-2">
-      <a href={link} className="transition-all duration-300 rounded-full hover:bg-slate-200 p-1 group ">
-        <OpenInNewIcon className="transition-all duration-300 group-hover:text-blue-icon group-hover:scale-90 " />
-      </a>
-      <span className="font-medium">{name}</span>
+      {link && (
+        <a
+          href={`/turma/${turma.idTurma}`}
+          className="transition-all duration-300 rounded-full hover:bg-slate-200 p-1 group "
+        >
+          <OpenInNewIcon className="transition-all duration-300 group-hover:text-blue-icon group-hover:scale-90 " />
+        </a>
+      )}
+      <span className="font-medium">{turma.nome}</span>
     </div>
   );
 };
@@ -70,7 +77,9 @@ const Escolas: React.FC = () => {
                 Selecione <span className="font-bold">uma</span> escola
               </Typography>
             ) : Turmas.length > 0 ? (
-              Turmas.map((turma, index) => <ClassLink key={index} link={`/turma/${turma.idTurma}`} name={turma.nome} />)
+              Turmas.map((turma, index) => (
+                <ClassLink key={index} turma={turma} link={turma.escola.idGestor === TokenData.idUsuario} />
+              ))
             ) : (
               <Typography variant="subtitle2" textAlign={"center"} component="span">
                 Esta escola ainda não possui turmas

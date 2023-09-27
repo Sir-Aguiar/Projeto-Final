@@ -2,6 +2,12 @@ import axios, { AxiosInstance } from "axios";
 import React, { createContext, useState, useMemo, useContext, useEffect } from "react";
 import { useAuthHeader } from "react-auth-kit";
 import jwtDecode from "jwt-decode";
+import { IEscola } from "../../@types/Escolas";
+import { FindAllSchools } from "../../services/Escolas";
+import { ITurma } from "../../@types/Turmas";
+import { FindAllClasses, FindClassesBySchool } from "../../services/Turmas";
+import { FindStudentsByClass } from "../../services/Alunos";
+import { IAluno } from "../../@types/Alunos";
 
 interface IUserTokenData {
   email: string;
@@ -15,33 +21,6 @@ interface IModalProps {
   close: () => void;
 }
 
-interface ITurma {
-  idTurma: number;
-  escola: {
-    idGestor: number;
-    idEscola: number;
-    nome: string;
-  };
-  curso: {
-    idCurso: number;
-    nome: string;
-  };
-  nome: string;
-}
-
-interface IEscola {
-  idEscola: number;
-  idGestor: number;
-  nome: string;
-}
-
-interface IAluno {
-  idAluno: number;
-  idTurma: number;
-  idEscola: number;
-  nome: string;
-}
-
 type ProviderProps = {
   children: React.ReactNode;
 };
@@ -52,9 +31,9 @@ interface IRouteContext {
   DrawerUpdate: IModalProps;
   ModalDelete: IModalProps;
   ModalFilter: IModalProps;
-  TurmasState: ITurma[];
-  EscolasState: IEscola[];
-  AlunosTurmaState: IAluno[];
+  Turmas: ITurma[];
+  Escolas: IEscola[];
+  Alunos: IAluno[];
   selectedRows: number[];
   selectRow: (idTurma: number) => void;
   TokenData: IUserTokenData;
@@ -78,15 +57,18 @@ const TurmasProvider: React.FC<ProviderProps> = ({ children }) => {
   const [isUpdateOpen, setUpdateDrawer] = useState(false);
   const [isDeleteOpen, setDeleteModal] = useState(false);
   const [isFilterOpen, setFilterModal] = useState(false);
-  const [TurmasState, setTurmas] = useState<ITurma[]>([]);
-  const [AlunosTurmaState, setAlunoTurma] = useState<IAluno[]>([]);
-  const [EscolasState, setEscolas] = useState<IEscola[]>([]);
+
+  const [Escolas, setEscolas] = useState<IEscola[]>([]);
+
+  const [Turmas, setTurmas] = useState<ITurma[]>([]);
+  const [Alunos, setAlunos] = useState<IAluno[]>([]);
   const [selectedRows, setRows] = useState<number[]>([]);
   const [classNameFilter, setClassNameFilter] = useState("");
   const [selectedCourse, setSelectedCourse] = useState("");
   const [selectedSchool, setSelectedSchool] = useState("");
   const [SnackBarState, setSnackBarState] = useState(false);
   const [SnackBarMessage, setSnackBarMessage] = useState("");
+
   const TokenData = useMemo(() => {
     const TOKEN = authHeader();
     const TOKEN_DATA = jwtDecode(TOKEN) as IUserTokenData;
@@ -113,7 +95,7 @@ const TurmasProvider: React.FC<ProviderProps> = ({ children }) => {
       if (newValues.length === 1) {
         showClassStudents(newValues[0]);
       } else {
-        setAlunoTurma([]);
+        setAlunos([]);
       }
       return newValues;
     });
@@ -121,22 +103,37 @@ const TurmasProvider: React.FC<ProviderProps> = ({ children }) => {
 
   const showSchools = async () => {
     try {
-      const response = await RouteAPI.get("/escola");
-      setEscolas(response.data.escolas);
+      const response = await FindAllSchools(RouteAPI);
+      setEscolas(response);
     } catch (error: any) {
-      alert(error.response.data.error.message);
+      const response = error.response;
+      console.log(response);
+      alert(response.data.error.message);
     }
   };
 
   const showClasses = async () => {
-    const response = await RouteAPI.get(`/turma`);
-    console.log(response.data.turmas);
-    setTurmas(response.data.turmas);
+    try {
+      const response = await FindAllClasses(RouteAPI);
+      setTurmas(response);
+    } catch (error: any) {
+      const response = error.response;
+      console.log(response);
+      alert(response.data.error.message);
+    }
   };
 
   const showClassStudents = async (idTurma: number) => {
+    try {
+      const response = await FindStudentsByClass(RouteAPI, idTurma);
+      setAlunos(response);
+    } catch (error: any) {
+      const response = error.response;
+      console.log(response);
+      alert(response.data.error.message);
+    }
     const response = await RouteAPI.get(`/aluno?idTurma=${idTurma}`);
-    setAlunoTurma(response.data.alunos);
+    setAlunos(response.data.alunos);
   };
 
   const DrawerCreate: IModalProps = useMemo(() => {
@@ -195,7 +192,7 @@ const TurmasProvider: React.FC<ProviderProps> = ({ children }) => {
 
   useEffect(() => {
     showClasses();
-    document.title = "Eligo | Turmas"
+    document.title = "Eligo | Turmas";
   }, []);
 
   return (
@@ -213,11 +210,11 @@ const TurmasProvider: React.FC<ProviderProps> = ({ children }) => {
         classNameFilter,
         DrawerCreate,
         ModalDelete,
-        TurmasState,
-        EscolasState,
+        Turmas,
+        Escolas,
         selectedRows,
         ModalFilter,
-        AlunosTurmaState,
+        Alunos,
         setSnackBarState,
         SnackBarState,
         setSnackBarMessage,

@@ -1,6 +1,19 @@
 import axios, { AxiosInstance } from "axios";
 import React, { createContext, useState, useMemo, useContext, useEffect } from "react";
 import { useAuthHeader } from "react-auth-kit";
+import { FindAllSchools } from "../../services/Escolas";
+import jwtDecode from "jwt-decode";
+import { FindClassesBySchool } from "../../services/Turmas";
+import { IAluno } from "../../@types/Alunos";
+import { IEscola } from "../../@types/Escolas";
+import { ITurma } from "../../@types/Turmas";
+import { FindStudentsBySchool } from "../../services/Alunos";
+
+interface IUserTokenData {
+  email: string;
+  idUsuario: number;
+  iat: number;
+}
 
 type ProviderProps = {
   children: React.ReactNode;
@@ -12,54 +25,16 @@ interface IModalProps {
   close: () => void;
 }
 
-interface ITurma {
-  idTurma: number;
-  idCurso: number;
-  idEscola: number;
-  nome: string;
-  escola: {
-    idGestor: number;
-    nome: string;
-  };
-  curso: {
-    nome: string;
-  };
-}
-interface IEscola {
-  idEscola: number;
-  idGestor: number;
-  nome: string;
-}
-
-interface IAluno {
-  idAluno: number;
-  nome: string;
-  escola: {
-    idEscola: number;
-    nome: string;
-  };
-  turma: {
-    idTurma: number;
-    nome: string;
-    curso: {
-      idCurso: number;
-      nome: string;
-    };
-  };
-}
-
 interface IRouteContext {
   Alunos: IAluno[];
-  EscolasState: IEscola[];
-  TurmasState: ITurma[];
-  AlunosQTD: number;
+  Escolas: IEscola[];
+  Turmas: ITurma[];
   RouteAPI: AxiosInstance;
   DrawerCreate: IModalProps;
   DrawerUpdate: IModalProps;
   ModalDelete: IModalProps;
   selectedRows: number[];
   selectRow: (idTurma: number) => void;
-  loadMore: () => Promise<void>;
   showSchools: () => Promise<void>;
   showClasses: (idEscola?: number) => Promise<void>;
   showStudent: (idEscola?: number) => Promise<void>;
@@ -69,6 +44,7 @@ interface IRouteContext {
   selectedClass: string;
   setSelectedSchool: React.Dispatch<React.SetStateAction<string>>;
   setSelectedClass: React.Dispatch<React.SetStateAction<string>>;
+  TokenData: IUserTokenData;
 }
 
 const RouteContext = createContext<IRouteContext | null>(null);
@@ -76,19 +52,24 @@ const RouteContext = createContext<IRouteContext | null>(null);
 const AlunosProvider: React.FC<ProviderProps> = ({ children }) => {
   const authHeader = useAuthHeader();
 
+  const [isLoading, setLoading] = useState(false);
   const [isCreateOpen, setCreateDrawer] = useState(false);
   const [isUpdateOpen, setUpdateDrawer] = useState(false);
   const [isDeleteOpen, setDeleteModal] = useState(false);
   const [selectedRows, setRows] = useState<number[]>([]);
 
-  const [Alunos, setAlunos] = useState<IAluno[]>([]);
   const [selectedSchool, setSelectedSchool] = useState("");
   const [selectedClass, setSelectedClass] = useState("");
-  const [AlunosQTD, setAlunosQTD] = useState(0);
 
-  const [TurmasState, setTurmas] = useState<ITurma[]>([]);
-  const [EscolasState, setEscolas] = useState<IEscola[]>([]);
-  const [isLoading, setLoading] = useState(false);
+  const [Alunos, setAlunos] = useState<IAluno[]>([]);
+  const [Turmas, setTurmas] = useState<ITurma[]>([]);
+  const [Escolas, setEscolas] = useState<IEscola[]>([]);
+
+  const TokenData = useMemo(() => {
+    const TOKEN = authHeader();
+    const TOKEN_DATA = jwtDecode(TOKEN) as IUserTokenData;
+    return TOKEN_DATA;
+  }, [authHeader()]);
 
   // Axios instance
   const RouteAPI = axios.create({
@@ -106,8 +87,6 @@ const AlunosProvider: React.FC<ProviderProps> = ({ children }) => {
       },
       close: () => {
         showStudent().then(() => setCreateDrawer(false));
-        setEscolas([]);
-        setTurmas([]);
       },
     };
   }, [isCreateOpen]);
@@ -118,7 +97,9 @@ const AlunosProvider: React.FC<ProviderProps> = ({ children }) => {
       open: () => {
         showClasses().then(() => setUpdateDrawer(true));
       },
-      close: () => {},
+      close: () => {
+        setUpdateDrawer(false);
+      },
     };
   }, [isUpdateOpen]);
 
@@ -136,56 +117,72 @@ const AlunosProvider: React.FC<ProviderProps> = ({ children }) => {
   }, [isDeleteOpen]);
 
   const selectRow = (idAluno: number) => {
-    setRows((values) => {
-      let newValues: number[];
+    const toSelectStudent = Alunos.find((aluno) => aluno.idAluno === idAluno);
+    if (toSelectStudent?.escola.idGestor === TokenData.idUsuario) {
+      setRows((values) => {
+        let newValues: number[];
 
-      if (values.includes(idAluno)) {
-        newValues = values.filter((value) => value !== idAluno);
-      } else {
-        newValues = [...values, idAluno];
-      }
-      /* 			if (newValues.length === 1) {
-				showClassStudents(newValues[0]);
-			} else {
-				setAlunoTurma([]);
-			} */
-      return newValues;
-    });
+        if (values.includes(idAluno)) {
+          newValues = values.filter((value) => value !== idAluno);
+        } else {
+          newValues = [...values, idAluno];
+        }
+        /* 			if (newValues.length === 1) {
+          showClassStudents(newValues[0]);
+        } else {
+          setAlunoTurma([]);
+        } */
+        return newValues;
+      });
+    }
   };
 
   const showSchools = async () => {
-    const response = await RouteAPI.get("/escola");
-    setEscolas(response.data.escolas);
+    try {
+      const response = await FindAllSchools(RouteAPI);
+      setEscolas(response);
+    } catch (error: any) {
+      const response = error.response;
+      console.log(response.data.error.message);
+    }
   };
 
   const showClasses = async (idEscola?: number) => {
-    const response = await RouteAPI.get(`/turma${idEscola && `?idEscola=${idEscola}`}`);
-    setTurmas(response.data.turmas);
+    if (idEscola) {
+      console.log(idEscola);
+      try {
+        const response = await FindClassesBySchool(RouteAPI, Number(idEscola));
+        console.log(response);
+        setTurmas(response);
+      } catch (error: any) {
+        const response = error.response;
+        console.log(response.data.error.message);
+      }
+    } else if (selectedSchool) {
+      try {
+        const response = await FindClassesBySchool(RouteAPI, Number(selectedSchool));
+        setTurmas(response);
+      } catch (error: any) {
+        const response = error.response;
+        console.log(response.data.error.message);
+      }
+    }
   };
 
   const showStudent = async () => {
     setLoading(true);
 
     if (selectedSchool) {
-      const response = await RouteAPI.get(`/aluno?idEscola=${selectedSchool}`);
-      setAlunos(response.data.alunos);
-      setAlunosQTD(response.data.qtd);
-    }
-
-    if (selectedClass) {
-      const response = await RouteAPI.get(`/aluno?idTurma=${selectedClass}`);
-      setAlunos(response.data.alunos);
-      setAlunosQTD(response.data.qtd);
+      try {
+        const response = await FindStudentsBySchool(RouteAPI, Number(selectedSchool));
+        setAlunos(response);
+      } catch (error: any) {
+        const response = error.response;
+        console.log(response.data.error.message);
+      }
     }
 
     setLoading(false);
-  };
-
-  const loadMore = async () => {
-    const skip = Alunos.length;
-    const response = await RouteAPI.get(`/aluno`);
-    setAlunos((values) => [...values, ...response.data.alunos]);
-    setAlunosQTD(response.data.qtd);
   };
 
   useEffect(() => {
@@ -195,21 +192,21 @@ const AlunosProvider: React.FC<ProviderProps> = ({ children }) => {
 
   useEffect(() => {
     showStudent();
-  }, [selectedSchool, selectedClass]);
+    showClasses();
+  }, [selectedSchool]);
 
   return (
     <RouteContext.Provider
       value={{
-        loadMore,
         Alunos,
-        AlunosQTD,
         DrawerCreate,
+        TokenData,
         DrawerUpdate,
         ModalDelete,
         RouteAPI,
         selectedRows,
-        EscolasState,
-        TurmasState,
+        Escolas,
+        Turmas,
         selectRow,
         showClasses,
         showSchools,

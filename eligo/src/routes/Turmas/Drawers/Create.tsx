@@ -36,7 +36,7 @@ const ClassToAdd: React.FC = () => {
 };
 
 const Create: React.FC = () => {
-  const { DrawerCreate, EscolasState, RouteAPI, TokenData } = useTurmasContext();
+  const { DrawerCreate, Escolas, RouteAPI, TokenData } = useTurmasContext();
   const [idEscola, setIdEscola] = useState("");
   const [classesToAdd, setClassesToAdd] = useState<number[]>([]);
   const addClass = () => setClassesToAdd((values) => [...values, 1]);
@@ -97,7 +97,7 @@ const Create: React.FC = () => {
                 label="Escola"
                 onChange={(e: any) => setIdEscola(e.target.value)}
               >
-                {EscolasState.map(
+                {Escolas.map(
                   (escola, index) =>
                     escola.idGestor === TokenData.idUsuario && (
                       <MenuItem value={escola.idEscola} key={index}>

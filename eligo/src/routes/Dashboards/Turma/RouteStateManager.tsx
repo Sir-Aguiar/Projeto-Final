@@ -55,7 +55,7 @@ export const ClassDashboardProvider: React.FC<{ children: React.ReactNode }> = (
       ]);
       setAvarageAbsence([["Mês", "Ausências"], ...response.data.media_faltas]);
       setClassInfo(response.data.turma_info);
-      console.log(response);
+      console.log(response.data);
     } catch (error: any) {
       console.log(error);
     }

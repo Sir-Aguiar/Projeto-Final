@@ -2,9 +2,23 @@ const FindClassesByAdmin = require("./FindByAdmin");
 const { FindClassesByProfessor } = require("./FindByProfessor");
 
 /**
+  @typedef {object} Curso
+  @property {number} idCurso
+  @property {string} nome
+*/
+/**
+  @typedef {object} Escola
+  @property {number} idEscola
+  @property {number} idGestor
+  @property {string} nome
+*/
+
+/**
   @typedef {object} Turma
   @property {number} idTurma
   @property {string} nome
+  @property {Curso} curso
+  @property {Escola} escola
 */
 
 /**
@@ -25,7 +39,7 @@ const FindClassesByUser = async (idUsuario) => {
   const turmas = [...admin, ...professor].filter((turma) => {
     if (!classMap.has(turma.idTurma)) {
       classMap.set(turma.idTurma, turma);
-      return turma;
+      return true;
     }
   });
 

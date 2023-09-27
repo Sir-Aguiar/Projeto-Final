@@ -28,13 +28,13 @@ const StudentLink: React.FC<{ link: string; name: string }> = ({ link, name }) =
 
 const Turmas: React.FC = () => {
   const {
-    TurmasState,
+    Turmas,
     selectRow,
     selectedRows,
     DrawerCreate,
     ModalDelete,
     DrawerUpdate,
-    AlunosTurmaState,
+    Alunos,
     TokenData,
     ModalFilter,
     selectedCourse,
@@ -46,7 +46,7 @@ const Turmas: React.FC = () => {
   } = useTurmasContext();
 
   const applyFilters = () => {
-    let filtredData = TurmasState;
+    let filtredData = Turmas;
 
     if (selectedCourse) {
       filtredData = filtredData.filter((turma) => turma.curso.idCurso === Number(selectedCourse));
@@ -77,7 +77,7 @@ const Turmas: React.FC = () => {
           <button
             disabled={
               selectedRows.length !== 1 ||
-              TurmasState.find((turma) => turma.idTurma === selectedRows[0])?.escola.idGestor !== TokenData.idUsuario
+              Turmas.find((turma) => turma.idTurma === selectedRows[0])?.escola.idGestor !== TokenData.idUsuario
             }
             title="Editar turma"
             onClick={() => DrawerUpdate.open()}
@@ -88,7 +88,7 @@ const Turmas: React.FC = () => {
             disabled={
               selectedRows.length < 1 ||
               selectedRows.filter((idTurma) => {
-                const turmaSelecionada = TurmasState.find((turma) => turma.idTurma === idTurma);
+                const turmaSelecionada = Turmas.find((turma) => turma.idTurma === idTurma);
                 return turmaSelecionada?.escola.idGestor !== TokenData.idUsuario;
               }).length > 0
             }
@@ -108,10 +108,8 @@ const Turmas: React.FC = () => {
             <Typography variant="subtitle2" textAlign={"center"} component="span">
               Selecione <span className="font-bold">uma</span> turma
             </Typography>
-          ) : AlunosTurmaState.length > 0 ? (
-            AlunosTurmaState.map((aluno, index) => (
-              <StudentLink key={index} name={aluno.nome} link={`/aluno/${aluno.idAluno}`} />
-            ))
+          ) : Alunos.length > 0 ? (
+            Alunos.map((aluno, index) => <StudentLink key={index} name={aluno.nome} link={`/aluno/${aluno.idAluno}`} />)
           ) : (
             <Typography variant="subtitle2" textAlign={"center"} component="span">
               Esta turma ainda não possui alunos

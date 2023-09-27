@@ -33,6 +33,7 @@ const { VerifySchoolPermission, VerifyClassPermission } = require("../../utils/V
   @property {number} idAluno
   @property {string} nome
   @property {Turma} turma
+  @property {Escola} escola
 */
 
 /**

@@ -1,4 +1,5 @@
 const Curso = require("../../../database/models/Curso");
+const Escola = require("../../../database/models/Escola");
 const Turma = require("../../../database/models/Turma");
 const { VerifySchoolPermission } = require("../../utils/VerifyPermission");
 const { FindClassesFromSchoolByProfessor } = require("./FindByProfessor");
@@ -8,12 +9,19 @@ const { FindClassesFromSchoolByProfessor } = require("./FindByProfessor");
   @property {number} idCurso
   @property {string} nome
 */
+/**
+  @typedef {object} Escola
+  @property {number} idEscola
+  @property {number} idGestor
+  @property {string} nome
+*/
 
 /**
   @typedef {object} Turma
   @property {number} idTurma
   @property {string} nome
   @property {Curso} curso
+  @property {Escola} escola
 */
 
 /**
@@ -45,14 +53,15 @@ const FindClassesBySchool = async (idEscola, idUsuario) => {
   const turmas = await Turma.findAll({
     where: { idEscola },
     attributes: ["idTurma", "nome"],
-    include: [{ model: Curso, as: "curso", attributes: ["idCurso", "nome"] }],
+    include: [
+      { model: Curso, as: "curso", attributes: ["idCurso", "nome"] },
+      { model: Escola, as: "escola", attributes: ["idEscola", "idGestor", "nome"] },
+    ],
     raw: true,
     nest: true,
   });
 
   return turmas;
 };
-
-FindClassesBySchool(3,11).then(res => console.log(res))
 
 module.exports = FindClassesBySchool;

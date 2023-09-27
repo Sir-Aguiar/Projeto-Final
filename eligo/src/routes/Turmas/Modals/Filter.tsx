@@ -15,7 +15,7 @@ import Select from "@mui/material/Select";
 const Filter: React.FC = () => {
   const {
     ModalFilter,
-    EscolasState,
+    Escolas,
     selectedCourse,
     selectedSchool,
     setSelectedCourse,
@@ -62,7 +62,7 @@ const Filter: React.FC = () => {
               <InputLabel>Escola</InputLabel>
               <Select value={selectedSchool} label="Escola" onChange={(e: any) => setSelectedSchool(e.target.value)}>
                 <MenuItem value="">Selecione...</MenuItem>
-                {EscolasState.map((escola, index) => (
+                {Escolas.map((escola, index) => (
                   <MenuItem key={index} value={escola.idEscola}>
                     {escola.nome}
                   </MenuItem>

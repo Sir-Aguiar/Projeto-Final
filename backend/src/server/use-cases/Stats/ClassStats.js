@@ -89,7 +89,7 @@ const ClassInfo = async (idTurma) => {
       {
         model: Escola,
         as: "escola",
-        attributes: ["idEscola", "nome"],
+        attributes: ["idEscola", "idGestor","nome"],
       },
       {
         model: Curso,
@@ -117,5 +117,6 @@ const ClassInfo = async (idTurma) => {
       faltas: aluno.chamadas.filter((chamada) => !chamada.dataValues.situacao).length,
     })).sort((a,b) => b.faltas - a.faltas),
   };
+  
 };
 module.exports = { ClassPopulation, AvarageMonthlyAbsence, ClassInfo };

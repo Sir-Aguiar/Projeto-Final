@@ -2,19 +2,9 @@ import axios, { AxiosInstance } from "axios";
 import React, { createContext, useState, useMemo, useContext, useEffect } from "react";
 import { useAuthHeader } from "react-auth-kit";
 import jwtDecode from "jwt-decode";
-
-interface IEscola {
-  idEscola: number;
-  idGestor: number;
-  nome: string;
-}
-
-interface ITurma {
-  idTurma: number;
-  idCurso: string;
-  idEscola: number;
-  nome: string;
-}
+import { IEscola } from "../../@types/Escolas";
+import { FindAllSchools } from "../../services/Escolas";
+import { ITurma } from "../../@types/Turmas";
 
 type ProviderProps = {
   children: React.ReactNode;
@@ -55,6 +45,7 @@ const EscolasProvider: React.FC<ProviderProps> = ({ children }) => {
   const [Escolas, setEscolas] = useState<IEscola[]>([]);
   const [selectedRows, setRows] = useState<number[]>([]);
   const [isLoading, setLoading] = useState(false);
+
   const TokenData = useMemo(() => {
     const TOKEN = authHeader();
     const TOKEN_DATA = jwtDecode(TOKEN) as IUserTokenData;
@@ -70,16 +61,22 @@ const EscolasProvider: React.FC<ProviderProps> = ({ children }) => {
   });
 
   const showClasses = async (idEscola: number) => {
-    const response = await RouteAPI.get(`/turma?idEscola=${idEscola}`);
-    setTurmas(response.data.turmas);
+    try {
+      const response = await RouteAPI.get(`/turma?idEscola=${idEscola}`);
+      setTurmas(response.data.turmas);
+    } catch (error: any) {
+      const response = error.response;
+      console.log(response.data.error.message);
+    }
   };
 
   const showSchools = async () => {
     try {
-      const response = await RouteAPI.get("/escola");
-      setEscolas(response.data.escolas);
+      const response = await FindAllSchools(RouteAPI);
+      setEscolas(response);
     } catch (error: any) {
-      alert(error.response.data.error.message);
+      const response = error.response;
+      console.log(response.data.error.message);
     }
   };
 

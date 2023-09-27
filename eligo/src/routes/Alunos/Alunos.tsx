@@ -17,23 +17,30 @@ import { Link } from "react-router-dom";
 const Alunos: React.FC = () => {
   const {
     Alunos,
-    AlunosQTD,
     selectRow,
     selectedRows,
-    loadMore,
     DrawerCreate,
     ModalDelete,
     DrawerUpdate,
-    EscolasState,
-    TurmasState,
-    showStudent,
+    Escolas,
+    Turmas,
     isLoading,
     showClasses,
     selectedSchool,
     selectedClass,
     setSelectedSchool,
+    TokenData,
     setSelectedClass,
   } = useAlunosContext();
+
+  const applyFilters = () => {
+    let filtredData = Alunos;
+
+    if (selectedClass) {
+      filtredData = filtredData.filter((aluno) => aluno.turma.idTurma === Number(selectedClass));
+    }
+    return filtredData;
+  };
 
   return (
     <div className={styles.content_container}>
@@ -62,15 +69,15 @@ const Alunos: React.FC = () => {
                 showClasses(Number(e.target.value));
               }}
             >
-              {EscolasState.length > 0 &&
-                EscolasState.map((escola, index) => (
+              {Escolas.length > 0 &&
+                Escolas.map((escola, index) => (
                   <MenuItem key={index} value={escola.idEscola}>
                     {escola.nome}
                   </MenuItem>
                 ))}
             </Select>
           </FormControl>
-          <FormControl fullWidth disabled={TurmasState.length < 1}>
+          <FormControl fullWidth disabled={Turmas.length < 1}>
             <InputLabel>Turma</InputLabel>
             <Select
               value={selectedClass}
@@ -78,8 +85,9 @@ const Alunos: React.FC = () => {
               label="Turma"
               onChange={(e: any) => setSelectedClass(e.target.value)}
             >
-              {TurmasState.length > 0 &&
-                TurmasState.map((turma, index) => (
+              <MenuItem value="">Selecione</MenuItem>
+              {Turmas.length > 0 &&
+                Turmas.map((turma, index) => (
                   <MenuItem key={index} value={turma.idTurma}>
                     {turma.nome}
                   </MenuItem>
@@ -111,18 +119,22 @@ const Alunos: React.FC = () => {
                 </tr>
               </thead>
               <tbody className={styles.table_body}>
-                {Alunos.map((aluno, index) => (
+                {applyFilters().map((aluno, index) => (
                   <tr key={index}>
                     <td>
-                      <Checkbox
-                        checked={selectedRows.includes(aluno.idAluno)}
-                        onChange={() => selectRow(aluno.idAluno)}
-                      />
+                      {aluno.escola.idGestor === TokenData.idUsuario && (
+                        <Checkbox
+                          checked={selectedRows.includes(aluno.idAluno)}
+                          onChange={() => selectRow(aluno.idAluno)}
+                        />
+                      )}
                     </td>
                     <td>
-                      <Link to={`/aluno/${aluno.idAluno}`}>
-                        <OpenInNewIcon fontSize="small" />
-                      </Link>
+                      {aluno.escola.idGestor === TokenData.idUsuario && (
+                        <Link to={`/aluno/${aluno.idAluno}`}>
+                          <OpenInNewIcon fontSize="small" />
+                        </Link>
+                      )}
                     </td>
                     <td>{aluno.nome}</td>
                     <td>{aluno.turma.nome}</td>
