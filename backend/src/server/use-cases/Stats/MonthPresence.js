@@ -8,15 +8,31 @@ const Aluno = require("../../../database/models/Aluno");
 const Disciplina = require("../../../database/models/Disciplina");
 const Curso = require("../../../database/models/Curso");
 const Escola = require("../../../database/models/Escola");
+const { VerifySchoolPermission } = require("../../utils/VerifyPermission");
+const ServerError = require("../../utils/ServerError");
 
 /**
- *
  * @param {number} idAluno Identificador do aluno
+ * @param {number} idUsuario Identificador do usuário
  * @returns {Promise<(string | number)[][]>} Retorna um array contendo as faltas mensais do aluno informado.
  */
 
-const MonthlyAbsence = async (idAluno) => {
-	/* const aluno = await FindStudentById(idAluno); */
+const MonthlyAbsence = async (idAluno, idUsuario) => {
+	if (!idAluno || typeof idAluno !== "number") {
+		throw new ServerError("O identificador do aluno está ausente ou em formato inválido", 400, new Error().stack);
+	}
+
+	if (!idUsuario || typeof idUsuario !== "number") {
+		throw new ServerError("O identificador do usuário está ausente ou em formato inválido", 400, new Error().stack);
+	}
+
+	const foundStudent = await Aluno.findByPk(idAluno, { attributes: ["idEscola"], raw: true, nest: true });
+
+	const isUserAdmin = await VerifySchoolPermission(foundStudent.idEscola, idUsuario);
+
+	if (!isUserAdmin) {
+		throw new ServerError("Você não tem permissão para realizar esta ação", 401, new Error().stack);
+	}
 
 	const faltas = await ChamadaAluno.findAll({
 		where: { idAluno, situacao: false },
@@ -52,11 +68,27 @@ const MonthlyAbsence = async (idAluno) => {
  * @property {string} nome
  *
  * @param {number} idAluno Identificador do aluno
+ * @param {number} idUsuario Identificador do usuário
  * @param {number} month Número do mês desejado, onde 0 = Janeiro e 11 = Dezembro
  * @returns {Promise<{faltas:number, disciplinas:Disciplina[]}>} Esta função informará a quantidade de faltas do aluno no mês, contendo também a disposição por disciplinas
  */
 
-const MonthAbscence = async (idAluno, month) => {
+const MonthAbscence = async (month, idAluno, idUsuario) => {
+	if (!idAluno || typeof idAluno !== "number") {
+		throw new ServerError("O identificador do aluno está ausente ou em formato inválido", 400, new Error().stack);
+	}
+
+	if (!idUsuario || typeof idUsuario !== "number") {
+		throw new ServerError("O identificador do usuário está ausente ou em formato inválido", 400, new Error().stack);
+	}
+	const foundStudent = await Aluno.findByPk(idAluno, { attributes: ["idEscola"], raw: true, nest: true });
+
+	const isUserAdmin = await VerifySchoolPermission(foundStudent.idEscola, idUsuario);
+
+	if (!isUserAdmin) {
+		throw new ServerError("Você não tem permissão para realizar esta ação", 401, new Error().stack);
+	}
+
 	const currentDate = new Date();
 
 	const currentYear = currentDate.getFullYear();
@@ -119,11 +151,20 @@ const MonthAbscence = async (idAluno, month) => {
 };
 
 /**
- * @param {number} idCurso Identificador do curso
+ * @param {number} idAluno Identificador do aluno
+ * @param {number} idUsuario Identificador do usuário
  * @param {number} month Número do mês desejado, onde 0 = Janeiro e 11 = Dezembro
  * @description Esta função retorna a média de faltas dos alunos do curso informado, no mês informado
  */
-const AvarageMonthAbscenceInCourse = async (idAluno, month) => {
+const AvarageMonthAbscenceInCourse = async (month, idAluno, idUsuario) => {
+	if (!idAluno || typeof idAluno !== "number") {
+		throw new ServerError("O identificador do aluno está ausente ou em formato inválido", 400, new Error().stack);
+	}
+
+	if (!idUsuario || typeof idUsuario !== "number") {
+		throw new ServerError("O identificador do usuário está ausente ou em formato inválido", 400, new Error().stack);
+	}
+
 	const currentDate = new Date();
 
 	const currentYear = currentDate.getFullYear();
@@ -144,6 +185,12 @@ const AvarageMonthAbscenceInCourse = async (idAluno, month) => {
 		raw: true,
 		nest: true,
 	});
+
+	const isUserAdmin = await VerifySchoolPermission(foundStudent.escola.idEscola, idUsuario);
+
+	if (!isUserAdmin) {
+		throw new ServerError("Você não tem permissão para realizar esta ação", 401, new Error().stack);
+	}
 
 	const faltas = await ChamadaAluno.findAll({
 		where: {
@@ -191,7 +238,23 @@ const AvarageMonthAbscenceInCourse = async (idAluno, month) => {
 	return Number((faltas.length / uniqueStudents.length).toFixed(2));
 };
 
-const TotalAbscence = async (idAluno) => {
+const TotalAbscence = async (idAluno, idUsuario) => {
+	if (!idAluno || typeof idAluno !== "number") {
+		throw new ServerError("O identificador do aluno está ausente ou em formato inválido", 400, new Error().stack);
+	}
+
+	if (!idUsuario || typeof idUsuario !== "number") {
+		throw new ServerError("O identificador do usuário está ausente ou em formato inválido", 400, new Error().stack);
+	}
+
+	const foundStudent = await Aluno.findByPk(idAluno, { attributes: ["idEscola"], raw: true, nest: true });
+
+	const isUserAdmin = await VerifySchoolPermission(foundStudent.idEscola, idUsuario);
+
+	if (!isUserAdmin) {
+		throw new ServerError("Você não tem permissão para realizar esta ação", 401, new Error().stack);
+	}
+
 	const currentDate = new Date();
 
 	const currentYear = currentDate.getFullYear();

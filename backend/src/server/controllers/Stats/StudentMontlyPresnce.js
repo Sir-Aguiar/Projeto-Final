@@ -5,6 +5,7 @@ const {
 	MonthlyAbsence,
 	TotalAbscence,
 } = require("../../use-cases/Stats/MonthPresence");
+const ServerError = require("../../utils/ServerError");
 
 /** @type {import("express").RequestHandler}  */
 const MonthlyPresenceController = async (req, res) => {
@@ -17,22 +18,14 @@ const MonthlyPresenceController = async (req, res) => {
 	month = Number(month);
 
 	try {
-		const aluno = await FindStudentById(Number(idAluno));
+		const aluno = await FindStudentById(Number(idAluno), Number(idUsuario));
 
-		if (aluno.escola.idGestor !== idUsuario) {
-			return res.status(401).json({
-				error: {
-					message: "Você não possui acesso à estas informações",
-				},
-			});
-		}
+		const faltas_mes = await MonthAbscence(month, Number(aluno.idAluno), Number(idUsuario));
 
-		const faltas_mes = await MonthAbscence(aluno.idAluno, month);
+		const media_falta_mes = await AvarageMonthAbscenceInCourse(month, Number(aluno.idAluno), Number(idUsuario));
 
-		const media_falta_mes = await AvarageMonthAbscenceInCourse(Number(aluno.idAluno), month);
-
-		const faltas_ano = await MonthlyAbsence(Number(idAluno));
-		const faltas_total = await TotalAbscence(Number(idAluno));
+		const faltas_ano = await MonthlyAbsence(Number(aluno.idAluno), Number(idUsuario));
+		const faltas_total = await TotalAbscence(Number(aluno.idAluno), Number(idUsuario));
 
 		return res.status(200).json({
 			aluno,
@@ -42,8 +35,14 @@ const MonthlyPresenceController = async (req, res) => {
 			faltas_total,
 		});
 	} catch (error) {
-		res.status(500).json({ error });
+		if (error instanceof ServerError) {
+			const { message, status } = error;
+			return res.status(status).json({ error: { message } });
+		}
 		console.log(error);
+		return res.status(500).json({
+			error: { message: "Houve um erro desconhecido ao tentar pesquisar turmas" },
+		});
 	}
 };
 
