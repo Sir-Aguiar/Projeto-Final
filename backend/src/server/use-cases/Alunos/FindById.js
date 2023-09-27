@@ -1,6 +1,7 @@
 const Aluno = require("../../../database/models/Aluno");
 const Turma = require("../../../database/models/Turma");
 const Curso = require("../../../database/models/Curso");
+const Escola = require("../../../database/models/Escola");
 /**
  * @typedef {object} Curso
  *  @property {number} idCurso
@@ -28,20 +29,25 @@ const Curso = require("../../../database/models/Curso");
  */
 
 const FindStudentById = async (idAluno) => {
-  const aluno = await Aluno.findByPk(idAluno, {
-    attributes: ["idAluno", "nome"],
-    include: [
-      {
-        model: Turma,
-        as: "turma",
-        attributes: ["idTurma", "nome"],
-        include: [{ model: Curso, as: "curso", attributes: ["idCurso", "nome"] }],
-      },
-    ],
-    raw: true,
-    nest: true,
-  });
-  return aluno;
+	const aluno = await Aluno.findByPk(idAluno, {
+		attributes: ["idAluno", "nome"],
+		include: [
+			{
+				model: Turma,
+				as: "turma",
+				attributes: ["idTurma", "nome"],
+				include: [{ model: Curso, as: "curso", attributes: ["idCurso", "nome"] }],
+			},
+			{
+				model: Escola,
+				as: "escola",
+				attributes: ["idEscola", "idGestor", "nome"],
+			},
+		],
+		raw: true,
+		nest: true,
+	});
+	return aluno;
 };
 
 module.exports = FindStudentById;
