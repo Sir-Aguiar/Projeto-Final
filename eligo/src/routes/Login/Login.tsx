@@ -60,12 +60,12 @@ const Login: React.FC = () => {
           <div className={styles.inputs}>
             <TextField fullWidth id="email" type="email" label="Nome de usuário" variant="outlined" />
             <TextField fullWidth id="senha" label="Senha" type="password" variant="outlined" />
-            <div className="w-full flex items-center font-Roboto text-sm text-black-text font-medium">
+            {/* <div className="w-full flex items-center font-Roboto text-sm text-black-text font-medium">
               <Checkbox size="small" id="remember" />
               <label htmlFor="remember" className="cursor-pointer">
                 Lembrar senha
               </label>
-            </div>
+            </div> */}
           </div>
 
           <button type="submit" className={styles.login} id="login-submiter">

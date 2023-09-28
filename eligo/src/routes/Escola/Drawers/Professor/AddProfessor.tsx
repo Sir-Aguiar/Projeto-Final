@@ -19,10 +19,14 @@ const NewAssociation: React.FC<{ turmas: any[]; disciplinas: any[] }> = ({ turma
       return [];
     }
     const selectedClass = turmas.find((turma) => turma.idTurma === idTurma);
-    return disciplinas.filter((disciplina) => disciplina.curso.idCurso === selectedClass.idCurso);
+    console.log(selectedClass);
+    console.log(disciplinas.filter((disciplina) => disciplina.curso.idCurso === selectedClass.curso.idCurso));
+    return disciplinas.filter((disciplina) => disciplina.curso.idCurso === selectedClass.curso.idCurso);
   }, [idTurma]);
 
   useEffect(() => {
+    console.log(disciplinas);
+    console.log(turmas);
     if (!disciplinas || disciplinas.length < 1) {
       setIdDisciplina("");
     }
@@ -70,7 +74,7 @@ const AddProfessor: React.FC = () => {
   const { ProfessorDrawer, ProfessorsData, RouteAPI, SchoolData, DisciplinesData, GridData } = useEscolaContext();
   const [Turmas, setTurmas] = useState<any[]>([]);
   const [associationsToAdd, setAssociations] = useState([0]);
-  
+
   const addAssociation = () => {
     setAssociations((values) => [...values, 1]);
   };

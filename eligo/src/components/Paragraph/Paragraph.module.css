@@ -1,7 +1,7 @@
 .paragraph_container {
-  @apply flex justify-center items-center content-center overflow-hidden;
+  @apply flex justify-around items-center content-center overflow-hidden;
   @apply gap-6 p-2;
-  @apply min-h-[224px] max-w-[928px] mobile:min-h-[450px];
+  @apply min-h-[224px] w-full max-w-[1120px] mobile:min-h-[450px];
   @apply border-b-2 border-black-text border-opacity-40;
 }
 

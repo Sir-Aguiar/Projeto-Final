@@ -8,7 +8,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 const Update: React.FC = () => {
-  const { selectedRows, DrawerUpdate, TurmasState, RouteAPI } = useTurmasContext();
+  const { selectedRows, DrawerUpdate, Turmas, RouteAPI } = useTurmasContext();
 
   const [TurmaIdCurso, setTurmaIdCurso] = useState("");
   const [TurmaNome, setTurmaNome] = useState("");
@@ -19,7 +19,7 @@ const Update: React.FC = () => {
         DrawerUpdate.close();
         return;
       }
-      const RespectiveClass = TurmasState.find((turma) => turma.idTurma === selectedRows[0])!;
+      const RespectiveClass = Turmas.find((turma) => turma.idTurma === selectedRows[0])!;
       setTurmaIdCurso(RespectiveClass.curso.idCurso.toString());
       setTurmaNome(RespectiveClass.nome);
     }

@@ -132,7 +132,7 @@ const EscolaProvider: React.FC<ProviderProps> = ({ children }) => {
     return {
       situation: isDisciplineModalOpen,
       close() {
-        setDisciplineModalOpen(false);
+        loadInitialData().then(() => setDisciplineModalOpen(false));
       },
       open() {
         loadDisciplineData(false)
@@ -284,6 +284,7 @@ const EscolaProvider: React.FC<ProviderProps> = ({ children }) => {
   const loadGridData = async () => {
     try {
       const response = await RouteAPI.get(`/grade?idEscola=${idEscola}`);
+      console.log(response);
       setGridData(response.data.grade);
     } catch (error) {
       console.log(error);

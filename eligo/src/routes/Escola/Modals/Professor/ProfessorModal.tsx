@@ -171,12 +171,9 @@ const ModalProfessor: React.FC = () => {
             <Fade in={isDeleteOpen}>
               <div className={styles.delete_container}>
                 <header>
-                  <h1 className="font-semibold text-xl">Remover Escolas</h1>
+                  <h1 className="font-semibold text-xl">Remover Professor</h1>
                   <div className="w-full flex flex-col items-center gap-[2px]">
-                    <h3 className="text-[12px] ">
-                      Você tem certeza que deseja excluir {selectedRows.length} escola
-                      {selectedRows.length > 1 ? "s" : ""}?
-                    </h3>
+                    <h3 className="text-[12px] ">Você tem certeza que deseja remover esta associação?</h3>
                     <p className="text-[12px] font-medium text-icon-black">Esta ação não poderá ser revertida</p>
                   </div>
                 </header>
@@ -187,7 +184,7 @@ const ModalProfessor: React.FC = () => {
                   <div className="flex flex-col gap-1 h-full">
                     <h1 className="text-lg font-bold text-[#D94F3B]">Cuidado</h1>
                     <p className="text-[12px] leading-4 text-icon-black">
-                      Todas as turmas, das respectivas escolas, serão apagadas assim como seus dados.
+                      Você está removendo este professor da suas respectiva disciplina e turma
                     </p>
                   </div>
                 </main>
