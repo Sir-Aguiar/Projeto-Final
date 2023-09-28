@@ -7,20 +7,35 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import { AxiosError } from "axios";
+import { UpdateStudent } from "../../../services/Alunos";
 const Update: React.FC = () => {
-  const { DrawerUpdate, Turmas, selectedRows, Alunos } = useAlunosContext();
+  const { DrawerUpdate, Turmas, selectedRows, Alunos, RouteAPI, showStudent } = useAlunosContext();
 
   const [idTurma, setIdTurma] = useState("");
   const [nomeAluno, setNomeAluno] = useState("");
 
-  const onClose = () => {
+  const onClose = async () => {
+    await showStudent();
     DrawerUpdate.close();
   };
 
-  const onSubmit = async () => {};
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const toUpdate = { nome: nomeAluno, idTurma };
+    try {
+      const response = await UpdateStudent(RouteAPI, selectedRows[0], toUpdate);
+      await onClose();
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        alert(error.response?.data.error.message);
+        return;
+      }
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
-    if (DrawerUpdate.situation) {
+    if (DrawerUpdate.situation && selectedRows.length === 1) {
       const foundStudent = Alunos.find((aluno) => aluno.idAluno === selectedRows[0]);
       const foundClass = Turmas.find((turma) => turma.idTurma === foundStudent?.turma.idTurma)!;
       setIdTurma(String(foundClass.idTurma));

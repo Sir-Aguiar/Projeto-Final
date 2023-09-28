@@ -66,6 +66,7 @@ const Alunos: React.FC = () => {
               label="Escola"
               onChange={(e: any) => {
                 setSelectedSchool(e.target.value);
+                setSelectedClass("");
                 showClasses(Number(e.target.value));
               }}
             >

@@ -142,8 +142,8 @@ const AlunosProvider: React.FC<ProviderProps> = ({ children }) => {
       const response = await FindAllSchools(RouteAPI);
       setEscolas(response);
     } catch (error: any) {
+      console.log(error)
       const response = error.response;
-      console.log(response.data.error.message);
     }
   };
 
