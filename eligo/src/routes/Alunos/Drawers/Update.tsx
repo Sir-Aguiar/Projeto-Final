@@ -9,81 +9,84 @@ import InputLabel from "@mui/material/InputLabel";
 import { AxiosError } from "axios";
 import { UpdateStudent } from "../../../services/Alunos";
 const Update: React.FC = () => {
-  const { DrawerUpdate, Turmas, selectedRows, Alunos, RouteAPI, showStudent } = useAlunosContext();
+	const { DrawerUpdate, Turmas, selectedRows, Alunos, RouteAPI, showStudent, setSnackMessage, setSnackbarOpen } =
+		useAlunosContext();
 
-  const [idTurma, setIdTurma] = useState("");
-  const [nomeAluno, setNomeAluno] = useState("");
+	const [idTurma, setIdTurma] = useState("");
+	const [nomeAluno, setNomeAluno] = useState("");
 
-  const onClose = async () => {
-    await showStudent();
-    DrawerUpdate.close();
-  };
+	const onClose = async () => {
+		await showStudent();
+		DrawerUpdate.close();
+	};
 
-  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const toUpdate = { nome: nomeAluno, idTurma };
-    try {
-      const response = await UpdateStudent(RouteAPI, selectedRows[0], toUpdate);
-      await onClose();
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        alert(error.response?.data.error.message);
-        return;
-      }
-      console.log(error);
-    }
-  };
+	const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		const toUpdate = { nome: nomeAluno, idTurma };
+		try {
+			const response = await UpdateStudent(RouteAPI, selectedRows[0], toUpdate);
+			setSnackMessage("Aluno atualizado com sucesso");
+			setSnackbarOpen(true);
+			await onClose();
+		} catch (error) {
+			if (error instanceof AxiosError) {
+				alert(error.response?.data.error.message);
+				return;
+			}
+			console.log(error);
+		}
+	};
 
-  useEffect(() => {
-    if (DrawerUpdate.situation && selectedRows.length === 1) {
-      const foundStudent = Alunos.find((aluno) => aluno.idAluno === selectedRows[0]);
-      const foundClass = Turmas.find((turma) => turma.idTurma === foundStudent?.turma.idTurma)!;
-      setIdTurma(String(foundClass.idTurma));
-      setNomeAluno(foundStudent!.nome);
-    }
-  }, [DrawerUpdate.situation]);
+	useEffect(() => {
+		if (DrawerUpdate.situation && selectedRows.length === 1) {
+			const foundStudent = Alunos.find((aluno) => aluno.idAluno === selectedRows[0]);
+			const foundClass = Turmas.find((turma) => turma.idTurma === foundStudent?.turma.idTurma)!;
+			setIdTurma(String(foundClass.idTurma));
+			setNomeAluno(foundStudent!.nome);
+		}
+	}, [DrawerUpdate.situation]);
 
-  return (
-    <Drawer anchor="right" open={DrawerUpdate.situation} onClose={onClose}>
-      <div className={styles.update_container}>
-        <header className="py-1">
-          <h1 className="font-bold text-lg text-center">Atualizar Aluno</h1>
-        </header>
-        <Divider />
-        <main className="w-full h-full flex flex-col gap-2 overflow-y-auto">
-          <form className={styles.formulary} id="update-student" onSubmit={onSubmit}>
-            <FormControl fullWidth disabled={Turmas.length < 1}>
-              <InputLabel>Turma</InputLabel>
-              <Select value={idTurma} required label="Turma" onChange={(e: any) => setIdTurma(e.target.value)}>
-                {Turmas.length > 0
-                  ? Turmas.map((turma, index) => (
-                      <MenuItem value={turma.idTurma} key={index}>
-                        {turma.nome}
-                      </MenuItem>
-                    ))
-                  : ""}
-              </Select>
-            </FormControl>
-            <TextField
-              label="Nome do aluno"
-              variant="outlined"
-              fullWidth
-              inputProps={{ maxLength: 50 }}
-              value={nomeAluno}
-              onChange={(e: any) => setNomeAluno(e.target.value)}
-              required
-            />
-          </form>
-        </main>
-        <footer className={styles.senders}>
-          <button onClick={onClose} className={styles.cancel}>
-            Cancelar
-          </button>
-          <input type="submit" value="Cadastrar" form="update-student" className={styles.submiter} />
-        </footer>
-      </div>
-    </Drawer>
-  );
+	return (
+		<Drawer anchor="right" open={DrawerUpdate.situation} onClose={onClose}>
+			<div className={styles.update_container}>
+				<header className="py-1">
+					<h1 className="font-bold text-lg text-center">Atualizar Aluno</h1>
+				</header>
+				<Divider />
+				<main className="w-full h-full flex flex-col gap-2 overflow-y-auto">
+					<form className={styles.formulary} id="update-student" onSubmit={onSubmit}>
+						<FormControl fullWidth disabled={Turmas.length < 1}>
+							<InputLabel>Turma</InputLabel>
+							<Select value={idTurma} required label="Turma" onChange={(e: any) => setIdTurma(e.target.value)}>
+								{Turmas.length > 0
+									? Turmas.map((turma, index) => (
+											<MenuItem value={turma.idTurma} key={index}>
+												{turma.nome}
+											</MenuItem>
+									  ))
+									: ""}
+							</Select>
+						</FormControl>
+						<TextField
+							label="Nome do aluno"
+							variant="outlined"
+							fullWidth
+							inputProps={{ maxLength: 50 }}
+							value={nomeAluno}
+							onChange={(e: any) => setNomeAluno(e.target.value)}
+							required
+						/>
+					</form>
+				</main>
+				<footer className={styles.senders}>
+					<button onClick={onClose} className={styles.cancel}>
+						Cancelar
+					</button>
+					<input type="submit" value="Cadastrar" form="update-student" className={styles.submiter} />
+				</footer>
+			</div>
+		</Drawer>
+	);
 };
 
 export default Update;

@@ -8,13 +8,15 @@ import { useAlunosContext } from "../RouteStateManager";
 import { AxiosError } from "axios";
 
 const Delete: React.FC = () => {
-	const { ModalDelete, selectedRows, RouteAPI } = useAlunosContext();
+	const { ModalDelete, selectedRows, RouteAPI, setSnackMessage, setSnackbarOpen } = useAlunosContext();
 	const handleDelete = async () => {
 		try {
 			// Realizar uma requisição por vez
 			for (const idAluno of selectedRows) {
 				await RouteAPI.delete(`/aluno/${idAluno}`);
 			}
+			setSnackMessage("Turma excluída com sucesso");
+			setSnackbarOpen(true);
 		} catch (error: any) {
 			if (error instanceof AxiosError) {
 				return console.log(error.response?.data);

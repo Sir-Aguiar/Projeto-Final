@@ -40,8 +40,7 @@ const Navbar: React.FC = () => {
       />
       <div className={styles.nav_options}>
         <div className={styles.search_bar}>
-          <input type="text" placeholder="Nome do aluno" />
-          <PersonSearchIcon />
+          
         </div>
         <div className={styles.navigations}>
           <Link to="/turmas">Turmas</Link>
