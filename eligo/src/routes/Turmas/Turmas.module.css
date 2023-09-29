@@ -1,37 +1,21 @@
 .content_container {
-  @apply flex mobile:flex-col gap-2 p-2;
-  @apply w-full h-[625px] mobile:h-[1000px] mt-[65px] mx-auto;
+  @apply flex mobile:flex-col gap-4 py-2;
+  @apply w-full h-[625px] mobile:h-[1000px] mt-[50px] mx-auto;
   @apply desktop:max-w-[1120px];
   @apply tablet:max-w-[770px];
   @apply mobile:max-w-[328px];
+  @apply font-Roboto text-black-smooth;
 }
 .controllers {
-  @apply flex flex-col gap-4 items-center justify-center;
-  @apply w-full desktop:max-w-[260px] tablet:max-w-[260px];
-  @apply h-full max-h-[400px];
-}
-
-.actions {
-  @apply flex items-center justify-between py-2 px-3;
-  @apply w-full;
-  @apply border-[1px] border-black-text border-opacity-50 rounded-sm;
-}
-
-.actions button {
-  @apply h-[40px] w-[40px];
-  @apply flex items-center justify-center;
-  @apply transition-all duration-200;
-  @apply p-2 rounded-full;
-  @apply enabled:hover:bg-slate-100;
-  @apply disabled:cursor-not-allowed;
-  @apply text-black-text disabled:text-opacity-75;
+  @apply flex flex-col gap-2 items-center justify-center;
+  @apply w-full max-w-[256px] mobile:max-w-full;
+  @apply h-full;
 }
 
 .students {
-  @apply w-full h-full;
+  @apply w-full h-full max-h-[300px];
   @apply flex flex-col gap-1 p-2;
   @apply border-[1px] border-black-text border-opacity-50 rounded-[5px];
-  @apply text-black-text font-Roboto;
   @apply overflow-y-auto;
 }
 
@@ -44,7 +28,6 @@
 
 .content_table {
   @apply w-full min-w-full;
-  @apply font-Roboto text-black-text;
 }
 
 .table_header {

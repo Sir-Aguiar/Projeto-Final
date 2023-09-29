@@ -1,66 +1,55 @@
-const ServerError = require("../../utils/ServerError");
+const { VerifySchoolPermission } = require("../../utils/VerifyPermission");
 const FindAllSchools = require("../../use-cases/Escolas/FindAll");
-const Escola = require("../../../database/models/Escola");
-const ProfessorLeciona = require("../../../database/models/ProfessorLeciona");
-const Turma = require("../../../database/models/Turma");
+const FindSchoolById = require("../../use-cases/Escolas/FindById");
+const ResponseHandler = require("../../utils/ResponseHandler");
+const { ConnectionRefusedError, ConnectionAcquireTimeoutError } = require("sequelize");
+
 /** @type {import("express").RequestHandler}  */
-const GetEscolasController = async (req, res) => {
+const GetSchoolsController = async (req, res) => {
+  const Handler = new ResponseHandler(res);
+
   const { idUsuario } = req.userData;
-  const { idEscola } = req.query;
-
-  if (idEscola) {
-    const escola = await Escola.findByPk(idEscola, {
-      include: [{ model: Turma, as: "turmas", attributes: ["idTurma", "nome"] }],
-      attributes: ["idEscola", "idGestor", "nome"],
-    });
-
-    if (!escola) {
-      return res.status(404).json({});
-    }
-
-    if (escola.dataValues.idGestor !== idUsuario) {
-      const foundRelations = await ProfessorLeciona.findAll({
-        where: { idProfessor: idUsuario },
-        include: [{ model: Turma, as: "turma", where: { idEscola }, attributes: [] }],
-        raw: true,
-        nest: true,
-        attributes: ["turma.idTurma", "turma.nome"],
-      });
-
-      if (foundRelations.length < 1) {
-        return res.status(401).json({});
-      }
-
-      const schoolData = escola.dataValues;
-
-      return res.status(200).json({
-        escola: {
-          idEscola: schoolData.idEscola,
-          idGestor: schoolData.idGestor,
-          nome: schoolData.nome,
-          turmas: foundRelations,
-        },
-      });
-    }
-
-    return res.status(200).json({ error: null, escola });
+  
+  if (!idUsuario) {
+    return Handler.forbidden("Nenhum usuário foi identificado, por favor, reconecte-se");
   }
 
-  // Todas as escolas
-  try {
-    const escolas = await FindAllSchools(Number(idUsuario));
-    return res.status(200).json({ error: null, escolas });
-  } catch (error) {
-    if (error instanceof ServerError) {
-      const { message, status } = error;
-      return res.status(status).json({ error: { message } });
+  const { idEscola } = req.query;
+
+
+  if (idEscola) {
+    // Caso não seja um número
+    if (isNaN(Number(idEscola))) {
+      return Handler.clientError("Identificador da escola em formato inválido");
     }
 
-    console.log(error);
-    return res.status(500).json({
-      error: { message: "Houve um erro desconhecido ao tentar pesquisar escolas" },
-    });
+    const isUserAdmin = await VerifySchoolPermission(Number(idEscola), Number(idUsuario));
+
+    if (!isUserAdmin) {
+      return Handler.unauthorized("Você não possui autorização para realizar esta ação");
+    }
+
+    // Retornar escola específica
+    const escola = await FindSchoolById(idEscola);
+    return Handler.ok({ escola });
+  }
+
+  try {
+    const escolas = await FindAllSchools(Number(idUsuario));
+    return Handler.ok({ escolas });
+  } catch (error) {
+    if (error instanceof ConnectionRefusedError) {
+      return Handler.fail(
+        "Parece que nosso banco de dados se encontra fora do ar neste momento, tente novamente em alguns instantes",
+        error,
+      );
+    }
+    if (error instanceof ConnectionAcquireTimeoutError) {
+      return Handler.fail("Parece que nosso banco de dados esta sobrecarregado, aguarde alguns instantes", error);
+    }
+
+    return Handler.fail("Houve um erro desconhecido, isto foi um problema interno. Aguarde aguns instantes", error);
   }
 };
 
-module.exports = GetEscolasController;
+module.exports = GetSchoolsController;

@@ -1,28 +1,48 @@
-const Escola = require("../../../database/models/Escola");
-const Turma = require("../../../database/models/Turma");
+const { ConnectionRefusedError, ConnectionAcquireTimeoutError } = require("sequelize");
+const ResponseHandler = require("../../utils/ResponseHandler");
+
+const CreateSchool = require("../../use-cases/Escolas/Create");
+const { CreateManyClasses } = require("../../use-cases/Turmas/Create");
+
 /** @type {import("express").RequestHandler}  */
-const CreateEscolasController = async (req, res) => {
-	const { idUsuario } = req.userData;
-	const { nome, turmas } = req.body;
-	try {
-		const created = await Escola.create({ idGestor: idUsuario, nome });
+const CreateSchoolController = async (req, res) => {
+  const Handler = new ResponseHandler(res);
 
-		if (turmas && turmas.length > 0) {
-			for (const turma of turmas) {
-				const { idCurso, nome } = turma;
-				await Turma.create({ idCurso, idEscola: created.dataValues.idEscola, nome });
-			}
-		}
+  const { idUsuario } = req.userData;
 
-		return res.status(201).json({ error: null, created });
-	} catch (error) {
-		console.log(error);
-		return res.status(500).json({
-			error: {
-				message: error.message,
-			},
-		});
-	}
+  if (!idUsuario) {
+    return Handler.forbidden("Nenhum usuário foi identificado, por favor, reconecte-se");
+  }
+
+  const { nome, turmas } = req.body;
+
+  if (!nome) {
+    return Handler.clientError("Não foi informado nenhum nome para a escola");
+  }
+
+  if (nome.length > 150) {
+    return Handler.clientError("O nome da escola deve conter no máximo 150 caracteres");
+  }
+
+  try {
+    const escola = await CreateSchool(Number(idUsuario), nome);
+
+    if (turmas && turmas.length > 0) {
+      await CreateManyClasses(turmas.map((turma) => ({ ...turma, idEscola: escola.dataValues.idEscola })));
+    }
+
+    return Handler.ok();
+  } catch (error) {
+    if (error instanceof ConnectionRefusedError) {
+      return Handler.fail("Nosso banco de dados se encontra fora do ar, tente novamente em alguns instantes", error);
+    }
+
+    if (error instanceof ConnectionAcquireTimeoutError) {
+      return Handler.fail("Nosso banco de dados esta sobrecarregado, aguarde alguns instantes", error);
+    }
+
+    return Handler.fail("Houve um erro desconhecido, estamos com problemas internos. Aguarde aguns instantes", error);
+  }
 };
 
-module.exports = CreateEscolasController;
+module.exports = CreateSchoolController;

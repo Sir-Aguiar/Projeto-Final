@@ -1,0 +1,27 @@
+.controller_container {
+  @apply w-full;
+  @apply flex flex-col justify-center items-center gap-2 py-2;
+  @apply font-Montserrat text-black-smooth;
+}
+
+.controller_options {
+  @apply w-full;
+  @apply flex flex-col justify-center items-center p-2 gap-2;
+  @apply border-y-[1px] border-black-smooth border-opacity-50;
+}
+
+.option {
+  @apply w-full h-[45px] min-h-[45px] rounded-sm;
+  @apply flex items-center justify-start px-1 py-2 gap-3;
+  @apply transition-all duration-200;
+  @apply disabled:cursor-not-allowed disabled:opacity-75;
+  @apply hover:bg-gray-100;
+}
+
+.option span {
+  @apply font-semibold text-sm;
+}
+.option svg {
+  @apply w-[20px] h-[20px];
+  @apply fill-black-smooth;
+}

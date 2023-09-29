@@ -8,7 +8,13 @@ export default {
         "white-text": "#FAFAFA",
         background: "#FAFAFA",
         "blue-icon": "#228CE5",
-        "icon-black":"#272A2B"
+        "icon-black": "#272A2B",
+        blue: {
+          600: "#1B70B7",
+        },
+        black: {
+          smooth: "#292C2E",
+        },
       },
       fontFamily: {
         Montserrat: ["Montserrat", "sans-serif"],

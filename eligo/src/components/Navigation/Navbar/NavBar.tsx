@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "./NavBar.module.css";
 import LogoBlack from "../../../assets/logo-black.svg";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -39,9 +39,7 @@ const Navbar: React.FC = () => {
         onClick={() => navigate("/")}
       />
       <div className={styles.nav_options}>
-        <div className={styles.search_bar}>
-          
-        </div>
+        <div className={styles.search_bar}></div>
         <div className={styles.navigations}>
           <Link to="/turmas">Turmas</Link>
           <Link to="/escolas">Escolas</Link>

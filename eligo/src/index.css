@@ -8,7 +8,7 @@ body,
   height: 100vh;
   min-height: max-content;
   overflow-y: auto;
-  @apply bg-background
+  @apply bg-background;
 }
 
 /* width */
@@ -30,5 +30,3 @@ body,
 *:-webkit-scrollbar-thumb:hover {
   background: #555;
 }
-
-

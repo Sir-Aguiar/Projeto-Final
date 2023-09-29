@@ -3,8 +3,7 @@ const routes = Router();
 const RegisterUser = require("./controllers/User/ReigsterUser");
 const Login = require("./controllers/User/Login");
 const UserAuthMiddleware = require("./middlewares/UserAuth");
-const GetEscolasController = require("./controllers/Escolas/Get");
-const CreateEscolasController = require("./controllers/Escolas/Create");
+const GetSchoolsController = require("./controllers/Escolas/Get");
 const UpdateEscolasController = require("./controllers/Escolas/Update");
 const UpdateTurmaController = require("./controllers/Turmas/Update");
 const DeleteEscolasController = require("./controllers/Escolas/Delete");
@@ -45,11 +44,12 @@ const GetTurmaStatsController = require("./controllers/Stats/turma-stats");
 const GetUserController = require("./controllers/User/Get");
 const DeleteUserController = require("./controllers/User/Delete");
 const UpdateUserController = require("./controllers/User/Update");
+const CreateSchoolController = require("./controllers/Escolas/Create");
 routes.post("/registro", RegisterUser);
 routes.post("/login", Login);
 
-routes.post("/escola", UserAuthMiddleware, CreateEscolasController);
-routes.get("/escola", UserAuthMiddleware, GetEscolasController);
+routes.post("/escola", UserAuthMiddleware, CreateSchoolController);
+routes.get("/escola", UserAuthMiddleware, GetSchoolsController);
 routes.put("/escola/:idEscola", UserAuthMiddleware, UpdateEscolasController);
 routes.delete("/escola/:idEscola", UserAuthMiddleware, DeleteEscolasController);
 
@@ -73,15 +73,15 @@ routes.get("/professor", UserAuthMiddleware, GetProfessorLecionaController);
 routes.get("/professor-leciona/:idTurma", UserAuthMiddleware, GetProfessorLecionaController);
 
 routes.delete(
-	"/professor-leciona/:idProfessor/:idTurma/:idDisciplina",
-	UserAuthMiddleware,
-	DeleteProfessorLecionaController,
+  "/professor-leciona/:idProfessor/:idTurma/:idDisciplina",
+  UserAuthMiddleware,
+  DeleteProfessorLecionaController,
 );
 
 routes.put(
-	"/professor-leciona/:idProfessor/:idTurma/:idDisciplina",
-	UserAuthMiddleware,
-	UpdateProfessorLecionaController,
+  "/professor-leciona/:idProfessor/:idTurma/:idDisciplina",
+  UserAuthMiddleware,
+  UpdateProfessorLecionaController,
 );
 
 routes.post("/aula", UserAuthMiddleware, CreateAulaController);
@@ -105,8 +105,8 @@ routes.delete("/aluno-chamada/:idAluno/:idChamada", UserAuthMiddleware, DeleteAl
 routes.put("/aluno-chamada/:idAluno/:idChamada", UserAuthMiddleware, UpdateAlunoChamadaController);
 
 routes.get("/usuario", UserAuthMiddleware, GetUserController);
-routes.delete("/usuario", UserAuthMiddleware, DeleteUserController)
-routes.put("/usuario", UserAuthMiddleware, UpdateUserController)
+routes.delete("/usuario", UserAuthMiddleware, DeleteUserController);
+routes.put("/usuario", UserAuthMiddleware, UpdateUserController);
 routes.get("/aulas-professor-turma", UserAuthMiddleware, GetProfessorsStatsByClassRooms);
 routes.get("/students-stat", UserAuthMiddleware, MonthlyPresenceController);
 routes.get("/class-stats", UserAuthMiddleware, GetTurmaStatsController);
