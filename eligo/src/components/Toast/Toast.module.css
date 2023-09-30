@@ -1,0 +1,11 @@
+.toast_container {
+  @apply min-w-[328px] w-[328px] min-h-[100px] h-[100px];
+  @apply flex flex-col;
+  @apply border-[1px] border-black-smooth border-opacity-60;
+  @apply bg-background;
+  @apply overflow-hidden;
+  @apply fixed bottom-[25px] left-[25px];
+  @apply transition-all duration-[300ms] rounded-[3px];
+  @apply font-Montserrat;
+  @apply z-[1500];
+}

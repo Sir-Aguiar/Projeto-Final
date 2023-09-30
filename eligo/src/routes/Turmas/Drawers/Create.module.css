@@ -1,36 +1,37 @@
 .insert_container {
-	@apply h-full min-w-[320px] w-[320px];
-	@apply flex flex-col p-2 gap-2;
-	@apply font-Roboto text-black-text text-center;
-	@apply bg-background;
+  @apply h-full min-w-[320px] w-[320px];
+  @apply flex flex-col p-2 gap-2;
+  @apply font-Roboto text-black-text text-center;
+  @apply bg-background;
 }
 .senders {
-	@apply w-full h-[50px];
-	@apply flex justify-end items-center gap-2 py-[2px] mobile:py-0;
-	@apply font-semibold;
+  @apply w-full h-[50px];
+  @apply flex justify-end items-center gap-2 py-[2px] mobile:py-0;
+  @apply font-semibold;
 }
 
 .submiter {
-	@apply text-[#eeeeee] rounded-sm desktop:font-medium;
-	@apply bg-blue-gradient;
-	@apply w-[150px] h-full;
-	@apply cursor-pointer transition-all duration-200;
-	@apply hover:brightness-95;
+  @apply text-[#eeeeee] rounded-sm desktop:font-medium;
+  @apply bg-blue-gradient;
+  @apply w-[150px] h-full;
+  @apply cursor-pointer transition-all duration-200;
+  @apply hover:brightness-95;
+  @apply disabled:cursor-not-allowed disabled:opacity-50;
 }
 
 .cancel {
-	@apply bg-background;
-	@apply border-2 border-black-text border-opacity-75 rounded-sm;
-	@apply w-[125px] h-full;
-	@apply transition-all duration-200;
-	@apply hover:brightness-95;
+  @apply bg-background;
+  @apply border-2 border-black-text border-opacity-75 rounded-sm;
+  @apply w-[125px] h-full;
+  @apply transition-all duration-200;
+  @apply hover:brightness-95;
 }
 .class_adder {
-	@apply my-2 px-1 py-2 w-full flex items-center font-medium text-sm;
-	@apply bg-background;
-	@apply transition-all duration-200;
-	@apply hover:brightness-95;
+  @apply my-2 px-1 py-2 w-full flex items-center font-medium text-sm;
+  @apply bg-background;
+  @apply transition-all duration-200;
+  @apply hover:brightness-95;
 }
 .class_adder svg {
-	@apply w-[20px] h-[20px] mr-1;
+  @apply w-[20px] h-[20px] mr-1;
 }

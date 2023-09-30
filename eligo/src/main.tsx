@@ -1,13 +1,16 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import "./index.css";
 import { AuthProvider } from "react-auth-kit";
 import { Router } from "./routes/Router";
+import { ToastProvider } from "./components/Toast/Toast";
+import "./index.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-	<React.StrictMode>
-		<AuthProvider authType="localstorage" authName="_auth">
-			<Router />
-		</AuthProvider>
-	</React.StrictMode>,
+  <React.StrictMode>
+    <AuthProvider authType="localstorage" authName="_auth">
+      <ToastProvider>
+        <Router />
+      </ToastProvider>
+    </AuthProvider>
+  </React.StrictMode>,
 );

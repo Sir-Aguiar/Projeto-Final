@@ -5,7 +5,7 @@ import LibraryAddIcon from "@mui/icons-material/LibraryAdd";
 import EditIcon from "@mui/icons-material/Edit";
 import FilterListIcon from "@mui/icons-material/FilterList";
 
-interface IOptionProps {
+interface ITableController {
   disabled: boolean;
   onClick: () => void;
   title: string;
@@ -13,10 +13,10 @@ interface IOptionProps {
 
 type Props = {
   page_title: string;
-  create?: IOptionProps;
-  update?: IOptionProps;
-  remove?: IOptionProps;
-  filter?: IOptionProps;
+  create?: ITableController;
+  update?: ITableController;
+  remove?: ITableController;
+  filter?: ITableController;
 };
 
 const TableController: React.FC<Props> = ({ create, remove, filter, update, page_title }) => {
@@ -54,8 +54,4 @@ const TableController: React.FC<Props> = ({ create, remove, filter, update, page
 };
 
 export default TableController;
-
-/* 
-  Criar -> Tem
-  Editar -> Tem
-*/
+export type { ITableController };

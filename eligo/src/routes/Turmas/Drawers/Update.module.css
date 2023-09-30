@@ -6,7 +6,7 @@
 }
 .senders {
   @apply w-full h-[50px];
-  @apply flex justify-end items-center gap-2 py-1 mobile:py-0;
+  @apply flex justify-end items-center gap-2;
   @apply font-semibold;
 }
 
@@ -16,6 +16,7 @@
   @apply w-[150px] h-full;
   @apply cursor-pointer transition-all duration-200;
   @apply hover:brightness-95;
+  @apply disabled:cursor-not-allowed disabled:opacity-50;
 }
 
 .cancel {

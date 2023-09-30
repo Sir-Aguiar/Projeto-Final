@@ -4,4 +4,14 @@ interface IEscola {
   nome: string;
 }
 
-export type { IEscola };
+interface ToCreateSchool {
+  nome: string;
+  turmas: { idCurso: number; nome: string }[];
+}
+
+interface ToUpdateSchool {
+  nome?: string;
+  idGestor?: number;
+}
+
+export type { IEscola, ToCreateSchool, ToUpdateSchool };

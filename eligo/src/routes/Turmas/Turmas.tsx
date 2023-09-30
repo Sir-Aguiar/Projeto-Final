@@ -1,10 +1,6 @@
 import React from "react";
 import styles from "./Turmas.module.css";
-import { Checkbox, Divider, Typography, Snackbar } from "@mui/material";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import LibraryAddIcon from "@mui/icons-material/LibraryAdd";
-import EditIcon from "@mui/icons-material/Edit";
-import FilterListIcon from "@mui/icons-material/FilterList";
+import { Checkbox, Divider, Typography } from "@mui/material";
 import { useTurmasContext } from "./RouteStateManager";
 import Create from "./Drawers/Create";
 import Delete from "./Modals/Delete";
@@ -12,7 +8,6 @@ import Update from "./Drawers/Update";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import Filter from "./Modals/Filter";
 import { Link } from "react-router-dom";
-import ConfirmPopup from "../../components/PopUps/Toast";
 import TableController from "../../components/TableController/TableController";
 
 const StudentLink: React.FC<{ link: string; name: string }> = ({ link, name }) => {
@@ -30,65 +25,17 @@ const StudentLink: React.FC<{ link: string; name: string }> = ({ link, name }) =
 
 const Turmas: React.FC = () => {
   const {
-    Turmas,
     selectRow,
     selectedRows,
-    DrawerCreate,
-    ModalDelete,
-    DrawerUpdate,
+    CreateButton,
+    FilterButton,
+    RemoveButton,
+    UpdateButton,
     Alunos,
     TokenData,
-    ModalFilter,
-    selectedCourse,
-    selectedSchool,
-    classNameFilter,
-    isSnackbarOpen,
-    setSnackMessage,
-    setSnackbarOpen,
-    SnackMessage,
+    applyFilters,
   } = useTurmasContext();
 
-  const applyFilters = () => {
-    let filtredData = Turmas;
-
-    if (selectedCourse) {
-      filtredData = filtredData.filter((turma) => turma.curso.idCurso === Number(selectedCourse));
-    }
-    if (selectedSchool) {
-      filtredData = filtredData.filter((turma) => turma.escola.idEscola === Number(selectedSchool));
-    }
-    if (classNameFilter) {
-      filtredData = filtredData.filter((turma) => turma.nome.indexOf(classNameFilter) !== -1);
-    }
-    return filtredData;
-  };
-  const CreateButton = {
-    disabled: false,
-    onClick: () => DrawerCreate.open(),
-    title: "Cadastrar Turma",
-  };
-  const UpdateButton = {
-    disabled:
-      selectedRows.length !== 1 ||
-      Turmas.find((turma) => turma.idTurma === selectedRows[0])?.escola.idGestor !== TokenData.idUsuario,
-    onClick: () => DrawerUpdate.open(),
-    title: "Atualizar Turma",
-  };
-  const RemoveButton = {
-    disabled:
-      selectedRows.length < 1 ||
-      selectedRows.filter((idTurma) => {
-        const turmaSelecionada = Turmas.find((turma) => turma.idTurma === idTurma);
-        return turmaSelecionada?.escola.idGestor !== TokenData.idUsuario;
-      }).length > 0,
-    onClick: () => ModalDelete.open(),
-    title: "Exclui Turma",
-  };
-  const FilterButton = {
-    disabled: false,
-    onClick: () => ModalFilter.open(),
-    title: "Filtrar Turma",
-  };
   return (
     <div className={styles.content_container}>
       <div className={styles.controllers}>
@@ -149,7 +96,6 @@ const Turmas: React.FC = () => {
       <Delete />
       <Update />
       <Filter />
-      <ConfirmPopup message={SnackMessage} open={isSnackbarOpen} onClose={() => setSnackbarOpen(false)} />
     </div>
   );
 };

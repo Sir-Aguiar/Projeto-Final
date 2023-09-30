@@ -12,7 +12,6 @@ import Update from "./Drawers/Update";
 import Delete from "./Modals/Delete";
 import { Link } from "react-router-dom";
 import { ITurma } from "../../@types/Turmas";
-import ConfirmPopup from "../../components/PopUps/Toast";
 import TableController from "../../components/TableController/TableController";
 
 type ClassLinkProps = {
@@ -37,20 +36,8 @@ const ClassLink: React.FC<ClassLinkProps> = ({ turma, link = false }) => {
 };
 
 const Escolas: React.FC = () => {
-  const {
-    selectedRows,
-    DrawerCreate,
-    DrawerUpdate,
-    Escolas,
-    ModalDelete,
-    selectRow,
-    Turmas,
-    RouteAPI,
-    TokenData,
-    SnackMessage,
-    isSnackbarOpen,
-    setSnackbarOpen,
-  } = useEscolasContext();
+  const { selectedRows, DrawerCreate, DrawerUpdate, Escolas, ModalDelete, selectRow, Turmas, TokenData } =
+    useEscolasContext();
 
   const CreateButton = {
     disabled: false,
@@ -129,7 +116,6 @@ const Escolas: React.FC = () => {
       <Create />
       <Update />
       <Delete />
-      <ConfirmPopup message={SnackMessage} open={isSnackbarOpen} onClose={() => setSnackbarOpen(false)} />
     </div>
   );
 };

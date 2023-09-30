@@ -14,7 +14,6 @@ import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { Link } from "react-router-dom";
-import ConfirmPopup from "../../components/PopUps/Toast";
 import TableController from "../../components/TableController/TableController";
 const Alunos: React.FC = () => {
   const {
@@ -56,7 +55,7 @@ const Alunos: React.FC = () => {
     onClick: () => DrawerUpdate.open(),
     title: "Atualizar Aluno",
   };
-	
+
   const RemoveButton = {
     disabled: selectedRows.length < 1,
     onClick: () => ModalDelete.open(),
@@ -65,7 +64,6 @@ const Alunos: React.FC = () => {
 
   return (
     <div className={styles.content_container}>
-      <ConfirmPopup message={SnackMessage} open={isSnackbarOpen} onClose={() => setSnackbarOpen(false)} />
       <div className={styles.controllers}>
         <TableController page_title="Alunos" create={CreateButton} update={UpdateButton} remove={RemoveButton} />
         <div className={styles.filters}>

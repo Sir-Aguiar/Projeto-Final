@@ -41,8 +41,8 @@ const Navbar: React.FC = () => {
       <div className={styles.nav_options}>
         <div className={styles.search_bar}></div>
         <div className={styles.navigations}>
-          <Link to="/turmas">Turmas</Link>
           <Link to="/escolas">Escolas</Link>
+          <Link to="/turmas">Turmas</Link>
           <Link to="/alunos">Alunos</Link>
         </div>
         <button className={styles.profile} onClick={openProfileMenu}>
