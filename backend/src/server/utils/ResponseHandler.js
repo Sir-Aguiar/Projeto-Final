@@ -67,7 +67,30 @@ class ResponseHandler {
    */
   fail(message, error) {
     console.log(error);
-    return this.sendJson(500, { error: { message } });
+    return this.sendJson(500, {
+      error: {
+        message: message || "Houve um erro desconhecido, isto foi um problema interno. Aguarde aguns instantes",
+      },
+    });
+  }
+
+  databaseConnectionFail(message, error) {
+    console.log(error);
+    return this.sendJson(500, {
+      error: {
+        message:
+          message || "Nosso banco de dados se encontra fora do ar neste momento, tente novamente em alguns instantes",
+      },
+    });
+  }
+
+  databaseTimeout(message, error) {
+    console.log(error);
+    return this.sendJson(500, {
+      error: {
+        message: message || "Nosso banco de dados esta sobrecarregado, aguarde alguns instantes",
+      },
+    });
   }
 }
 

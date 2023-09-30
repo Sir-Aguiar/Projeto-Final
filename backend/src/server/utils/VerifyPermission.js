@@ -12,6 +12,10 @@ const ServerError = require("./ServerError");
 const VerifySchoolPermission = async (idEscola, idUsuario) => {
   const foundSchool = await Escola.findByPk(idEscola, { attributes: ["idGestor"], raw: true, nest: true });
 
+  if (!foundSchool) {
+    throw new ServerError("Nenhuma escola foi encontrada com este identificador", 404);
+  }
+
   if (foundSchool && foundSchool.idGestor === idUsuario) return true;
 
   return false;

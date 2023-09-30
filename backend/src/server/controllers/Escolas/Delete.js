@@ -1,46 +1,54 @@
-const Escola = require("../../../database/models/Escola");
+const { ConnectionRefusedError, ConnectionAcquireTimeoutError } = require("sequelize");
+const DeleteSchool = require("../../use-cases/Escolas/Delete");
+const ResponseHandler = require("../../utils/ResponseHandler");
+const ServerError = require("../../utils/ServerError");
+const { VerifySchoolPermission } = require("../../utils/VerifyPermission");
 /** @type {import("express").RequestHandler}  */
-const DeleteEscolasController = async (req, res) => {
+const DeleteSchoolController = async (req, res) => {
+  const Handler = new ResponseHandler(res);
+
   const { idUsuario } = req.userData;
-  const { idEscola } = req.params;
+
+  if (!idUsuario) {
+    return Handler.forbidden("Nenhum usuário foi identificado, por favor, reconecte-se");
+  }
+
+  const { idEscola } = req.query;
 
   if (!idEscola) {
-    return res.status(400).json({
-      error: {
-        message: "Dados insuficientes para realizar esta ação",
-      },
-    });
+    return Handler.clientError("Identificador da escola ausente");
+  }
+
+  if (isNaN(Number(idEscola))) {
+    return Handler.clientError("Identificador da escola em formato inválido");
   }
 
   try {
-    const foundSchool = await Escola.findByPk(idEscola);
+    const isUserAdmin = await VerifySchoolPermission(Number(idEscola), Number(idUsuario));
 
-    if (!foundSchool) {
-      return res.status(404).json({
-        error: {
-          message: "Nenhuma escola foi encontrada",
-        },
-      });
+    if (!isUserAdmin) {
+      return Handler.unauthorized("Você não possui autorização para realizar esta ação");
     }
 
-    if (foundSchool.dataValues.idGestor !== idUsuario) {
-      return res.status(401).json({
-        error: {
-          message: "Você não possui permissão para fazer isto",
-        },
-      });
-    }
-
-    await foundSchool.destroy();
-    return res.status(200).json({ error: null });
+    await DeleteSchool(Number(idEscola));
+    return Handler.ok();
   } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      error: {
-        message: error.message,
-      },
-    });
+    if (error instanceof ServerError) {
+      if (error.status === 404) {
+        return Handler.notFound(error.message);
+      }
+    }
+
+    if (error instanceof ConnectionRefusedError) {
+      return Handler.databaseConnectionFail(undefined, error);
+    }
+
+    if (error instanceof ConnectionAcquireTimeoutError) {
+      return Handler.databaseTimeout(undefined, error);
+    }
+
+    return Handler.fail(undefined, error);
   }
 };
 
-module.exports = DeleteEscolasController;
+module.exports = DeleteSchoolController;

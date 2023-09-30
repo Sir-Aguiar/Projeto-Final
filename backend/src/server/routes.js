@@ -4,9 +4,9 @@ const RegisterUser = require("./controllers/User/ReigsterUser");
 const Login = require("./controllers/User/Login");
 const UserAuthMiddleware = require("./middlewares/UserAuth");
 const GetSchoolsController = require("./controllers/Escolas/Get");
-const UpdateEscolasController = require("./controllers/Escolas/Update");
+const UpdateSchoolController = require("./controllers/Escolas/Update");
 const UpdateTurmaController = require("./controllers/Turmas/Update");
-const DeleteEscolasController = require("./controllers/Escolas/Delete");
+const DeleteSchoolController = require("./controllers/Escolas/Delete");
 const CreateTurmaController = require("./controllers/Turmas/Create");
 const GetTurmasController = require("./controllers/Turmas/Get");
 const DeleteTurmasController = require("./controllers/Turmas/Delete");
@@ -45,13 +45,16 @@ const GetUserController = require("./controllers/User/Get");
 const DeleteUserController = require("./controllers/User/Delete");
 const UpdateUserController = require("./controllers/User/Update");
 const CreateSchoolController = require("./controllers/Escolas/Create");
+
+
+
 routes.post("/registro", RegisterUser);
 routes.post("/login", Login);
 
 routes.post("/escola", UserAuthMiddleware, CreateSchoolController);
 routes.get("/escola", UserAuthMiddleware, GetSchoolsController);
-routes.put("/escola/:idEscola", UserAuthMiddleware, UpdateEscolasController);
-routes.delete("/escola/:idEscola", UserAuthMiddleware, DeleteEscolasController);
+routes.put("/escola", UserAuthMiddleware, UpdateSchoolController);
+routes.delete("/escola", UserAuthMiddleware, DeleteSchoolController);
 
 routes.get("/turma", UserAuthMiddleware, GetTurmasController);
 routes.post("/turma", UserAuthMiddleware, CreateTurmaController);
