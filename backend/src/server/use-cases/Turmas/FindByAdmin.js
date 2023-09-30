@@ -5,28 +5,8 @@ const Curso = require("../../../database/models/Curso");
 const Escola = require("../../../database/models/Escola");
 
 /**
-  @typedef {object} Curso
-  @property {number} idCurso
-  @property {string} nome
-*/
-/**
-  @typedef {object} Escola
-  @property {number} idEscola
-  @property {number} idGestor
-  @property {string} nome
-*/
-
-/**
-  @typedef {object} Turma
-  @property {number} idTurma
-  @property {string} nome
-  @property {Curso} curso
-  @property {Escola} escola
-*/
-
-/**
  * @param {number} idGestor Identificador do gestor (da escola), o usuário
- * @returns {Promise<Turma[]>} Todas as turmas das escolas em que o usuário é gestor
+ * @returns {Promise<import("../../@types/Turma").__Turma__[]>} Todas as turmas das escolas em que o usuário é gestor
  */
 
 const FindClassesByAdmin = async (idGestor) => {

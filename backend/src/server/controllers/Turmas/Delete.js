@@ -1,49 +1,55 @@
-const Escola = require("../../../database/models/Escola");
-const Turma = require("../../../database/models/Turma");
-/** @type {import("express").RequestHandler}  */
-const DeleteTurmasController = async (req, res) => {
-  const { idUsuario } = req.userData;
-  const { idTurma } = req.params;
+const { ConnectionRefusedError, ConnectionAcquireTimeoutError } = require("sequelize");
+const ResponseHandler = require("../../utils/ResponseHandler");
+const ServerError = require("../../utils/ServerError");
+const DeleteClass = require("../../use-cases/Turmas/Delete");
+const { VerifyUserPermission } = require("../../utils/VerifyPermission");
 
-  if (!idTurma || isNaN(Number(idTurma))) {
-    return res.status(400).json({
-      error: {
-        message: "Dados inválidos para realizar esta ação",
-      },
-    });
+/** @type {import("express").RequestHandler}  */
+const DeleteClassController = async (req, res) => {
+  const Handler = new ResponseHandler(res);
+
+  const { idUsuario } = req.userData;
+
+  if (!idUsuario) {
+    return Handler.forbidden("Nenhum usuário foi identificado, por favor, reconecte-se");
+  }
+
+  const { idTurma } = req.query;
+
+  if (!idTurma) {
+    return Handler.clientError("Identificador da turma ausente");
+  }
+
+  if (isNaN(Number(idTurma))) {
+    return Handler.clientError("Identificador da turma em formato inválido");
   }
 
   try {
-    const requestedClass = await Turma.findByPk(Number(idTurma), {
-      include: { model: Escola, as: "escola", attributes: ["idGestor"] },
-    });
+    const userPermission = await VerifyUserPermission(Number(idUsuario), { idTurma });
 
-    if (!requestedClass) {
-      return res.status(404).json({
-        error: {
-          message: "Nehuma turma foi encontrada com este ID",
-        },
-      });
+    if (userPermission !== 0) {
+      return Handler.unauthorized("Você não tem permissão para realizar esta ação");
     }
 
-    if (requestedClass.dataValues.escola.idGestor !== Number(idUsuario)) {
-      return res.status(401).json({
-        error: {
-          message: "Voce não possui permissão para realizar esta ação",
-        },
-      });
-    }
-
-    await requestedClass.destroy();
-    return res.status(200).json({ error: null });
+    await DeleteClass(Number(idTurma));
+    return Handler.ok();
   } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      error: {
-        message: error.message,
-      },
-    });
+    if (error instanceof ServerError) {
+      if (error.status === 404) {
+        return Handler.notFound(error.message);
+      }
+    }
+
+    if (error instanceof ConnectionRefusedError) {
+      return Handler.databaseConnectionFail(undefined, error);
+    }
+
+    if (error instanceof ConnectionAcquireTimeoutError) {
+      return Handler.databaseTimeout(undefined, error);
+    }
+
+    return Handler.fail(undefined, error);
   }
 };
 
-module.exports = DeleteTurmasController;
+module.exports = DeleteClassController;

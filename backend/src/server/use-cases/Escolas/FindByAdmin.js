@@ -1,15 +1,8 @@
 const Escola = require("../../../database/models/Escola");
 
 /**
-  @typedef {object} Escola
-  @property {number} idEscola
-  @property {number} idGestor
-  @property {string} nome
-*/
-
-/**
  * @param {number} idGestor Identificador do gestor (da escola), o usuário
- * @returns {Promise<Escola[]>} Todas as escolas em que o usuário é gestor
+ * @returns {Promise<import("../../@types/Escola").__Escola__[]>} Todas as escolas em que o usuário é gestor
  */
 const FindSchoolsByAdmin = async (idGestor) => {
   if (!idGestor || typeof idGestor !== "number") {

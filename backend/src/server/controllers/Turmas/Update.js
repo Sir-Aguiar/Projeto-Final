@@ -1,71 +1,75 @@
-const { ValidationError } = require("sequelize");
-const Escola = require("../../../database/models/Escola");
-const Turma = require("../../../database/models/Turma");
-/** @type {import("express").RequestHandler}  */
-const UpdateTurmaController = async (req, res) => {
-  const { idUsuario } = req.userData;
-  const { idTurma } = req.params;
-  const { toUpdate } = req.body;
+const ResponseHandler = require("../../utils/ResponseHandler");
+const { VerifyUserPermission } = require("../../utils/VerifyPermission");
+const UpdateClass = require("../../use-cases/Turmas/Update");
 
-  if (!idTurma || isNaN(Number(idTurma))) {
-    return res.status(400).json({
-      error: {
-        message: "Dados inválidos para realizar esta ação",
-      },
-    });
+/** @type {import("express").RequestHandler}  */
+const UpdateClassController = async (req, res) => {
+  const Handler = new ResponseHandler(res);
+
+  const { idUsuario } = req.userData;
+
+  if (!idUsuario) {
+    return Handler.forbidden("Nenhum usuário foi identificado, por favor, reconecte-se");
   }
 
-  if (!toUpdate) {
-    return res.status(400).json({
-      error: {
-        message: "Dados insuficientes para realizar esta ação",
-      },
-    });
+  const { idTurma } = req.query;
+
+  if (!idTurma) {
+    return Handler.clientError("Identificador da turma ausente");
+  }
+
+  if (isNaN(Number(idTurma))) {
+    return Handler.clientError("Identificador da turma em formato inválido");
+  }
+
+  const { toUpdate } = req.body;
+
+  if (!toUpdate || (!toUpdate.nome && !toUpdate.idCurso)) {
+    return Handler.clientError("Não foram inseridos dados à serem atualizados");
   }
 
   const { nome, idCurso } = toUpdate;
 
-  if (!nome || nome.length > 15 || !idCurso || isNaN(Number(idCurso))) {
-    return res.status(400).json({
-      error: {
-        message: "Nome de turma inválido",
-      },
-    });
+  if (nome) {
+    if (typeof nome !== "string") {
+      return Handler.clientError("O nome da turma se encontra em formato inválido");
+    }
+
+    if (nome.length > 15) {
+      return Handler.clientError("O nome da turma deve conter no máximo 15 caracteres");
+    }
+  }
+
+  if (idCurso && isNaN(Number(idCurso))) {
+    return Handler.clientError("Este curso não é um curso válido");
   }
 
   try {
-    const requestedClass = await Turma.findByPk(Number(idTurma));
+    const userPermission = await VerifyUserPermission(Number(idUsuario), { idTurma });
 
-    if (!requestedClass) {
-      return res.status(404).json({
-        error: {
-          message: "Nenhuma turma encontrada com este ID",
-        },
-      });
+    if (userPermission !== 0) {
+      return Handler.unauthorized("Você não tem permissão para realizar esta ação");
     }
 
-    const requestedSchool = await Escola.findByPk(requestedClass.dataValues.idEscola);
-
-    if (requestedSchool.dataValues.idGestor == idUsuario) {
-      await requestedClass.update({ nome, idCurso: Number(idCurso) }, { where: { idTurma } });
-      return res.status(200).json({ error: null });
-    }
-
-    return res.status(400).json({
-      error: {
-        message: "Você não possui permissão para fazer isto",
-      },
-    });
+    await UpdateClass(Number(idTurma), toUpdate);
+    return Handler.ok();
   } catch (error) {
-    if (error instanceof ValidationError) {
-      return res.status(404).json({
-        error: {
-          message: error.errors[0].message,
-        },
-      });
+    if (error instanceof ServerError) {
+      if (error.status === 404) {
+        return Handler.notFound(error.message);
+      }
     }
-    return res.status(500).json(error);
+
+    if (error instanceof ConnectionRefusedError) {
+      return Handler.databaseConnectionFail(undefined, error);
+    }
+
+    if (error instanceof ConnectionAcquireTimeoutError) {
+      return Handler.databaseTimeout(undefined, error);
+    }
+
+    return Handler.fail("Houve um erro desconhecido, estamos com problemas internos. Aguarde aguns instantes", error);
   }
 };
 
-module.exports = UpdateTurmaController;
+module.exports = UpdateClassController;

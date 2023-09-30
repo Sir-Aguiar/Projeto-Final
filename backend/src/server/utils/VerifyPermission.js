@@ -28,14 +28,6 @@ const VerifySchoolPermission = async (idEscola, idUsuario) => {
 */
 
 const VerifyClassPermission = async (idTurma, idUsuario) => {
-  if (!idTurma || typeof idTurma !== "number" || isNaN(Number(idTurma))) {
-    throw new ServerError("O identificador da turma está ausente ou em formato inválido", 400);
-  }
-
-  if (!idUsuario || typeof idUsuario !== "number" || isNaN(Number(idUsuario))) {
-    throw new ServerError("O identificador do usuário está ausente ou em formato inválido", 400);
-  }
-
   const foundClass = await Turma.findByPk(idTurma, { raw: true, nest: true, attributes: ["idEscola"] });
   const isUserAdmin = await VerifySchoolPermission(foundClass.idEscola, idUsuario);
   if (isUserAdmin) return true;
@@ -51,4 +43,58 @@ const VerifyClassPermission = async (idTurma, idUsuario) => {
   return true;
 };
 
-module.exports = { VerifySchoolPermission, VerifyClassPermission };
+const VerifyUserPermission = async (idUsuario, options) => {
+  const { idEscola, idTurma } = options;
+
+  if (idEscola) {
+    const escola = await Escola.findByPk(idEscola, { attributes: ["idGestor"], raw: true, nest: true });
+
+    if (!escola) {
+      throw new ServerError("Nenhuma escola foi encontrada com este identificador", 404);
+    }
+
+    if (escola.idGestor === idUsuario) return 0;
+
+    if (escola.idGestor !== idUsuario) {
+      const relacoes = await ProfessorLeciona.findAll({
+        where: {
+          idProfessor: idUsuario,
+        },
+        include: [
+          {
+            model: Turma,
+            as: "turma",
+            attributes: ["idTurma"],
+            include: [{ model: Escola, as: "escola", where: { idEscola }, required: true }],
+            required: true,
+          },
+        ],
+      });
+
+      if (relacoes.length >= 1) return 1;
+      return -1;
+    }
+  }
+
+  if (idTurma) {
+    const foundObject = await Turma.findByPk(idTurma, {
+      include: [
+        { model: Escola, as: "escola", attributes: ["idGestor"] },
+        { model: ProfessorLeciona, as: "professores", attributes: ["idProfessor"] },
+      ],
+    });
+
+    if (!foundObject) {
+      throw new ServerError("Nenhuma turma foi encontrada com este identificador", 404);
+    }
+
+    const turma = foundObject.toJSON();
+    if (turma.escola.idGestor === idUsuario) return 0;
+
+    if (turma.professores.map((prof) => prof.idProfessor).includes(idUsuario)) return 1;
+
+    return -1;
+  }
+};
+
+module.exports = { VerifySchoolPermission, VerifyClassPermission, VerifyUserPermission };

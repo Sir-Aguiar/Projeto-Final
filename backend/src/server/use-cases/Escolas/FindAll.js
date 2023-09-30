@@ -7,7 +7,7 @@ const ServerError = require("../../utils/ServerError");
 /**
  *
  * @param {number} idUsuario Identificador do usuário
- * @returns {Promise<import("./FindByAdmin").Escola[]>}
+ * @returns {Promise<import("../../@types/Escola").__Escola__[]>}
  */
 const FindAllSchools = async (idUsuario) => {
   // Todas as escolas em que o usuário é gestor

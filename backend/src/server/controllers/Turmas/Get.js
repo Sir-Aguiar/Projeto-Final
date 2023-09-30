@@ -1,85 +1,79 @@
 const FindClassesBySchool = require("../../use-cases/Turmas/FindBySchool");
-const Aluno = require("../../../database/models/Aluno");
-const Curso = require("../../../database/models/Curso");
-const Escola = require("../../../database/models/Escola");
-const ProfessorLeciona = require("../../../database/models/ProfessorLeciona");
-const Usuario = require("../../../database/models/Usuario");
-const Turma = require("../../../database/models/Turma");
-const Disciplina = require("../../../database/models/Disciplina");
 const FindClassesByUser = require("../../use-cases/Turmas/FindByUser");
 const ServerError = require("../../utils/ServerError");
+const ResponseHandler = require("../../utils/ResponseHandler");
+const { FindClassesFromSchoolByProfessor } = require("../../use-cases/Turmas/FindByProfessor");
+const { VerifyUserPermission } = require("../../utils/VerifyPermission");
+const FindClassById = require("../../use-cases/Turmas/FindById");
+const { ConnectionRefusedError, ConnectionAcquireTimeoutError } = require("sequelize");
+
 /** @type {import("express").RequestHandler}  */
-const GetTurmasController = async (req, res) => {
+const GetClassController = async (req, res) => {
+  const Handler = new ResponseHandler(res);
+
   const { idUsuario } = req.userData;
+
+  if (!idUsuario) {
+    return Handler.forbidden("Nenhum usuário foi identificado, por favor, reconecte-se");
+  }
+
   const { idEscola, idTurma } = req.query;
 
-  if (idEscola) {
-    try {
-      const turmas = await FindClassesBySchool(Number(idEscola), Number(idUsuario));
-      return res.status(200).json({ error: null, turmas });
-    } catch (error) {
-      if (error instanceof ServerError) {
-        const { message, status } = error;
-        return res.status(status).json({ error: { message } });
-      }
-      console.log(error);
-      return res.status(500).json({
-        error: { message: "Houve um erro desconhecido ao tentar pesquisar turmas por escola" },
-      });
-    }
-  }
-
-  if (idTurma) {
-    const turma = await Turma.findByPk(idTurma, {
-      include: [
-        { model: Escola, as: "escola" },
-        { model: Aluno, as: "alunos", attributes: ["idAluno", "nome"] },
-        { model: Curso, as: "curso" },
-        {
-          model: ProfessorLeciona,
-          as: "professores",
-          attributes: ["idProfessor", "idDisciplina"],
-          include: [
-            { model: Usuario, as: "professor", attributes: ["nome"] },
-            { model: Disciplina, as: "disciplina", attributes: ["nome"] },
-          ],
-        },
-      ],
-      attributes: ["idTurma", "nome"],
-    });
-
-    if (turma.toJSON().escola.idGestor !== idUsuario) {
-      const OBJECT_TO_NOT_MANAGER = turma.toJSON();
-
-      OBJECT_TO_NOT_MANAGER.professores = OBJECT_TO_NOT_MANAGER.professores.filter(
-        (some_class) => some_class.idProfessor === idUsuario,
-      );
-      if (OBJECT_TO_NOT_MANAGER.professores.length < 1) {
-        return res.status(401).json({});
-      }
-      return res.status(200).json({ error: null, turma: OBJECT_TO_NOT_MANAGER });
-    }
-
-    if (!turma) {
-      return res.status(404).json({});
-    }
-
-    return res.status(200).json({ error: null, turma });
-  }
-
   try {
+    if (idTurma) {
+      if (isNaN(Number(idTurma))) {
+        return Handler.clientError("Identificador da turma em formato inválido");
+      }
+
+      const userPermission = await VerifyUserPermission(Number(idUsuario), { idTurma });
+
+      if (userPermission !== 0) {
+        return Handler.unauthorized("Você não tem permissão para realizar esta ação");
+      }
+
+      const turma = await FindClassById(Number(idTurma));
+      return Handler.ok({ turma });
+    }
+
+    if (idEscola) {
+      if (isNaN(Number(idEscola))) {
+        return Handler.clientError("Identificador da escola em formato inválido");
+      }
+
+      const userPermission = await VerifyUserPermission(Number(idUsuario), { idEscola });
+
+      if (userPermission === -1) {
+        return Handler.unauthorized("Você não tem permissão para realizar esta ação");
+      }
+
+      if (userPermission === 1) {
+        const turmas = await FindClassesFromSchoolByProfessor(Number(idEscola), Number(idUsuario));
+        return Handler.ok({ turmas });
+      }
+
+      const turmas = await FindClassesBySchool(Number(idEscola), Number(idUsuario));
+      return Handler.ok({ turmas });
+    }
+
     const turmas = await FindClassesByUser(Number(idUsuario));
-    return res.status(200).json({ error: null, turmas });
+    return Handler.ok({ turmas });
   } catch (error) {
     if (error instanceof ServerError) {
-      const { message, status } = error;
-      return res.status(status).json({ error: { message } });
+      if (error.status === 404) {
+        return Handler.notFound(error.message);
+      }
     }
-    console.log(error);
-    return res.status(500).json({
-      error: { message: "Houve um erro desconhecido ao tentar pesquisar turmas" },
-    });
+
+    if (error instanceof ConnectionRefusedError) {
+      return Handler.databaseConnectionFail(undefined, error);
+    }
+
+    if (error instanceof ConnectionAcquireTimeoutError) {
+      return Handler.databaseTimeout(undefined, error);
+    }
+
+    return Handler.fail(undefined, error);
   }
 };
 
-module.exports = GetTurmasController;
+module.exports = GetClassController;

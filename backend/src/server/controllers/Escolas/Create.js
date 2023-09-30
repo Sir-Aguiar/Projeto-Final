@@ -1,6 +1,5 @@
 const { ConnectionRefusedError, ConnectionAcquireTimeoutError } = require("sequelize");
 const ResponseHandler = require("../../utils/ResponseHandler");
-
 const CreateSchool = require("../../use-cases/Escolas/Create");
 const { CreateManyClasses } = require("../../use-cases/Turmas/Create");
 
