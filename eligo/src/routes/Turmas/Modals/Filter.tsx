@@ -1,17 +1,16 @@
 import React from "react";
 import styles from "./Filter.module.css";
 import Modal from "@mui/material/Modal";
-import GppMaybeIcon from "@mui/icons-material/GppMaybe";
-import DeleteIcon from "@mui/icons-material/Delete";
 import { useTurmasContext } from "../RouteStateManager";
-import { AxiosError } from "axios";
-import { Fade, TextField } from "@mui/material";
+import { TextField } from "@mui/material";
 import Divider from "@mui/material/Divider";
 import Button from "@mui/material/Button";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
+import Grow from "@mui/material/Grow";
+
 const Filter: React.FC = () => {
   const {
     ModalFilter,
@@ -30,8 +29,13 @@ const Filter: React.FC = () => {
       open={ModalFilter.situation}
       onClose={() => ModalFilter.close()}
       closeAfterTransition
+      sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
     >
-      <Fade in={ModalFilter.situation}>
+      <Grow
+        in={ModalFilter.situation}
+        style={{ transformOrigin: "0 0 0 0" }}
+        {...(ModalFilter.situation ? { timeout: 350 } : {})}
+      >
         <div className={styles.filter_container}>
           <header className="w-full h-[50px]  relative">
             <Divider
@@ -107,7 +111,7 @@ const Filter: React.FC = () => {
             </Button>
           </footer>
         </div>
-      </Fade>
+      </Grow>
     </Modal>
   );
 };

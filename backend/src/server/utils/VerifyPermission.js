@@ -1,3 +1,4 @@
+const Aluno = require("../../database/models/Aluno");
 const Escola = require("../../database/models/Escola");
 const ProfessorLeciona = require("../../database/models/ProfessorLeciona");
 const Turma = require("../../database/models/Turma");
@@ -44,7 +45,7 @@ const VerifyClassPermission = async (idTurma, idUsuario) => {
 };
 
 const VerifyUserPermission = async (idUsuario, options) => {
-  const { idEscola, idTurma } = options;
+  const { idEscola, idTurma, idAluno } = options;
 
   if (idEscola) {
     const escola = await Escola.findByPk(idEscola, { attributes: ["idGestor"], raw: true, nest: true });
@@ -92,6 +93,35 @@ const VerifyUserPermission = async (idUsuario, options) => {
     if (turma.escola.idGestor === idUsuario) return 0;
 
     if (turma.professores.map((prof) => prof.idProfessor).includes(idUsuario)) return 1;
+
+    return -1;
+  }
+
+  if (idAluno) {
+    const foundObject = await Aluno.findByPk(idAluno, {
+      include: [
+        {
+          model: Turma,
+          as: "turma",
+          attributes: ["idTurma"],
+          include: [
+            { model: Escola, as: "escola", attributes: ["idGestor"] },
+            { model: ProfessorLeciona, as: "professores", attributes: ["idProfessor"] },
+          ],
+        },
+      ],
+      attributes: ["idAluno"],
+    });
+
+    if (!foundObject) {
+      throw new ServerError("Nenhum aluno foi encontrado com este identificador", 404);
+    }
+
+    const aluno = foundObject.toJSON();
+
+    if (aluno.turma.escola.idGestor === idUsuario) return 0;
+
+    if (aluno.turma.professores.map((prof) => prof.idProfessor).includes(idUsuario)) return 1;
 
     return -1;
   }

@@ -1,42 +1,81 @@
-const Aluno = require("../../../database/models/Aluno");
-const Escola = require("../../../database/models/Escola");
-const Turma = require("../../../database/models/Turma");
+const { ConnectionRefusedError, ConnectionAcquireTimeoutError } = require("sequelize");
+const ResponseHandler = require("../../utils/ResponseHandler");
+const ServerError = require("../../utils/ServerError");
+const { CreateManyStudents } = require("../../use-cases/Alunos/Create");
+const { VerifyUserPermission } = require("../../utils/VerifyPermission");
+
 /** @type {import("express").RequestHandler}  */
-const CreateAlunosController = async (req, res) => {
-	const { idUsuario } = req.userData;
-	const { alunos } = req.body;
+const CreateStudentController = async (req, res) => {
+  const Handler = new ResponseHandler(res);
 
-	if (!alunos || alunos.length <= 0) {
-		return res.status(400).json({
-			error: {
-				message: "Insira alunos à serem adicionados",
-			},
-		});
-	}
+  const { idUsuario } = req.userData;
 
-	try {
-		for (const aluno of alunos) {
-			const { idTurma, nome } = aluno;
-			const foundClass = await Turma.findByPk(idTurma, { include: { model: Escola, as: "escola" } });
+  if (!idUsuario) {
+    return Handler.forbidden("Nenhum usuário foi identificado, por favor, reconecte-se");
+  }
 
-			if (!foundClass) {
-				return res.status(404).json({ error: { message: "Nenhuma turma foi encontrada com este ID" } });
-			}
+  const { alunos } = req.body;
 
-			if (foundClass.dataValues.escola.idGestor !== Number(idUsuario)) {
-				return res.status(401).json({
-					error: {
-						message: `Você não possui autorização para inserir ${nome} nesta turma`,
-					},
-				});
-			}
+  if (!alunos || alunos.length <= 0) {
+    return Handler.clientError("Não foram informados alunos à serem inseridos");
+  }
 
-			await Aluno.create({ nome, idTurma, idEscola: foundClass.dataValues.idEscola });
-		}
+  try {
+    for (const aluno of alunos) {
+      const { nome, idTurma } = aluno;
 
-		return res.status(201).json({ error: null });
-	} catch (error) {
-		return res.status(500).json({ error });
-	}
+      if (!nome) {
+        throw new ServerError("Todos os alunos devem possuir um nome", 400);
+      }
+
+      if (typeof nome !== "string") {
+        throw new ServerError(`${nome} não é um nome válido para aluno`, 400);
+      }
+
+      if (nome.length > 45) {
+        throw new ServerError(`O nome de um aluno deve ter até 45 caractéres, faça abreviações caso necessário`, 400);
+      }
+
+      if (!idTurma) {
+        throw new ServerError(`${nome} deve estar associado à uma turma`, 400);
+      }
+
+      if (isNaN(Number(idTurma))) {
+        throw new ServerError(`${nome} não está associado à nenhuma turma`, 400);
+      }
+
+      const userPermission = await VerifyUserPermission(Number(idUsuario), { idTurma: Number(idTurma) });
+
+      if (userPermission !== 0) {
+        throw new ServerError(`Você não tem permissão para inserir ${nome} nesta turma`, 401);
+      }
+    }
+
+    await CreateManyStudents(alunos);
+    return Handler.ok();
+  } catch (error) {
+    if (error instanceof ServerError) {
+      if (error.status === 404) {
+        return Handler.notFound(error.message);
+      }
+      if (error.status === 400) {
+        return Handler.clientError(error.message);
+      }
+      if (error.status === 401) {
+        return Handler.unauthorized(error.message);
+      }
+    }
+
+    if (error instanceof ConnectionRefusedError) {
+      return Handler.databaseConnectionFail(undefined, error);
+    }
+
+    if (error instanceof ConnectionAcquireTimeoutError) {
+      return Handler.databaseTimeout(undefined, error);
+    }
+
+    return Handler.fail(undefined, error);
+  }
 };
-module.exports = CreateAlunosController;
+
+module.exports = CreateStudentController;

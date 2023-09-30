@@ -1,28 +1,57 @@
-const { json } = require("sequelize");
-const Aluno = require("../../../database/models/Aluno");
-const Escola = require("../../../database/models/Escola");
-const Turma = require("../../../database/models/Turma");
-
+const { ConnectionRefusedError, ConnectionAcquireTimeoutError } = require("sequelize");
+const ResponseHandler = require("../../utils/ResponseHandler");
+const ServerError = require("../../utils/ServerError");
+const { VerifyUserPermission } = require("../../utils/VerifyPermission");
+const DeleteStudent = require("../../use-cases/Alunos/Delete");
 /** @type {import("express").RequestHandler}  */
-const DeleteAlunosController = async (req, res) => {
-  const { idUsuario } = req.userData;
-  const { idAluno } = req.params;
+const DeleteStudentController = async (req, res) => {
+  const Handler = new ResponseHandler(res);
 
-  if (idAluno && isNaN(idAluno)) {
-    return res.status(400).json({
-      error: {
-        message: "Dados inválidos para realizar esta ação",
-      },
-    });
+  const { idUsuario } = req.userData;
+
+  if (!idUsuario) {
+    return Handler.forbidden("Nenhum usuário foi identificado, por favor, reconecte-se");
+  }
+
+  const { idAluno } = req.query;
+
+  if (!idAluno) {
+    return Handler.clientError("Nenhum aluno foi informado");
+  }
+
+  if (isNaN(Number(idAluno))) {
+    return Handler.clientError("Identificador de aluno em formato inválido");
   }
 
   try {
-    await Aluno.destroy({ where: { idAluno } });
-    return res.status(200).json({ error: null });
+    const userPermission = await VerifyUserPermission(Number(idUsuario), { idAluno: Number(idAluno) });
+
+    if (userPermission !== 0) {
+      return Handler.unauthorized(`Você não tem permissão para realizar esta ação`);
+    }
+
+    await DeleteStudent(Number(idAluno));
+    return Handler.ok();
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ error });
+    if (error instanceof ServerError) {
+      if (error.status === 404) {
+        return Handler.notFound(error.message);
+      }
+      if (error.status === 400) {
+        return Handler.clientError(error.message);
+      }
+    }
+
+    if (error instanceof ConnectionRefusedError) {
+      return Handler.databaseConnectionFail(undefined, error);
+    }
+
+    if (error instanceof ConnectionAcquireTimeoutError) {
+      return Handler.databaseTimeout(undefined, error);
+    }
+
+    return Handler.fail(undefined, error);
   }
 };
 
-module.exports = DeleteAlunosController;
+module.exports = DeleteStudentController;
