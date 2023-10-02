@@ -1,17 +1,27 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./Login.module.css";
-import { TextField, Checkbox } from "@mui/material";
+import { TextField, Checkbox, CircularProgress } from "@mui/material";
 import LoginBackground from "../../assets/login-bg.jpg";
 import logo from "../../assets/logo.png";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useIsAuthenticated, useSignIn } from "react-auth-kit";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
+import { useToast } from "../../components/Toast/Toast";
+
 const Login: React.FC = () => {
   const signIn = useSignIn();
   const navigate = useNavigate();
   const isUserAuthenticated = useIsAuthenticated();
+  const [formError, setFormError] = useState("");
+  const [remember, setRemember] = useState(false);
+  const [isLoading, setLoading] = useState(false);
+  const { notify } = useToast();
+
+  if (isUserAuthenticated()) return <Navigate to="/"></Navigate>;
+
   const logIn = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
 
     const email = e.currentTarget.querySelector("#email") as HTMLInputElement;
     const senha = e.currentTarget.querySelector("#senha") as HTMLInputElement;
@@ -19,35 +29,39 @@ const Login: React.FC = () => {
     const userData = {
       email: email.value,
       senha: senha.value,
+      remember,
     };
 
     axios
-      .post(`${import.meta.env.VITE_SERVER_URL}/login`, {
-        ...userData,
-      })
+      .post(`${import.meta.env.VITE_SERVER_URL}/login`, userData)
       .then((res) => {
-        if (
-          signIn({
-            token: res.data.token,
-            tokenType: "Bearer",
-            expiresIn: 80000,
-            authState: {
-              email,
-            },
-          })
-        ) {
-          navigate("/");
+        signIn({ token: res.data.token, tokenType: "Bearer", expiresIn: 60 * 60 * 6, authState: { email } });
+        navigate("/");
+      })
+      .catch((error) => {
+        console.log(error);
+        if (error instanceof AxiosError) {
+          const response = error.response;
+          if (response) {
+            setFormError(response.data.error.message);
+            return;
+          }
+          return notify({
+            title: error.message,
+            severity: "error",
+          });
         }
+        notify({
+          title: "Servidor se encontra fora do ar",
+          message: "Tente novamente em alguns instantes",
+          severity: "error",
+        });
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
-  useEffect(() => {
-    if (isUserAuthenticated()) {
-      navigate("/");
-    }
-  }, [isUserAuthenticated()]);
-
-  if (isUserAuthenticated()) return <></>;
   return (
     <div className="w-full h-full flex">
       <div className="flex-1 h-full w-full ">
@@ -58,18 +72,19 @@ const Login: React.FC = () => {
             <p>Entre para ter acesso à nossa plataforma</p>
           </div>
           <div className={styles.inputs}>
-            <TextField fullWidth id="email" type="email" label="Nome de usuário" variant="outlined" />
-            <TextField fullWidth id="senha" label="Senha" type="password" variant="outlined" />
-            {/* <div className="w-full flex items-center font-Roboto text-sm text-black-text font-medium">
-              <Checkbox size="small" id="remember" />
+            <TextField required fullWidth id="email" type="email" label="Nome de usuário" variant="outlined" />
+            <TextField required fullWidth id="senha" label="Senha" type="password" variant="outlined" />
+            {formError && <span className="text-[12px] text-red-500 text-start w-full">{formError}</span>}
+            <div className="w-full flex items-center font-Roboto text-sm text-black-text font-medium">
+              <Checkbox size="small" id="remember" checked={remember} onChange={() => setRemember((value) => !value)} />
               <label htmlFor="remember" className="cursor-pointer">
                 Lembrar senha
               </label>
-            </div> */}
+            </div>
           </div>
 
-          <button type="submit" className={styles.login} id="login-submiter">
-            Entrar
+          <button type="submit" className={`${styles.login} bg-blue-gradient`} id="login-submiter">
+            {isLoading ? <CircularProgress size={25} color="inherit" /> : "Entrar"}
           </button>
           <a href="/registro" className="text-[11px] text-blue-400 underline font-bold">
             Criar conta

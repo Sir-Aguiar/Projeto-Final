@@ -8,7 +8,7 @@ const ProfessorLeciona = require("../../../database/models/ProfessorLeciona");
  * @param {number} idEscola Identificador da escola
  * @param {number} limit Quantos alunos deverão ser retornados
  * @param {number} offset Quantos alunos deverão ser "pulados"
- * @returns {Promise<import("../../@types/Aluno").__Aluno__[]>}  Retorna todos os alunos de uma escola
+ * @returns {Promise<{rows:import("../../@types/Aluno").__Aluno__[], count:number}>}  Retorna todos os alunos de uma escola
  *
  * **_Garanta a integridade dos dados a serem passados e o tratamento de exceções é delegado totalmente ao escopo de chamada_**
  */
@@ -25,7 +25,7 @@ const FindStudentsBySchool = async (idEscola, limit, offset) => {
         attributes: ["idTurma", "nome"],
         include: [
           { model: Curso, as: "curso", attributes: ["idCurso", "nome"] },
-          { model: Escola, as: "escola", attributes: ["idEscola", "nome"] },
+          { model: Escola, as: "escola", attributes: ["idEscola", "idGestor", "nome"] },
         ],
       },
     ],
@@ -45,7 +45,7 @@ const FindStudentsBySchool = async (idEscola, limit, offset) => {
  * @param {number} idProfessor Identificador da escola
  * @param {number} limit Quantos alunos deverão ser retornados
  * @param {number} offset Quantos alunos deverão ser "pulados"
- * @returns {Promise<import("../../@types/Aluno").__Aluno__[]>}  Retorna todos os alunos de uma escola que sejam lecionados pelo professor informado
+ * @returns {Promise<{rows:import("../../@types/Aluno").__Aluno__[], count:number}>}  Retorna todos os alunos de uma escola que sejam lecionados pelo professor informado
  *
  * **_Garanta a integridade dos dados a serem passados e o tratamento de exceções é delegado totalmente ao escopo de chamada_**
  */

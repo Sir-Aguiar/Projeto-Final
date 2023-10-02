@@ -2,7 +2,7 @@
   @apply py-4 px-5 mobile:px-3 gap-6;
   @apply flex flex-col items-center;
   @apply font-Roboto;
-  @apply min-h-[500px] h-full w-full max-w-[360px] mx-auto items-center justify-center;
+  @apply min-h-[500px] h-full w-full desktop:max-w-[380px] max-w-[360px] mx-auto items-center justify-center;
 }
 
 .inputs {
@@ -28,7 +28,7 @@
   @apply w-[250px] h-[40px];
   @apply font-Roboto text-background font-semibold rounded-sm;
   @apply hover:brightness-95 transition-all duration-200;
-  @apply bg-blue-gradient;
+  @apply flex items-center justify-center;
 }
 
 .logo {

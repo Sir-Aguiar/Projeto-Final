@@ -1,51 +1,57 @@
-require("dotenv/config");
-const Usuario = require("../../../database/models/Usuario");
-
-const { compareSync } = require("bcrypt");
-const { sign } = require("jsonwebtoken");
+const VerifyUserAuthentication = require("../../use-cases/User/VerifyAuthentication");
+const SignUserToken = require("../../use-cases/User/SignToken");
+const ResponseHandler = require("../../utils/ResponseHandler");
+const { ConnectionRefusedError, ConnectionAcquireTimeoutError } = require("sequelize");
+const ServerError = require("../../utils/ServerError");
 
 /** @type {import("express").RequestHandler}  */
 module.exports = async (req, res) => {
-  const { email, senha } = req.body;
+  const Handler = new ResponseHandler(res);
 
-  if ((!email, !senha) || typeof email !== "string" || typeof senha !== "string") {
-    return res.status(400).json({
-      error: {
-        message: "Insira dados o válidos para realiar autenticação",
-      },
-    });
+  const { email, senha, remember } = req.body;
+
+  if (remember && typeof remember !== "boolean") {
+    return Handler.clientError("Foram inseridos dados inválidos no formuário");
+  }
+
+  if (!email) {
+    return Handler.clientError("Nenhum email foi informado");
+  }
+
+  if (!senha) {
+    return Handler.clientError("Nenhuma senha foi informada");
+  }
+
+  if (typeof email !== "string") {
+    return Handler.clientError("Email em formato inválido");
+  }
+
+  if (typeof senha !== "string") {
+    return Handler.clientError("Senha em formato inválido");
   }
 
   try {
-    const userFound = await Usuario.findOne({
-      where: { email },
-    });
-
-    if (!userFound) {
-      return res.status(404).json({
-        erorr: {
-          message: "Usuário não encontrado ou não existente",
-        },
-      });
-    }
-
-    if (compareSync(senha, userFound.dataValues.senha)) {
-      const token = sign(
-        {
-          email: userFound.dataValues.email,
-          idUsuario: userFound.dataValues.idUsuario,
-        },
-        process.env.SECRET,
-        {},
-      );
-      return res.status(200).json({ error: null, token });
-    }
-
-    return res.status(400).json({ error: { message: "Senha incorreta" } });
+    const validUser = await VerifyUserAuthentication(email, senha, { returning: true });
+    const token = SignUserToken(validUser, remember);
+    return Handler.ok({ token });
   } catch (error) {
+    if (error instanceof ServerError) {
+      if (error.status === 404) {
+        return Handler.notFound(error.message);
+      }
+      if (error.status === 401) {
+        return Handler.unauthorized(error.message);
+      }
+    }
+
+    if (error instanceof ConnectionRefusedError) {
+      return Handler.databaseConnectionFail(undefined, error);
+    }
+
+    if (error instanceof ConnectionAcquireTimeoutError) {
+      return Handler.databaseTimeout(undefined, error);
+    }
     console.log(error);
-    res.status(500).json({
-      error: { message: "Houve um erro em nossos servidores, contate o suporte ou tente novamente mais tarde" },
-    });
+    return Handler.fail(undefined, error);
   }
 };

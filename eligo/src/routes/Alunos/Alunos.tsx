@@ -1,9 +1,6 @@
 import React, { useState } from "react";
 import styles from "./Alunos.module.css";
 import { Checkbox, Divider, Typography, CircularProgress } from "@mui/material";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import LibraryAddIcon from "@mui/icons-material/LibraryAdd";
-import EditIcon from "@mui/icons-material/Edit";
 import Delete from "./Modals/Delete";
 import Update from "./Drawers/Update";
 import Create from "./Drawers/Create";
@@ -32,19 +29,10 @@ const Alunos: React.FC = () => {
     setSelectedSchool,
     TokenData,
     setSelectedClass,
-    SnackMessage,
-    isSnackbarOpen,
-    setSnackbarOpen,
+    alunosCount,
+    showStudent,
   } = useAlunosContext();
 
-  const applyFilters = () => {
-    let filtredData = Alunos;
-
-    if (selectedClass) {
-      filtredData = filtredData.filter((aluno) => aluno.turma.idTurma === Number(selectedClass));
-    }
-    return filtredData;
-  };
   const CreateButton = {
     disabled: false,
     onClick: () => DrawerCreate.open(),
@@ -94,7 +82,10 @@ const Alunos: React.FC = () => {
               value={selectedClass}
               required
               label="Turma"
-              onChange={(e: any) => setSelectedClass(e.target.value)}
+              onChange={(e: any) => {
+                setSelectedClass(e.target.value)
+                showStudent()
+              }}
             >
               <MenuItem value="">Selecione</MenuItem>
               {Turmas.length > 0 &&
@@ -109,14 +100,16 @@ const Alunos: React.FC = () => {
       </div>
       <div className={styles.table_container}>
         {selectedSchool ? (
-          isLoading ? (
-            <div className="w-full h-[50px] flex justify-center items-center">
-              <CircularProgress />
-            </div>
-          ) : Alunos.length < 1 ? (
-            <div className="w-full h-[50px] text-center">
-              <h1>Nenhum aluno foi encontrado</h1>
-            </div>
+          Alunos.length < 1 ? (
+            isLoading ? (
+              <div className="w-full flex items-center justify-center p-2">
+                <CircularProgress size={20} />
+              </div>
+            ) : (
+              <div className="w-full h-[50px] text-center p-2">
+                <h1>Nenhum aluno foi encontrado</h1>
+              </div>
+            )
           ) : (
             <table className={styles.content_table}>
               <thead className={styles.table_header}>
@@ -130,10 +123,10 @@ const Alunos: React.FC = () => {
                 </tr>
               </thead>
               <tbody className={styles.table_body}>
-                {applyFilters().map((aluno, index) => (
+                {Alunos.map((aluno, index) => (
                   <tr key={index}>
                     <td>
-                      {aluno.escola.idGestor === TokenData.idUsuario && (
+                      {aluno.turma.escola.idGestor === TokenData.idUsuario && (
                         <Checkbox
                           checked={selectedRows.includes(aluno.idAluno)}
                           onChange={() => selectRow(aluno.idAluno)}
@@ -141,7 +134,7 @@ const Alunos: React.FC = () => {
                       )}
                     </td>
                     <td>
-                      {aluno.escola.idGestor === TokenData.idUsuario && (
+                      {aluno.turma.escola.idGestor === TokenData.idUsuario && (
                         <Link to={`/aluno/${aluno.idAluno}`}>
                           <OpenInNewIcon fontSize="small" />
                         </Link>
@@ -150,14 +143,23 @@ const Alunos: React.FC = () => {
                     <td>{aluno.nome}</td>
                     <td>{aluno.turma.nome}</td>
                     <td>{aluno.turma.curso.nome}</td>
-                    <td>{aluno.escola.nome}</td>
+                    <td>{aluno.turma.escola.nome}</td>
                   </tr>
                 ))}
+                {Alunos.length < alunosCount && (
+                  <tr onClick={() => showStudent()}>
+                    <td colSpan={6}>
+                      <div className="flex items-center justify-center underline cursor-pointer font-medium">
+                        {isLoading ? <CircularProgress size={20} /> : "Carregar mais"}
+                      </div>
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           )
         ) : (
-          <h1 className="w-full py-1 font-light text-black-text text-center">Selecione uma Escola</h1>
+          <h1 className="w-full py-4 font-light text-black-text text-center">Selecione uma Escola</h1>
         )}
       </div>
       <Create />
