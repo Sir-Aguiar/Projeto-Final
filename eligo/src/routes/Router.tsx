@@ -23,18 +23,15 @@ import { ClassDashboardProvider } from "./Dashboards/Turma/RouteStateManager";
 import { UsuarioProvider } from "./Usuario/RouteStateManager";
 import Usuario from "./Usuario/Usuario";
 import Homepage from "./Homepage/Homepage";
-import { TokenWatcher } from "../components/TokenWatcher";
 
 const PrivateRoutes = () => {
   return (
     <RequireAuth loginPath={"/login"}>
-      <TokenWatcher>
-        <>
-          <Navbar />
-          <Outlet />
-          <Footer />
-        </>
-      </TokenWatcher>
+      <>
+        <Navbar />
+        <Outlet />
+        <Footer />
+      </>
     </RequireAuth>
   );
 };
