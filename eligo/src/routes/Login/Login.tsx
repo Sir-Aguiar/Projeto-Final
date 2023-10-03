@@ -35,7 +35,12 @@ const Login: React.FC = () => {
     axios
       .post(`${import.meta.env.VITE_SERVER_URL}/login`, userData)
       .then((res) => {
-        signIn({ token: res.data.token, tokenType: "Bearer", expiresIn: 60 * 60 * 6, authState: { email } });
+        signIn({
+          token: res.data.token,
+          tokenType: "Bearer",
+          expiresIn: remember ? 99 * 99 * 99 * 99 : 60 * 60 * 6,
+          authState: { email },
+        });
         navigate("/");
       })
       .catch((error) => {
@@ -83,7 +88,7 @@ const Login: React.FC = () => {
             </div>
           </div>
 
-          <button type="submit" className={`${styles.login} bg-blue-gradient`} id="login-submiter">
+          <button type="submit" className={`${styles.login} bg-blue-500`} id="login-submiter">
             {isLoading ? <CircularProgress size={25} color="inherit" /> : "Entrar"}
           </button>
           <a href="/registro" className="text-[11px] text-blue-400 underline font-bold">

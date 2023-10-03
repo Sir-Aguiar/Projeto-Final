@@ -1,54 +1,70 @@
 import React, { useEffect, useState } from "react";
 import styles from "./Register.module.css";
-import { TextField } from "@mui/material";
+import { CircularProgress, TextField } from "@mui/material";
 import LoginBackground from "../../assets/login-bg.jpg";
 import logo from "../../assets/logo.png";
 import axios, { AxiosError } from "axios";
-import { useIsAuthenticated } from "react-auth-kit";
+import { useIsAuthenticated, useSignIn } from "react-auth-kit";
 import { useNavigate } from "react-router-dom";
+import { useToast } from "../../components/Toast/Toast";
 
 const Register: React.FC = () => {
+  const { notify } = useToast();
+  const signIn = useSignIn();
+
+  const [formError, setFormError] = useState("");
+  const [isLoading, setLoading] = useState(false);
   const [password, setPassword] = useState("");
   const [againPassword, setAgainPassword] = useState("");
 
   const navigate = useNavigate();
-  const isUserAuthenticated = useIsAuthenticated();
-
-  useEffect(() => {
-    if (isUserAuthenticated()) {
-      navigate("/");
-    }
-  }, [isUserAuthenticated()]);
-
-  if (isUserAuthenticated()) return <></>;
 
   const signUp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
+
     if (password !== againPassword) {
-      alert("Digita senha igual porra");
-      return;
+      return setFormError("As senhas devem ser iguais");
     }
+
     const nome = e.currentTarget.querySelector<HTMLInputElement>("#nome")?.value;
     const email = e.currentTarget.querySelector<HTMLInputElement>("#email")?.value;
-    const senha = e.currentTarget.querySelector<HTMLInputElement>("#senha")?.value;
-
-    if (password !== senha) {
-      alert("ERRO");
-      return;
-    }
 
     axios
-      .post(`${import.meta.env.VITE_SERVER_URL}/registro`, { nome, email, senha })
+      .post(`${import.meta.env.VITE_SERVER_URL}/registro`, { nome, email, senha: password })
+
       .then((res) => {
-        window.location.href = "/login";
+        const { token } = res.data;
+        signIn({
+          token,
+          tokenType: "Bearer",
+          expiresIn: 60 * 60 * 6,
+        });
+        navigate("/");
       })
+
       .catch((error) => {
         console.log(error);
         if (error instanceof AxiosError) {
-          const responseError = error.response;
-          alert(responseError?.data.error.message);
+          const response = error.response;
+
+          if (response) {
+            return setFormError(response.data.error.message);
+          }
+
+          notify({
+            title: error.message,
+            severity: "error",
+          });
         }
-      });
+        notify({
+          title: "Servidor se encontra fora do ar",
+          message: "Este problema é completamente do nosso lado. Aguarde alguns instantes",
+          severity: "error",
+        });
+      })
+
+      .finally(() => setLoading(false));
   };
 
   return (
@@ -101,17 +117,21 @@ const Register: React.FC = () => {
               />
             </div>
           </div>
-
+          {formError && <span className="text-[12px] text-red-500 text-start w-full px-1">{formError}</span>}
           <p className={`${styles.register_message}`}>
-            {/* Lorem ipsum dolor sit amet, consectetur cras amet. */}
             <br />
             <a href="/login" className="font-bold text-[#228CE5] underline cursor-pointer hover:brightness-90">
               Já possui uma conta?
             </a>
           </p>
 
-          <button type="submit" className={styles.register} id="register-submiter">
-            Cadastrar
+          <button
+            disabled={password !== againPassword}
+            type="submit"
+            className={`${styles.register} bg-blue-gradient`}
+            id="register-submiter"
+          >
+            {isLoading ? <CircularProgress size={25} color="inherit" /> : "Cadastrar"}
           </button>
         </form>
       </div>

@@ -49,7 +49,7 @@ const Update: React.FC = () => {
           <button onClick={() => DrawerUpdate.close()} className={styles.cancel}>
             Cancelar
           </button>
-          <button className={`${styles.submiter} bg-blue-gradient`} type="submit" form="update-school">
+          <button className={`${styles.submiter} bg-blue-600`} type="submit" form="update-school">
             {isLoading ? <CircularProgress size={30} color="inherit" /> : "Atualizar"}
           </button>
         </footer>

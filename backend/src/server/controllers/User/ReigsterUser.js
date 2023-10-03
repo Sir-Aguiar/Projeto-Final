@@ -1,37 +1,51 @@
-require("dotenv/config");
-const { hashSync } = require("bcrypt");
-const Usuario = require("../../../database/models/Usuario");
-const HttpHandler = require("../../utils/HttpHandlers");
-
+const { ConnectionAcquireTimeoutError, ConnectionRefusedError } = require("sequelize");
+const ResponseHandler = require("../../utils/ResponseHandler");
+const ServerError = require("../../utils/ServerError");
+const CreateUser = require("../../use-cases/User/Create");
+const SignUserToken = require("../../use-cases/User/SignToken");
 /** @type {import("express").RequestHandler}  */
 module.exports = async (req, res) => {
+  const Handler = new ResponseHandler(res);
   const { nome, email, senha } = req.body;
+  if (!nome) {
+    return Handler.clientError("Nenhum nome foi informado para o usuário");
+  }
 
   if (nome.length > 45) {
-    return HttpHandler.outOfRangeProperty(res, "Nome precisa ser inferior a 45 caracteres");
+    return Handler.clientError("Nome precisa ter menos de 45 caracteres");
+  }
+
+  if (!senha) {
+    return Handler.clientError("Nenhuma senha foi informado para o usuário");
+  }
+
+  if (!email) {
+    return Handler.clientError("Nenhum email foi informado para o usuário");
   }
 
   if (email.length > 255) {
-    return HttpHandler.outOfRangeProperty(res, "Email precisa ser inferior a 255 caracteres");
+    return Handler.clientError("Email precisa ter menos de 255 caracteres");
   }
 
-  const HASHED_PASSWORD = hashSync(senha, Number(process.env.SALT));
-
   try {
-    const insertedUser = await Usuario.create({ nome, email, senha: HASHED_PASSWORD });
-    res.status(201).json({ error: null, insertedUser });
+    const usuario = await CreateUser(nome, email, senha);
+    const token = SignUserToken(usuario);
+    return Handler.ok({ token });
   } catch (error) {
-    const errorType = error.errors[0].type;
-    if (errorType === "unique violation") {
-      const errorPath = error.errors[0].path;
-      if (errorPath === "email") {
-        return res.status(400).json({
-          error: {
-            message: "Este email já está em uso",
-          },
-        });
+    if (error instanceof ServerError) {
+      if (error.status === 400) {
+        return Handler.clientError(error.message);
       }
     }
-    return res.status(500).json({ error });
+
+    if (error instanceof ConnectionRefusedError) {
+      return Handler.databaseConnectionFail(undefined, error);
+    }
+
+    if (error instanceof ConnectionAcquireTimeoutError) {
+      return Handler.databaseTimeout(undefined, error);
+    }
+
+    return Handler.fail(undefined, error);
   }
 };

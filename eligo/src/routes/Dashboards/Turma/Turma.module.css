@@ -6,7 +6,7 @@
   @apply tablet:max-w-[770px];
   @apply mobile:max-w-[328px];
   @apply overflow-hidden;
-  @apply font-Roboto text-icon-black;
+  @apply font-Roboto text-black-smooth;
 }
 
 .content_grid {

@@ -23,7 +23,7 @@
 .title {
   @apply text-[24px] font-bold;
   @apply mobile:text-[20px] w-full;
-  @apply text-transparent bg-clip-text bg-blue-gradient;
+  @apply text-transparent bg-clip-text bg-blue-600;
 }
 
 .paragraph {

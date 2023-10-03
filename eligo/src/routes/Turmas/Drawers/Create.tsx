@@ -124,7 +124,7 @@ const Create: React.FC = () => {
             disabled={!idEscola || classesToAdd.length < 1}
             type="submit"
             form="create-class"
-            className={`${styles.submiter} bg-blue-gradient`}
+            className={`${styles.submiter} bg-blue-600`}
           >
             {isLoading ? <CircularProgress size={30} color="inherit" /> : "Cadastrar"}
           </button>

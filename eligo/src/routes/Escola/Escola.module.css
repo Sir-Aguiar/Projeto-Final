@@ -39,7 +39,7 @@
 	@apply bg-black-text text-[#fefefe] text-[15px] mobile:font-medium;
 }
 .info_card span {
-	@apply text-blue-icon font-bold text-[17px];
+	@apply text-blue-600 font-bold text-[17px];
 }
 .info_card svg {
 	@apply transition-all;

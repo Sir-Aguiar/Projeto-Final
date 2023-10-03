@@ -38,7 +38,7 @@ const Delete: React.FC = () => {
               <h3 className="text-[12px] ">
                 Você tem certeza que deseja excluir {selectedRows.length} aluno{selectedRows.length > 1 ? "s" : ""}?
               </h3>
-              <p className="text-[12px] font-medium text-icon-black">Esta ação não poderá ser revertida</p>
+              <p className="text-[12px] font-medium text-black-smooth">Esta ação não poderá ser revertida</p>
             </div>
           </header>
           <main>
@@ -47,7 +47,7 @@ const Delete: React.FC = () => {
             </div>
             <div className="flex flex-col gap-1 h-full">
               <h1 className="text-lg font-bold text-[#D94F3B]">Cuidado</h1>
-              <p className="text-[12px] leading-4 text-icon-black">
+              <p className="text-[12px] leading-4 text-black-smooth">
                 Todos os respectivos dados desses alunos serão excluídos, isso inclui, notas, presenças, etc...
               </p>
             </div>

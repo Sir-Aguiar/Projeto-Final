@@ -19,5 +19,5 @@
   @apply hover:bg-slate-50 bg-opacity-10;
 }
 .login {
-  @apply bg-blue-gradient text-background;
+  @apply bg-blue-600 text-background;
 }

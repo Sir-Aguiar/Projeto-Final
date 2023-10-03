@@ -14,7 +14,7 @@ const StudentLink: React.FC<{ link: string; name: string }> = ({ link, name }) =
   return (
     <div className="w-full h-[50px] min-h-[50px] flex items-center justify-start gap-3 px-2">
       <a href={link} className="transition-all duration-300 rounded-full hover:bg-slate-200 p-1 group ">
-        <OpenInNewIcon className="transition-all duration-300 group-hover:text-blue-icon group-hover:scale-95 " />
+        <OpenInNewIcon className="transition-all duration-300 group-hover:text-blue-600 group-hover:scale-95 " />
       </a>
       <span title={name} className="text-sm whitespace-nowrap overflow-hidden text-ellipsis">
         {name}

@@ -35,7 +35,7 @@
   @apply backdrop-blur-[2px] bg-transparent;
 }
 .search_bar svg {
-  @apply absolute top-1/2 -translate-y-1/2 right-2 fill-blue-icon;
+  @apply absolute top-1/2 -translate-y-1/2 right-2 fill-blue-600;
   @apply cursor-pointer;
 }
 .navigations {

@@ -53,7 +53,7 @@
 
 .CTAs .primary {
   @apply font-Roboto text-background font-semibold rounded-sm;
-  @apply bg-blue-gradient;
+  @apply bg-blue-600;
 }
 
 .CTAs .secundary {

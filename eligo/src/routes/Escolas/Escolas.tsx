@@ -27,7 +27,7 @@ const ClassLink: React.FC<ClassLinkProps> = ({ turma, link = false }) => {
           href={`/turma/${turma.idTurma}`}
           className="transition-all duration-300 rounded-full hover:bg-slate-200 p-1 group "
         >
-          <OpenInNewIcon className="transition-all duration-300 group-hover:text-blue-icon group-hover:scale-90 " />
+          <OpenInNewIcon className="transition-all duration-300 group-hover:text-blue-600 group-hover:scale-90 " />
         </a>
       )}
       <span>{turma.nome}</span>

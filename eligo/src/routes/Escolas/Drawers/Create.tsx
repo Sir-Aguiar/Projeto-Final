@@ -115,7 +115,7 @@ const Create: React.FC = () => {
           <button onClick={onClose} className={styles.cancel}>
             Cancelar
           </button>
-          <button className={`${styles.submiter} bg-blue-gradient`} type="submit" form="create-school">
+          <button className={`${styles.submiter} bg-blue-600`} type="submit" form="create-school">
             {isLoading ? <CircularProgress size={30} color="inherit" /> : "Cadastrar"}
           </button>
         </footer>
