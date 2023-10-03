@@ -126,7 +126,6 @@ const AlunosProvider: React.FC<ProviderProps> = ({ children }) => {
       const response = await FindAllSchools(RouteAPI);
       setEscolas(response);
     } catch (error: any) {
-      console.log(error);
       if (error instanceof AxiosError) {
         // ERR_NETWORK -> mostre mais grave
         if (error.response!.status >= 400 && error.response!.status < 500) {
@@ -148,7 +147,6 @@ const AlunosProvider: React.FC<ProviderProps> = ({ children }) => {
         const response = await FindClassesBySchool(RouteAPI, Number(idEscola));
         setTurmas(response);
       } catch (error: any) {
-        console.log(error);
         if (error instanceof AxiosError) {
           // ERR_NETWORK -> mostre mais grave
           if (error.response!.status >= 400 && error.response!.status < 500) {
@@ -167,7 +165,6 @@ const AlunosProvider: React.FC<ProviderProps> = ({ children }) => {
         const response = await FindClassesBySchool(RouteAPI, Number(selectedSchool));
         setTurmas(response);
       } catch (error: any) {
-        console.log(error);
         if (error instanceof AxiosError) {
           // ERR_NETWORK -> mostre mais grave
           if (error.response!.status >= 400 && error.response!.status < 500) {
@@ -185,28 +182,33 @@ const AlunosProvider: React.FC<ProviderProps> = ({ children }) => {
   };
 
   useEffect(() => {
-    if (selectedSchool) {
-      
+    setRows([]);
+    if (selectedSchool && !selectedClass) {
+      setAlunos([]);
+      showClasses(Number(selectedSchool));
+      showStudent();
     }
-  }, [selectedClass, selectedSchool]);
+  }, [selectedSchool, selectedClass]);
+
+  useEffect(() => {
+    if (selectedClass) {
+      showStudent();
+    }
+  }, [selectedClass]);
 
   const showStudent = async () => {
     setLoading(true);
-
-    if (selectedSchool) {
+    if (selectedClass) {
       try {
-        const skip = Alunos.length;
-        const { count, rows } = await FindStudentsBySchool(RouteAPI, Number(selectedSchool), undefined, skip);
-        console.log(rows);
-        setAlunos((value) => [...value, ...rows]);
-        setAlunosCount(count);
+        const alunos = await FindStudentsByClass(RouteAPI, Number(selectedClass));
+        setAlunos(alunos);
+        setAlunosCount(alunos.length);
       } catch (error) {
-        console.log(error);
         if (error instanceof AxiosError) {
           // ERR_NETWORK -> mostre mais grave
           if (error.response!.status >= 400 && error.response!.status < 500) {
             notify({
-              title: "Erro consultar alunos da escola",
+              title: "Erro consultar alunos da turma",
               message: error.response!.data.error.message,
               severity: "warn",
             });
@@ -215,18 +217,18 @@ const AlunosProvider: React.FC<ProviderProps> = ({ children }) => {
         }
         // ERR_NETWORK -> mostre mais grave
       }
-    } else if (selectedClass) {
+    } else if (selectedSchool) {
       try {
-        const alunos = await FindStudentsByClass(RouteAPI, Number(selectedClass));
-        setAlunos(alunos);
-        setAlunosCount(alunos.length);
+        const skip = Alunos.length;
+        const { count, rows } = await FindStudentsBySchool(RouteAPI, Number(selectedSchool), undefined, skip);
+        setAlunos((value) => [...value, ...rows]);
+        setAlunosCount(count);
       } catch (error) {
-        console.log(error);
         if (error instanceof AxiosError) {
           // ERR_NETWORK -> mostre mais grave
           if (error.response!.status >= 400 && error.response!.status < 500) {
             notify({
-              title: "Erro consultar alunos da turma",
+              title: "Erro consultar alunos da escola",
               message: error.response!.data.error.message,
               severity: "warn",
             });

@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import styles from "./Aula.module.css";
 import { useAulaContext } from "./RouteStateManager";
-import { Checkbox, Divider, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
+import { Checkbox, CircularProgress, Divider, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import HistoryIcon from "@mui/icons-material/History";
-import Snackbar from "@mui/material/Snackbar";
 import History from "./Modals/History/History";
 
 const Aula: React.FC = () => {
@@ -27,11 +26,12 @@ const Aula: React.FC = () => {
     classObservations,
     setClassObservations,
     classStartTime,
+    isLoading
   } = useAulaContext();
   return (
     <div className={styles.content_container}>
       <div className={styles.controllers}>
-        <h1 className="font-Montserrat text-center font-medium text-black-text">Informações da Aula</h1>
+        <h1 className="text-center font-medium">Informações da Aula</h1>
         <FormControl fullWidth>
           <InputLabel>Escola</InputLabel>
           <Select label="Escola" value={selectedSchool} onChange={(e: any) => setSelectedSchool(e.target.value)}>
@@ -70,7 +70,7 @@ const Aula: React.FC = () => {
           className="w-full flex flex-col gap-2 overflow-hidden transition-all duration-500"
           style={{ maxHeight: started ? "200px" : "0" }}
         >
-          <Divider className="font-medium text-black-text">Observações</Divider>
+          <Divider className="font-medium">Observações</Divider>
           <TextField
             multiline
             rows={5}
@@ -85,10 +85,10 @@ const Aula: React.FC = () => {
             disabled={!selectedSchool || !selectedClass || !selectedDiscipline}
             onClick={started ? () => endClass() : () => startClass()}
           >
-            {started ? "Encerrar Aula" : "Iniciar Aula"}
+            {isLoading ? <CircularProgress size={25} color="inherit" /> : started ? "Encerrar Aula" : "Iniciar Aula"}
           </button>
           <button
-            className="disabled:opacity-60 disabled:cursor-not-allowed text-[10px] flex items-center gap-1 text-black-text underline underline-offset-2 font-medium cursor-pointer"
+            className="disabled:opacity-60 disabled:cursor-not-allowed text-[10px] flex items-center gap-1  underline underline-offset-2 font-medium cursor-pointer"
             onClick={() => HistoryModal.open()}
             disabled={!!started}
           >
@@ -98,7 +98,7 @@ const Aula: React.FC = () => {
       </div>
 
       <div className={styles.presence_list}>
-        <Divider className="font-medium text-black-text text-lg">
+        <Divider className="font-medium  text-lg">
           {started
             ? `Lista de chamada: ${classStartTime?.toLocaleString("pt-BR", { dateStyle: "short" })}`
             : "Lista de Alunos"}

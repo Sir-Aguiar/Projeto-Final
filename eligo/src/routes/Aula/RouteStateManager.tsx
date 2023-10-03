@@ -2,26 +2,15 @@ import axios, { AxiosError, AxiosInstance } from "axios";
 import React, { createContext, useState, useMemo, useContext, useEffect } from "react";
 import { useAuthHeader } from "react-auth-kit";
 import jwtDecode from "jwt-decode";
-import { useParams } from "react-router-dom";
-import NotFound from "../Errors/NotFound";
-import { SnackbarProps } from "@mui/material";
-
-interface IEscola {
-  idGestor: number;
-  idEscola: number;
-  nome: string;
-}
-
-interface ITurma {
-  idTurma: number;
-  idEscola: number;
-  idCurso: number;
-  nome: string;
-}
-interface IAluno {
-  idAluno: number;
-  nome: string;
-}
+import { useToast } from "../../components/Toast/Toast";
+import { FindAllSchools } from "../../services/Escolas";
+import { FindStudentsByClass } from "../../services/Alunos";
+import { FindClassesBySchool } from "../../services/Turmas";
+import { IEscola } from "../../@types/Escolas";
+import { IAluno } from "../../@types/Alunos";
+import { ITurma } from "../../@types/Turmas";
+import { FindDisciplinesByClass } from "../../services/Disciplinas";
+import { CreateLesson } from "../../services/Aulas";
 
 interface IDisciplina {
   idDisciplina: number;
@@ -65,27 +54,37 @@ interface IRouteContext {
   classStartTime?: Date;
   HistoryModal: IModalProps;
   RouteAPI: AxiosInstance;
-  setSnackBarState: React.Dispatch<React.SetStateAction<boolean>>;
-  SnackBarState: boolean;
+  isLoading: boolean;
 }
 
 const RouteContext = createContext<IRouteContext | null>(null);
 
 const AulaProvider: React.FC<ProviderProps> = ({ children }) => {
+  const { notify } = useToast();
   const authHeader = useAuthHeader();
+
+  const RouteAPI = axios.create({
+    baseURL: import.meta.env.VITE_SERVER_URL,
+    headers: {
+      Authorization: authHeader(),
+    },
+  });
+
   const [Escolas, setEscolas] = useState<IEscola[]>([]);
   const [Alunos, setAlunos] = useState<IAluno[]>([]);
   const [Turmas, setTurmas] = useState<ITurma[]>([]);
   const [Disciplinas, setDisciplinas] = useState<IDisciplina[]>([]);
+
   const [isHistoryModalOpen, setHistoryModal] = useState(false);
+  const [isLoading, setLoading] = useState(false);
   const [selectedSchool, setSelectedSchool] = useState("");
   const [selectedClass, setSelectedClass] = useState("");
   const [selectedDiscipline, setSelectedDiscipline] = useState("");
-  const [started, setStarted] = useState(false);
   const [studentPresence, setStudentPresence] = useState<number[]>([]);
+
+  const [started, setStarted] = useState(false);
   const [classObservations, setClassObservations] = useState("");
   const [classStartTime, setClassStartTime] = useState<Date>();
-  const [SnackBarState, setSnackBarState] = useState(false);
 
   const TokenData = useMemo(() => {
     const TOKEN = authHeader();
@@ -116,22 +115,44 @@ const AulaProvider: React.FC<ProviderProps> = ({ children }) => {
 
   const endClass = async () => {
     try {
-      await RouteAPI.post(`/aula`, {
-        idDisciplina: selectedDiscipline,
-        idTurma: selectedClass,
+      setLoading(true);
+      await CreateLesson(RouteAPI, {
+        idDisciplina: Number(selectedDiscipline),
+        idTurma: Number(selectedClass),
         idProfessor: TokenData.idUsuario,
         observacoes: classObservations,
         presentes: studentPresence,
       });
-      setStarted(false);
+
       setClassObservations("");
       setAlunos([]);
       setStudentPresence([]);
       setSelectedDiscipline("");
       setSelectedClass("");
       setSelectedSchool("");
+      setStarted(false);
     } catch (error: any) {
-      console.log(error);
+      if (error instanceof AxiosError) {
+        const response = error?.response
+        // ERR_NETWORK -> mostre mais grave
+
+        if (response) {
+          notify({
+            message: response.data.error.message,
+            title: "Erro ao criar aula",
+            severity: "error",
+          });
+          return;
+        }
+        notify({
+          title: error.message,
+          severity: "error",
+        });
+      }
+
+      // Caso error 500 ->  mostre mais grave
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -140,9 +161,9 @@ const AulaProvider: React.FC<ProviderProps> = ({ children }) => {
       situation: isHistoryModalOpen,
       close() {
         setSelectedDiscipline("");
-        setDisciplinas([])
+        setDisciplinas([]);
         setSelectedClass("");
-        setTurmas([])
+        setTurmas([]);
         setSelectedSchool("");
         setHistoryModal(false);
       },
@@ -152,56 +173,100 @@ const AulaProvider: React.FC<ProviderProps> = ({ children }) => {
     };
   }, [isHistoryModalOpen]);
 
-  const RouteAPI = axios.create({
-    baseURL: import.meta.env.VITE_SERVER_URL,
-    headers: {
-      Authorization: authHeader(),
-    },
-  });
-
   const loadSchools = async () => {
     try {
-      const response = await RouteAPI.get("/escola");
-      setEscolas(response.data.escolas);
+      const response = await FindAllSchools(RouteAPI);
+      setEscolas(response);
     } catch (error: any) {
-      console.log(error);
+      if (error instanceof AxiosError) {
+        // ERR_NETWORK -> mostre mais grave
+
+        if (error.status! >= 400 && error.status! < 500) {
+          notify({
+            message: error.response!.data.error.message,
+            title: "Erro ao consultar escolas",
+            severity: "warn",
+          });
+          return;
+        }
+      }
+
+      // Caso error 500 ->  mostre mais grave
+    }
+  };
+
+  const loadClasses = async () => {
+    try {
+      const response = await FindClassesBySchool(RouteAPI, Number(selectedSchool));
+      setTurmas(response);
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        // ERR_NETWORK -> mostre mais grave
+        if (error.response!.status >= 400 && error.response!.status < 500) {
+          notify({
+            title: "Erro consultar turmas da escola",
+            message: error.response!.data.error.message,
+            severity: "warn",
+          });
+          return;
+        }
+      }
+      // ERR_NETWORK -> mostre mais grave
+    }
+  };
+
+  const loadDisciplines = async () => {
+    try {
+      const response = await FindDisciplinesByClass(RouteAPI, Number(selectedClass));
+      setDisciplinas(response);
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        // ERR_NETWORK -> mostre mais grave
+        if (error.response!.status >= 400 && error.response!.status < 500) {
+          notify({
+            title: "Erro consultar turmas da escola",
+            message: error.response!.data.error.message,
+            severity: "warn",
+          });
+          return;
+        }
+      }
+      // ERR_NETWORK -> mostre mais grave
     }
   };
 
   const loadStudents = async () => {
     try {
-      const response = await RouteAPI.get(`/aluno?idTurma=${selectedClass}`);
-      console.log(response.data.alunos);
-      setAlunos(response.data.alunos);
-    } catch (error: any) {
-      console.log(error);
+      const alunos = await FindStudentsByClass(RouteAPI, Number(selectedClass));
+      setAlunos(alunos);
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        // ERR_NETWORK -> mostre mais grave
+        if (error.response!.status >= 400 && error.response!.status < 500) {
+          notify({
+            title: "Erro consultar alunos da turma",
+            message: error.response!.data.error.message,
+            severity: "warn",
+          });
+          return;
+        }
+      }
+      // ERR_NETWORK -> mostre mais grave
     }
   };
 
-  // Carrega dados de turmas da escola
   useEffect(() => {
-    setSelectedClass("");
-    setSelectedDiscipline("");
     if (selectedSchool) {
-      RouteAPI.get(`/turma?idEscola=${selectedSchool}`)
-        .then((response) => {
-          console.log(response.data);
-          setTurmas(response.data.turmas);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      setSelectedClass("");
+      setSelectedDiscipline("");
+      loadClasses();
     }
   }, [selectedSchool]);
 
   useEffect(() => {
     if (selectedClass) {
       setSelectedDiscipline("");
-      RouteAPI.get(`/disciplina?idTurma=${selectedClass}`).then((response) => {
-        console.log(response.data);
-        setDisciplinas(response.data.disciplinas);
-        loadStudents();
-      });
+      loadDisciplines().then(() => loadStudents());
     }
   }, [selectedClass]);
 
@@ -226,8 +291,6 @@ const AulaProvider: React.FC<ProviderProps> = ({ children }) => {
         Disciplinas,
         selectedDiscipline,
         studentPresence,
-        setSnackBarState,
-        SnackBarState,
         Alunos,
         HistoryModal,
         started,
@@ -235,6 +298,7 @@ const AulaProvider: React.FC<ProviderProps> = ({ children }) => {
         setSelectedDiscipline,
         toggleStudentPresence,
         classStartTime,
+        isLoading,
       }}
     >
       {children}

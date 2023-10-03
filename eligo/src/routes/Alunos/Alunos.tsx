@@ -63,9 +63,8 @@ const Alunos: React.FC = () => {
               required
               label="Escola"
               onChange={(e: any) => {
-                setSelectedSchool(e.target.value);
                 setSelectedClass("");
-                showClasses(Number(e.target.value));
+                setSelectedSchool(e.target.value);
               }}
             >
               {Escolas.length > 0 &&
@@ -82,10 +81,7 @@ const Alunos: React.FC = () => {
               value={selectedClass}
               required
               label="Turma"
-              onChange={(e: any) => {
-                setSelectedClass(e.target.value)
-                showStudent()
-              }}
+              onChange={(e: any) => setSelectedClass(e.target.value)}
             >
               <MenuItem value="">Selecione</MenuItem>
               {Turmas.length > 0 &&

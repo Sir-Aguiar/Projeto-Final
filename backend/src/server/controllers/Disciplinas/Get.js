@@ -1,123 +1,88 @@
-const Escola = require("../../../database/models/Escola");
-const Disciplina = require("../../../database/models/Disciplina");
-const Curso = require("../../../database/models/Curso");
-const CursoDisciplina = require("../../../database/models/CursoDisciplina");
-const Turma = require("../../../database/models/Turma");
-const ProfessorLeciona = require("../../../database/models/ProfessorLeciona");
-const { Op } = require("sequelize");
+const { ConnectionRefusedError, ConnectionAcquireTimeoutError } = require("sequelize");
+const {
+  FindDisciplinesByClass,
+  FindDisciplinesFromClassByProfessor,
+} = require("../../use-cases/Disciplinas/FindByClass");
+const {
+  FindDisciplinesFromSchoolByProfessor,
+  FindDisciplinesBySchool,
+} = require("../../use-cases/Disciplinas/FindBySchool");
+const ResponseHandler = require("../../utils/ResponseHandler");
+const ServerError = require("../../utils/ServerError");
+const { VerifyUserPermission } = require("../../utils/VerifyPermission");
 /** @type {import("express").RequestHandler}  */
 const GetDisciplinasController = async (req, res) => {
-	const { idUsuario } = req.userData;
-	const { idEscola, idCurso, onlyLength, idTurma } = req.query;
-	try {
-		if (idEscola) {
-			if (isNaN(Number(idEscola))) {
-				return res.status(400).json({});
-			}
-			const foundSchool = await Escola.findByPk(idEscola);
+  const Handler = new ResponseHandler(res);
 
-			if (!foundSchool) {
-				return res.status(404).json({});
-			}
+  const { idUsuario } = req.userData;
 
-			if (foundSchool.dataValues.idGestor !== idUsuario) {
-				return res.status(401).json({});
-			}
+  if (!idUsuario) {
+    return Handler.forbidden("Nenhum usuário foi identificado, por favor, reconecte-se");
+  }
 
-			if (onlyLength) {
-				return res.status(200).json({
-					length: await Disciplina.count({
-						where: { idEscola },
-					}),
-				});
-			}
+  const { idEscola, idTurma, onlyLength } = req.query;
 
-			const disciplinas = await Escola.findOne({
-				include: [
-					{
-						model: Disciplina,
-						as: "disciplinas",
-						attributes: ["nome", "idDisciplina"],
-					},
-				],
-				attributes: [],
-				where: { idGestor: idUsuario, idEscola },
-			});
+  if (!idEscola && !idTurma) {
+    return Handler.clientError("Nenhum critério de seleção encontrado, por favor informe uma escola ou turma");
+  }
 
-			if (!disciplinas) {
-				return res.status(404).json({});
-			}
+  if (idEscola && isNaN(Number(idEscola))) {
+    return Handler.clientError("Identificador da escola em formato inválido");
+  }
 
-			return res.status(200).json({ disciplinas: disciplinas.disciplinas });
-		}
+  if (idTurma && isNaN(Number(idTurma))) {
+    return Handler.clientError("Identificador da turma em formato inválido");
+  }
 
-		if (idTurma) {
-			/* 
-				Achar todas as disciplinas daquela escola
-				Achar todas as disciplinas da escola relacionadas com o curso
-				Retornar estas disciplinas.
-			*/
+  try {
+    if (idEscola) {
+      const userPermission = await VerifyUserPermission(Number(idUsuario), { idEscola: Number(idEscola) });
 
-			const foundClass = await Turma.findByPk(idTurma, {
-				attributes: ["idTurma", "idCurso", "nome"],
-				include: [{ model: Escola, as: "escola", attributes: ["idGestor", "idEscola"] }],
-				raw: true,
-				nest: true,
-			});
+      if (userPermission === -1) {
+        return Handler.unauthorized("Você não tem permissão para realizar esta ação");
+      }
 
-			if (foundClass.escola.idGestor === idUsuario) {
-				// Todas as disciplinas da escola em questão
-				const schoolDisciplines = await Disciplina.findAll({
-					where: {
-						idEscola: foundClass.escola.idEscola,
-					},
-					attributes: ["idDisciplina"],
-				});
+      if (userPermission === 1) {
+        const disciplinas = await FindDisciplinesFromSchoolByProfessor(Number(idEscola), Number(idUsuario));
+        return Handler.ok({ disciplinas });
+      }
 
-				const disciplinasDaEscola = schoolDisciplines.map((disciplina) => disciplina.dataValues.idDisciplina);
+      const disciplinas = await FindDisciplinesBySchool(Number(idEscola), onlyLength);
+      return Handler.ok({ disciplinas });
+    }
 
-				const foundGrids = await CursoDisciplina.findAll({
-					where: {
-						idCurso: foundClass.idCurso,
-						idDisciplina: {
-							[Op.in]: disciplinasDaEscola,
-						},
-					},
-					include: [{ model: Disciplina, as: "disciplina", attributes: [] }],
-					attributes: ["disciplina.idDisciplina", "disciplina.nome"],
-					group: ["disciplina.idDisciplina"],
-					raw: true,
-					nest: true,
-				});
+    if (idTurma) {
+      const userPermission = await VerifyUserPermission(Number(idUsuario), { idTurma: Number(idTurma) });
 
-				return res.status(200).json({ error: null, disciplinas: foundGrids });
-			}
+      if (userPermission === -1) {
+        return Handler.unauthorized("Você não tem permissão para realizar esta ação");
+      }
 
-			const foundRelations = await ProfessorLeciona.findAll({
-				where: { idTurma, idProfessor: idUsuario },
-				include: [{ model: Disciplina, as: "disciplina", attributes: [] }],
-				attributes: ["disciplina.idDisciplina", "disciplina.nome"],
-				group: ["disciplina.idDisciplina"],
-				raw: true,
-				nest: true,
-			});
+      if (userPermission === 1) {
+        const disciplinas = await FindDisciplinesFromClassByProfessor(Number(idTurma), Number(idUsuario));
+        return Handler.ok({ disciplinas });
+      }
 
-			return res.status(200).json({ error: null, disciplinas: foundRelations });
-		}
+      const disciplinas = await FindDisciplinesByClass(Number(idTurma));
+      return Handler.ok({ disciplinas });
+    }
+  } catch (error) {
+    if (error instanceof ServerError) {
+      if (error.status === 404) {
+        return Handler.notFound(error.message);
+      }
+    }
 
-		const disciplinas = await Disciplina.findAll({
-			include: [{ model: Escola, as: "escola", attributes: ["idGestor"], where: { idGestor: idUsuario } }],
-		});
+    if (error instanceof ConnectionRefusedError) {
+      return Handler.databaseConnectionFail(undefined, error);
+    }
 
-		if (!disciplinas) {
-			return res.status(404).json({});
-		}
+    if (error instanceof ConnectionAcquireTimeoutError) {
+      return Handler.databaseTimeout(undefined, error);
+    }
 
-		return res.status(200).json({ error: null, disciplinas });
-	} catch (error) {
-		console.log(error);
-		return res.status(500).json({ error });
-	}
+    return Handler.fail(undefined, error);
+  }
 };
 
 module.exports = GetDisciplinasController;

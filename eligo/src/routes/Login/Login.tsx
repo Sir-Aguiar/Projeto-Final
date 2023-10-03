@@ -51,14 +51,21 @@ const Login: React.FC = () => {
             setFormError(response.data.error.message);
             return;
           }
+          if (error.message === "Network Error") {
+            return notify({
+              title: "Servidor se encontra fora do ar",
+              message: "Tente novamente em alguns instantes",
+              severity: "error",
+            });
+          }
           return notify({
             title: error.message,
             severity: "error",
           });
         }
         notify({
-          title: "Servidor se encontra fora do ar",
-          message: "Tente novamente em alguns instantes",
+          title: "Este erro não é esperado, atualize a página e tente novamente",
+          message: error.message,
           severity: "error",
         });
       })

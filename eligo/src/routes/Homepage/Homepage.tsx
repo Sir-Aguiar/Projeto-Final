@@ -51,7 +51,7 @@ const Homepage: React.FC = () => {
             </div>
           </footer>
         </div>
-        <div className={styles.invite_section}>
+        <div className={`${styles.invite_section} mobile:max-h-[200px]`}>
           <div className={styles.head}>
             <h1>Monitore cada informação </h1>
             <p>

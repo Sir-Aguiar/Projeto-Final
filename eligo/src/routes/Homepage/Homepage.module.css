@@ -1,6 +1,6 @@
 .content_section {
   @apply flex mobile:flex-col gap-2;
-  @apply w-full h-[625px] mobile:h-[1000px] mt-[65px] mx-auto;
+  @apply w-full h-[625px] mobile:h-[1200px] mt-[65px] mx-auto;
   @apply desktop:max-w-[1120px];
   @apply tablet:max-w-[770px];
   @apply mobile:max-w-[328px];
@@ -8,9 +8,9 @@
 }
 
 .home_header {
-  @apply w-full h-[256px] mobile:h-[1000px];
+  @apply w-full h-[256px] mobile:h-[1100px];
   @apply grid grid-cols-4 grid-rows-1 mobile:grid-cols-1 mobile:grid-rows-3 py-3 gap-6 tablet:gap-2;
-  @apply font-Montserrat text-[#272C2E];
+  @apply font-Montserrat text-black-smooth;
   @apply overflow-hidden;
 }
 
@@ -39,7 +39,7 @@
 .invite_button {
   @apply w-full h-[40px];
   @apply rounded-[3px];
-  @apply bg-[#272C2E];
+  @apply bg-black-smooth;
   @apply text-background text-[15px] tablet:text-[13px] font-semibold;
   @apply hover:brightness-125 transition-all;
 }
@@ -57,12 +57,12 @@
 
 .main_panel {
   @apply col-span-2 row-span-1 mobile:col-span-1;
-  @apply flex flex-col items-start justify-between;
+  @apply flex flex-col items-start justify-between mobile:min-h-[350px] gap-2;
 }
 .panel_content {
-  @apply max-h-[160px] w-full h-full mobile:max-h-[220px];
-  @apply flex items-center desktop:px-4 py-3 px-2 tablet:py-1 justify-between;
-  @apply rounded-md border-[1px] border-[#3992e5];
+  @apply max-h-[160px] w-full h-full mobile:max-h-[328px];
+  @apply flex mobile:flex-col-reverse items-center desktop:px-4 py-3 px-2 tablet:py-1 justify-between gap-2;
+  @apply rounded-md border-[1px] border-blue-500;
   @apply overflow-hidden;
 }
 
@@ -80,12 +80,12 @@
 .lesson_warn {
   @apply h-[60px] w-full;
   @apply flex items-center px-3 gap-2 tablet:px-1 tablet:gap-1;
-  @apply border-l-4 border-[#3992e5] rounded-sm;
-  @apply bg-[#3992e5] bg-opacity-10;
+  @apply border-l-4 border-blue-500 rounded-sm;
+  @apply bg-blue-500 bg-opacity-10;
 }
 .class_link {
   @apply w-[135px] h-[30px] flex items-center justify-center gap-3  transition-all;
-  @apply font-semibold text-sm tablet:text-[12px] text-[#3992e5] relative;
+  @apply font-semibold text-sm tablet:text-[12px] text-blue-500 relative;
 }
 .class_link::before {
   content: "";
@@ -94,9 +94,9 @@
   height: 30px;
   position: absolute;
   left: 6px;
-  @apply tablet:left-[11px] mobile:left-[5px];
   border-radius: 5px;
   transition: all 0.4s ease;
+  @apply tablet:left-[11px] mobile:left-[5px];
 }
 .class_link:hover::before {
   width: 100%;

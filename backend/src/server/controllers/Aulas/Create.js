@@ -1,86 +1,74 @@
-const { json } = require("sequelize");
-const Escola = require("../../../database/models/Escola");
-const Disciplina = require("../../../database/models/Disciplina");
-const Aula = require("../../../database/models/Aula");
-const ChamadaAluno = require("../../../database/models/ChamadaAluno");
-const ProfessorLeciona = require("../../../database/models/ProfessorLeciona");
-const Turma = require("../../../database/models/Turma");
-const Aluno = require("../../../database/models/Aluno");
-const Chamada = require("../../../database/models/Chamada");
+const { ConnectionRefusedError, ConnectionAcquireTimeoutError } = require("sequelize");
+const ResponseHandler = require("../../utils/ResponseHandler");
+const CreateLesson = require("../../use-cases/Aulas/Create");
+const CreatePresenceList = require("../../use-cases/Chamadas/Create");
+const { FindStudentsByClass } = require("../../use-cases/Alunos/FindByClass");
+const ServerError = require("../../utils/ServerError");
+
 /** @type {import("express").RequestHandler}  */
 const CreateAulaController = async (req, res) => {
-  const { idUsuario } = req.userData;
-  const { idDisciplina, idTurma, idProfessor } = req.body;
-  const { observacoes, presentes } = req.body;
+  const Handler = new ResponseHandler(res);
 
-  if (!idDisciplina || !idTurma || !idProfessor || !presentes) {
-    return res.status(400).json({});
+  const { idUsuario } = req.userData;
+
+  if (!idUsuario) {
+    return Handler.forbidden("Nenhum usuário foi identificado, por favor, reconecte-se");
+  }
+
+  const { idDisciplina, idTurma, idProfessor, observacoes, presentes } = req.body;
+
+  if (!idDisciplina || isNaN(Number(idDisciplina))) {
+    return Handler.clientError("Identificador da disciplina ausente ou em formato inválido");
+  }
+
+  if (!idTurma || isNaN(Number(idTurma))) {
+    return Handler.clientError("Identificador da turma ausente ou em formato inválido");
+  }
+
+  if (!idProfessor || isNaN(Number(idProfessor))) {
+    return Handler.clientError("Identificador do professor ausente ou em formato inválido");
+  }
+
+  if (!presentes) {
+    return Handler.clientError("Não foram informados alunos presentes");
+  }
+
+  if (presentes.length > 0) {
+    const classStudents = (await FindStudentsByClass(Number(idTurma))).map(({ idAluno }) => idAluno);
+
+    for (const aluno of presentes) {
+      if (!classStudents.includes(aluno)) {
+        throw new ServerError(`O aluno ${aluno} não pertence à esta turma`, 400);
+      }
+    }
   }
 
   try {
-    const foundClass = await Turma.findByPk(idTurma, {
-      attributes: ["idTurma"],
-      include: [
-        { model: Escola, as: "escola", attributes: ["idGestor"] },
-        { model: Aluno, as: "alunos", attributes: ["idAluno"] },
-      ],
-    });
-
-    if (idProfessor !== idUsuario) {
-      return res.status(401).json({
-        error: {
-          message: "Você não pode atribuir uma aula à outro usuário",
-        },
-      });
-    }
-
-    if (foundClass.dataValues.escola.dataValues.idGestor !== idUsuario) {
-			// Verifica se o professor está associado com aquela turma e disciplina
-      const foundRelation = await ProfessorLeciona.findOne({ where: { idProfessor, idDisciplina, idTurma } });
-
-      if (!foundRelation) {
-        return res.status(401).json({
-          error: {
-            message: "Você não leciona à esta turma",
-          },
-        });
-      }
-    }
-
-    const studentsFromClass = foundClass.dataValues.alunos.map((aluno) => aluno.dataValues.idAluno);
-
-    for (const idAluno of presentes) {
-      if (!studentsFromClass.includes(idAluno)) {
-        res.status(401).json({
-          error: {
-            message: "Aluno não pertence à esta turma",
-          },
-        });
-        break;
-      }
-    }
-
-    const createdClass = await Aula.create({
-      idDisciplina,
-      idTurma,
-      idProfessor: idUsuario,
-      anotacao: observacoes || null,
-    });
-
-    const createdList = await Chamada.create({ idAula: createdClass.dataValues.idAula });
-
-    for (const aluno of studentsFromClass) {
-      await ChamadaAluno.create({
-        idChamada: createdList.dataValues.idChamada,
-        idAluno: aluno,
-        situacao: presentes.includes(aluno),
-      });
-    }
-
-    return res.status(201).json({ error: null });
+    const aula = await CreateLesson({ idDisciplina, idTurma, idProfessor, observacoes });
+    const chamada = await CreatePresenceList(aula.dataValues.idAula, presentes);
+    return Handler.created();
   } catch (error) {
-    console.log(error);
-    return res.status(500).json({ error });
+    if (error instanceof ServerError) {
+      if (error.status === 404) {
+        return Handler.notFound(error.message);
+      }
+      if (error.status === 400) {
+        return Handler.clientError(error.message);
+      }
+      if (error.status === 401) {
+        return Handler.unauthorized(error.message);
+      }
+    }
+
+    if (error instanceof ConnectionRefusedError) {
+      return Handler.databaseConnectionFail(undefined, error);
+    }
+
+    if (error instanceof ConnectionAcquireTimeoutError) {
+      return Handler.databaseTimeout(undefined, error);
+    }
+
+    return Handler.fail(undefined, error);
   }
 };
 

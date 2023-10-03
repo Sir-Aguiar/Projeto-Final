@@ -8,7 +8,7 @@ body,
   height: 100vh;
   min-height: max-content;
   overflow-y: auto;
-
+  @apply bg-background;
 }
 
 /* width */

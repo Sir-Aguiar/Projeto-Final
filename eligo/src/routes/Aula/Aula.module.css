@@ -6,6 +6,7 @@
   @apply mobile:max-w-[328px];
   @apply font-Roboto;
   @apply overflow-hidden;
+  @apply text-black-smooth;
 }
 
 .controllers {
@@ -30,7 +31,7 @@
 .student {
   @apply h-[50px] max-h-[50px] min-h-[50px];
   @apply w-full min-w-fit flex items-center gap-1;
-  @apply font-Montserrat font-medium text-black-text;
+  @apply font-Montserrat font-medium;
   @apply whitespace-nowrap;
 }
 
@@ -41,6 +42,9 @@
 .starter {
   @apply w-full h-[43px];
   @apply font-semibold text-background;
-  @apply bg-[#2D6DCC] rounded-[3px];
+  @apply flex items-center justify-center;
+  @apply bg-blue-600 rounded-[3px];
+  @apply transition-all;
+  @apply enabled:hover:brightness-90;
   @apply disabled:opacity-60 disabled:cursor-not-allowed;
 }

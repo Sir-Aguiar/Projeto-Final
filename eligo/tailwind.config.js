@@ -10,10 +10,12 @@ export default {
         "white-text": "#FAFAFA",
         background: "#FAFAFA",
         blue: {
+          ...colors.blue,
           500: "#228CE5",
           600: "#1B70B7",
         },
         black: {
+          ...colors.black,
           smooth: "#292C2E",
         },
       },
