@@ -12,350 +12,381 @@ import { CreateClasses, DeleteClasses, FindAllClasses, UpdateClass } from "../..
 import { useToast } from "../../components/Toast/Toast";
 
 interface IUserTokenData {
-  email: string;
-  idUsuario: number;
-  iat: number;
+	email: string;
+	idUsuario: number;
+	iat: number;
 }
 
 interface IModalProps {
-  situation: boolean;
-  open: () => void;
-  close: () => void;
+	situation: boolean;
+	open: () => void;
+	close: () => void;
 }
 
 type ProviderProps = {
-  children: React.ReactNode;
+	children: React.ReactNode;
 };
 
 interface IRouteContext {
-  RouteAPI: AxiosInstance;
-  DrawerCreate: IModalProps;
-  DrawerUpdate: IModalProps;
-  ModalDelete: IModalProps;
-  ModalFilter: IModalProps;
-  Turmas: ITurma[];
-  Escolas: IEscola[];
-  Alunos: IAluno[];
-  selectedRows: number[];
-  selectRow: (idTurma: number) => void;
-  TokenData: IUserTokenData;
-  setSelectedCourse: React.Dispatch<React.SetStateAction<string>>;
-  setSelectedSchool: React.Dispatch<React.SetStateAction<string>>;
-  setClassNameFilter: React.Dispatch<React.SetStateAction<string>>;
-  selectedCourse: string;
-  selectedSchool: string;
-  classNameFilter: string;
-  applyFilters: () => ITurma[];
-  CreateButton: ITableController;
-  UpdateButton: ITableController;
-  RemoveButton: ITableController;
-  FilterButton: ITableController;
-  handleCreate: (idEscola: number, RequestBody: ToCreateClass[]) => Promise<void>;
-  handleUpdate: (RequestBody: ToUpdateClass) => Promise<void>;
-  handleDelete: () => Promise<void>;
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  isLoading: boolean;
+	RouteAPI: AxiosInstance;
+	DrawerCreate: IModalProps;
+	DrawerUpdate: IModalProps;
+	ModalDelete: IModalProps;
+	ModalFilter: IModalProps;
+	Turmas: ITurma[];
+	Escolas: IEscola[];
+	Alunos: IAluno[];
+	selectedRows: number[];
+	selectRow: (idTurma: number) => void;
+	TokenData: IUserTokenData;
+	setSelectedCourse: React.Dispatch<React.SetStateAction<string>>;
+	setSelectedSchool: React.Dispatch<React.SetStateAction<string>>;
+	setClassNameFilter: React.Dispatch<React.SetStateAction<string>>;
+	selectedCourse: string;
+	selectedSchool: string;
+	classNameFilter: string;
+	applyFilters: () => ITurma[];
+	CreateButton: ITableController;
+	UpdateButton: ITableController;
+	RemoveButton: ITableController;
+	FilterButton: ITableController;
+	handleCreate: (idEscola: number, RequestBody: ToCreateClass[]) => Promise<void>;
+	handleUpdate: (RequestBody: ToUpdateClass) => Promise<void>;
+	handleDelete: () => Promise<void>;
+	setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+	isLoading: boolean;
 }
 
 const RouteContext = createContext<IRouteContext | null>(null);
 
 const TurmasProvider: React.FC<ProviderProps> = ({ children }) => {
-  const { notify } = useToast();
+	const { notify } = useToast();
 
-  const authHeader = useAuthHeader();
+	const authHeader = useAuthHeader();
 
-  // Axios instance
-  const RouteAPI = axios.create({
-    baseURL: import.meta.env.VITE_SERVER_URL,
-    headers: {
-      Authorization: authHeader(),
-    },
-  });
-  const [isLoading, setLoading] = useState(false);
-  const [isCreateOpen, setCreateDrawer] = useState(false);
-  const [isUpdateOpen, setUpdateDrawer] = useState(false);
-  const [isDeleteOpen, setDeleteModal] = useState(false);
-  const [isFilterOpen, setFilterModal] = useState(false);
-  const [Escolas, setEscolas] = useState<IEscola[]>([]);
+	// Axios instance
+	const RouteAPI = axios.create({
+		baseURL: import.meta.env.VITE_SERVER_URL,
+		headers: {
+			Authorization: authHeader(),
+		},
+	});
+	const [isLoading, setLoading] = useState(false);
+	const [isCreateOpen, setCreateDrawer] = useState(false);
+	const [isUpdateOpen, setUpdateDrawer] = useState(false);
+	const [isDeleteOpen, setDeleteModal] = useState(false);
+	const [isFilterOpen, setFilterModal] = useState(false);
+	const [Escolas, setEscolas] = useState<IEscola[]>([]);
 
-  const [Turmas, setTurmas] = useState<ITurma[]>([]);
-  const [Alunos, setAlunos] = useState<IAluno[]>([]);
+	const [Turmas, setTurmas] = useState<ITurma[]>([]);
+	const [Alunos, setAlunos] = useState<IAluno[]>([]);
 
-  const [selectedRows, setRows] = useState<number[]>([]);
-  const [classNameFilter, setClassNameFilter] = useState("");
-  const [selectedCourse, setSelectedCourse] = useState("");
-  const [selectedSchool, setSelectedSchool] = useState("");
+	const [selectedRows, setRows] = useState<number[]>([]);
+	const [classNameFilter, setClassNameFilter] = useState("");
+	const [selectedCourse, setSelectedCourse] = useState("");
+	const [selectedSchool, setSelectedSchool] = useState("");
 
-  const TokenData = useMemo(() => {
-    const TOKEN = authHeader();
-    const TOKEN_DATA = jwtDecode(TOKEN) as IUserTokenData;
-    return TOKEN_DATA;
-  }, [authHeader()]);
+	const TokenData = useMemo(() => {
+		const TOKEN = authHeader();
+		const TOKEN_DATA = jwtDecode(TOKEN) as IUserTokenData;
+		return TOKEN_DATA;
+	}, [authHeader()]);
 
-  const CreateButton = {
-    disabled: false,
-    onClick: () => DrawerCreate.open(),
-    title: "Cadastrar Turma",
-  };
+	const CreateButton = {
+		disabled: false,
+		onClick: () => DrawerCreate.open(),
+		title: "Cadastrar Turma",
+	};
 
-  const UpdateButton = {
-    disabled:
-      selectedRows.length !== 1 ||
-      Turmas.find((turma) => turma.idTurma === selectedRows[0])?.escola.idGestor !== TokenData.idUsuario,
-    onClick: () => DrawerUpdate.open(),
-    title: "Atualizar Turma",
-  };
+	const UpdateButton = {
+		disabled:
+			selectedRows.length !== 1 ||
+			Turmas.find((turma) => turma.idTurma === selectedRows[0])?.escola.idGestor !== TokenData.idUsuario,
+		onClick: () => DrawerUpdate.open(),
+		title: "Atualizar Turma",
+	};
 
-  const RemoveButton = {
-    disabled:
-      selectedRows.length < 1 ||
-      selectedRows.filter((idTurma) => {
-        const turmaSelecionada = Turmas.find((turma) => turma.idTurma === idTurma);
-        return turmaSelecionada?.escola.idGestor !== TokenData.idUsuario;
-      }).length > 0,
-    onClick: () => ModalDelete.open(),
-    title: "Exclui Turma",
-  };
+	const RemoveButton = {
+		disabled:
+			selectedRows.length < 1 ||
+			selectedRows.filter((idTurma) => {
+				const turmaSelecionada = Turmas.find((turma) => turma.idTurma === idTurma);
+				return turmaSelecionada?.escola.idGestor !== TokenData.idUsuario;
+			}).length > 0,
+		onClick: () => ModalDelete.open(),
+		title: "Exclui Turma",
+	};
 
-  const FilterButton = {
-    disabled: false,
-    onClick: () => ModalFilter.open(),
-    title: "Filtrar Turma",
-  };
+	const FilterButton = {
+		disabled: false,
+		onClick: () => ModalFilter.open(),
+		title: "Filtrar Turma",
+	};
 
-  const selectRow = (idTurma: number) => {
-    setRows((values) => {
-      let newValues: number[];
+	const selectRow = (idTurma: number) => {
+		setRows((values) => {
+			let newValues: number[];
 
-      if (values.includes(idTurma)) {
-        newValues = values.filter((value) => value !== idTurma);
-      } else {
-        newValues = [...values, idTurma];
-      }
-      if (newValues.length === 1) {
-        showClassStudents(newValues[0]);
-      } else {
-        setAlunos([]);
-      }
-      return newValues;
-    });
-  };
+			if (values.includes(idTurma)) {
+				newValues = values.filter((value) => value !== idTurma);
+			} else {
+				newValues = [...values, idTurma];
+			}
+			if (newValues.length === 1) {
+				showClassStudents(newValues[0]);
+			} else {
+				setAlunos([]);
+			}
+			return newValues;
+		});
+	};
 
-  const showSchools = async () => {
-    try {
-      const response = await FindAllSchools(RouteAPI);
-      setEscolas(response);
-    } catch (error: any) {
-      const response = error.response;
-      console.log(response);
-      alert(response.data.error.message);
-    }
-  };
+	const showSchools = async () => {
+		try {
+			const response = await FindAllSchools(RouteAPI);
+			setEscolas(response);
+		} catch (error: any) {
+			if (error instanceof AxiosError) {
+				// ERR_NETWORK -> mostre mais grave
+				const response = error.response;
+				if (response) {
+					notify({
+						message: error.response!.data.error.message,
+						title: "Erro ao consultar turmas",
+						severity: "warn",
+					});
+					return;
+				}
+			}
 
-  const showClasses = async () => {
-    try {
-      const response = await FindAllClasses(RouteAPI);
-      setTurmas(response);
-    } catch (error: any) {
-      const response = error.response;
-      console.log(response);
-      alert(response.data.error.message);
-    }
-  };
+			// Caso error 500 ->  mostre mais grave
+		}
+	};
 
-  const showClassStudents = async (idTurma: number) => {
-    try {
-      const response = await FindStudentsByClass(RouteAPI, idTurma);
-      setAlunos(response);
-    } catch (error: any) {
-      const response = error.response;
-      console.log(response);
-      alert(response.data.error.message);
-    }
-    const response = await RouteAPI.get(`/aluno?idTurma=${idTurma}`);
-    setAlunos(response.data.alunos);
-  };
+	const showClasses = async () => {
+		try {
+			const response = await FindAllClasses(RouteAPI);
+			setTurmas(response);
+		} catch (error: any) {
+			if (error instanceof AxiosError) {
+				// ERR_NETWORK -> mostre mais grave
+				const response = error.response;
+				if (response) {
+					notify({
+						message: error.response!.data.error.message,
+						title: "Erro ao consultar turmas",
+						severity: "warn",
+					});
+					return;
+				}
+			}
 
-  const DrawerCreate: IModalProps = useMemo(() => {
-    return {
-      situation: isCreateOpen,
-      open: () => {
-        showSchools().then(() => setCreateDrawer(true));
-      },
-      close: () => setCreateDrawer(false),
-    };
-  }, [isCreateOpen]);
+			// Caso error 500 ->  mostre mais grave
+		}
+	};
 
-  const DrawerUpdate: IModalProps = useMemo(() => {
-    return {
-      situation: isUpdateOpen,
-      open: () => setUpdateDrawer(true),
-      close: () => setUpdateDrawer(false),
-    };
-  }, [isUpdateOpen]);
+	const showClassStudents = async (idTurma: number) => {
+		try {
+			const response = await FindStudentsByClass(RouteAPI, idTurma);
+			setAlunos(response);
+		} catch (error: any) {
+			if (error instanceof AxiosError) {
+				// ERR_NETWORK -> mostre mais grave
+				const response = error.response;
+				if (response) {
+					notify({
+						message: error.response!.data.error.message,
+						title: "Erro ao consultar turmas",
+						severity: "warn",
+					});
+					return;
+				}
+			}
 
-  const ModalDelete: IModalProps = useMemo(() => {
-    return {
-      situation: isDeleteOpen,
-      open: () => setDeleteModal(true),
-      close: () => setDeleteModal(false),
-    };
-  }, [isDeleteOpen]);
+			// Caso error 500 ->  mostre mais grave
+		}
+		const response = await RouteAPI.get(`/aluno?idTurma=${idTurma}`);
+		setAlunos(response.data.alunos);
+	};
 
-  const ModalFilter: IModalProps = useMemo(() => {
-    return {
-      situation: isFilterOpen,
-      open: () => {
-        showSchools().then(() => setFilterModal(true));
-      },
-      close: () => setFilterModal(false),
-    };
-  }, [isFilterOpen]);
+	const DrawerCreate: IModalProps = useMemo(() => {
+		return {
+			situation: isCreateOpen,
+			open: () => {
+				showSchools().then(() => setCreateDrawer(true));
+			},
+			close: () => setCreateDrawer(false),
+		};
+	}, [isCreateOpen]);
 
-  const handleCreate = async (idEscola: number, RequestBody: ToCreateClass[]) => {
-    try {
-      await CreateClasses(RouteAPI, idEscola, RequestBody);
-      await showClasses();
-      setRows([]);
-      notify({ title: "Turmas criadas com sucesso" });
-    } catch (error: any) {
-      if (error instanceof AxiosError) {
-        // ERR_NETWORK -> mostre mais grave
-        if (error.response!.status >= 400 && error.response!.status < 500) {
-          notify({
-            message: error.response!.data.error.message,
-            title: "Erro ao criar turmas",
-            severity: "warn",
-          });
-          return;
-        }
-      }
+	const DrawerUpdate: IModalProps = useMemo(() => {
+		return {
+			situation: isUpdateOpen,
+			open: () => setUpdateDrawer(true),
+			close: () => setUpdateDrawer(false),
+		};
+	}, [isUpdateOpen]);
 
-      // Caso error 500 ->  mostre mais grave
-    } finally {
-      setLoading(false);
-      DrawerCreate.close();
-    }
-  };
+	const ModalDelete: IModalProps = useMemo(() => {
+		return {
+			situation: isDeleteOpen,
+			open: () => setDeleteModal(true),
+			close: () => setDeleteModal(false),
+		};
+	}, [isDeleteOpen]);
 
-  const handleDelete = async () => {
-    try {
-      setLoading(true);
-      await DeleteClasses(RouteAPI, selectedRows);
-      setRows([]);
-      await showClasses();
-      notify({ title: "Turmas excluídas com sucesso" });
-    } catch (error: any) {
-      if (error instanceof AxiosError) {
-        // ERR_NETWORK -> mostre mais grave
-        if (error.response!.status >= 400 && error.response!.status < 500) {
-          notify({
-            title: "Erro ao excluir turma",
-            message: error.response!.data.error.message,
-            severity: "warn",
-          });
-          return;
-        }
-      }
+	const ModalFilter: IModalProps = useMemo(() => {
+		return {
+			situation: isFilterOpen,
+			open: () => {
+				showSchools().then(() => setFilterModal(true));
+			},
+			close: () => setFilterModal(false),
+		};
+	}, [isFilterOpen]);
 
-      // Caso error 500 ->  mostre mais grave
-    } finally {
-      setLoading(false);
-      ModalDelete.close();
-    }
-  };
+	const handleCreate = async (idEscola: number, RequestBody: ToCreateClass[]) => {
+		try {
+			await CreateClasses(RouteAPI, idEscola, RequestBody);
+			await showClasses();
+			setRows([]);
+			notify({ title: "Turmas criadas com sucesso" });
+		} catch (error: any) {
+			if (error instanceof AxiosError) {
+				const response = error.response;
+				if (response) {
+					notify({
+						severity: "error",
+						title: response.data.error.message,
+					});
+				}
+				// Terminal Error
+			}
+			alert(error.message);
+		} finally {
+			setLoading(false);
+			DrawerCreate.close();
+		}
+	};
 
-  const handleUpdate = async (RequestBody: ToUpdateClass) => {
-    try {
-      setLoading(true);
-      await UpdateClass(RouteAPI, selectedRows[0], RequestBody);
-      setRows([]);
-      await showClasses();
-      notify({ title: "Turma atualizada com sucesso" });
-    } catch (error: any) {
-      if (error instanceof AxiosError) {
-        // ERR_NETWORK -> mostre mais grave
-        if (error.response!.status >= 400 && error.response!.status < 500) {
-          notify({
-            title: "Erro ao atualizar turma",
-            message: error.response!.data.error.message,
-            severity: "warn",
-          });
-          return;
-        }
-      }
+	const handleDelete = async () => {
+		try {
+			setLoading(true);
+			await DeleteClasses(RouteAPI, selectedRows);
+			setRows([]);
+			await showClasses();
+			notify({ title: "Turmas excluídas com sucesso" });
+		} catch (error: any) {
+			if (error instanceof AxiosError) {
+				// ERR_NETWORK -> mostre mais grave
+				if (error.response!.status >= 400 && error.response!.status < 500) {
+					notify({
+						title: "Erro ao excluir turma",
+						message: error.response!.data.error.message,
+						severity: "warn",
+					});
+					return;
+				}
+			}
 
-      // Caso error 500 ->  mostre mais grave
-    } finally {
-      setLoading(false);
-      DrawerUpdate.close();
-    }
-  };
+			// Caso error 500 ->  mostre mais grave
+		} finally {
+			setLoading(false);
+			ModalDelete.close();
+		}
+	};
 
-  useEffect(() => {
-    showClasses();
-    document.title = "Eligo | Turmas";
-  }, []);
+	const handleUpdate = async (RequestBody: ToUpdateClass) => {
+		try {
+			setLoading(true);
+			await UpdateClass(RouteAPI, selectedRows[0], RequestBody);
+			setRows([]);
+			await showClasses();
+			notify({ title: "Turma atualizada com sucesso" });
+		} catch (error: any) {
+			if (error instanceof AxiosError) {
+				// ERR_NETWORK -> mostre mais grave
+				if (error.response!.status >= 400 && error.response!.status < 500) {
+					notify({
+						title: "Erro ao atualizar turma",
+						message: error.response!.data.error.message,
+						severity: "warn",
+					});
+					return;
+				}
+			}
 
-  const applyFilters = () => {
-    let filtredData = Turmas;
+			// Caso error 500 ->  mostre mais grave
+		} finally {
+			setLoading(false);
+			DrawerUpdate.close();
+		}
+	};
 
-    if (selectedCourse) {
-      filtredData = filtredData.filter((turma) => turma.curso.idCurso === Number(selectedCourse));
-    }
-    if (selectedSchool) {
-      filtredData = filtredData.filter((turma) => turma.escola.idEscola === Number(selectedSchool));
-    }
-    if (classNameFilter) {
-      filtredData = filtredData.filter((turma) => turma.nome.indexOf(classNameFilter) !== -1);
-    }
+	useEffect(() => {
+		showClasses();
+		document.title = "Eligo | Turmas";
+	}, []);
 
-    return filtredData;
-  };
+	const applyFilters = () => {
+		let filtredData = Turmas;
 
-  return (
-    <RouteContext.Provider
-      value={{
-        setSelectedSchool,
-        setSelectedCourse,
-        setClassNameFilter,
-        selectRow,
-        RouteAPI,
-        selectedCourse,
-        selectedSchool,
-        DrawerUpdate,
-        TokenData,
-        classNameFilter,
-        DrawerCreate,
-        ModalDelete,
-        Turmas,
-        Escolas,
-        isLoading,
-        setLoading,
-        selectedRows,
-        ModalFilter,
-        Alunos,
-        applyFilters,
-        CreateButton,
-        FilterButton,
-        RemoveButton,
-        UpdateButton,
-        handleCreate,
-        handleDelete,
-        handleUpdate,
-      }}
-    >
-      {children}
-    </RouteContext.Provider>
-  );
+		if (selectedCourse) {
+			filtredData = filtredData.filter((turma) => turma.curso.idCurso === Number(selectedCourse));
+		}
+		if (selectedSchool) {
+			filtredData = filtredData.filter((turma) => turma.escola.idEscola === Number(selectedSchool));
+		}
+		if (classNameFilter) {
+			filtredData = filtredData.filter((turma) => turma.nome.indexOf(classNameFilter) !== -1);
+		}
+
+		return filtredData;
+	};
+
+	return (
+		<RouteContext.Provider
+			value={{
+				setSelectedSchool,
+				setSelectedCourse,
+				setClassNameFilter,
+				selectRow,
+				RouteAPI,
+				selectedCourse,
+				selectedSchool,
+				DrawerUpdate,
+				TokenData,
+				classNameFilter,
+				DrawerCreate,
+				ModalDelete,
+				Turmas,
+				Escolas,
+				isLoading,
+				setLoading,
+				selectedRows,
+				ModalFilter,
+				Alunos,
+				applyFilters,
+				CreateButton,
+				FilterButton,
+				RemoveButton,
+				UpdateButton,
+				handleCreate,
+				handleDelete,
+				handleUpdate,
+			}}
+		>
+			{children}
+		</RouteContext.Provider>
+	);
 };
 
 const useTurmasContext = () => {
-  const context = useContext(RouteContext);
+	const context = useContext(RouteContext);
 
-  if (!context) throw new Error("EscolasContext deve ser chamado dentro de TurmasProvider");
+	if (!context) throw new Error("EscolasContext deve ser chamado dentro de TurmasProvider");
 
-  return context;
+	return context;
 };
 
 export { TurmasProvider, useTurmasContext };

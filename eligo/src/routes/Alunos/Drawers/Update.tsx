@@ -17,7 +17,8 @@ const Update: React.FC = () => {
     e.preventDefault();
 
     await handleUpdate(nomeAluno);
-
+    setIdTurma("")
+    setNomeAluno("")
     DrawerUpdate.close();
   };
 

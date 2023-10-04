@@ -63,8 +63,8 @@ const Alunos: React.FC = () => {
               required
               label="Escola"
               onChange={(e: any) => {
-                setSelectedClass("");
                 setSelectedSchool(e.target.value);
+                setSelectedClass("");
               }}
             >
               {Escolas.length > 0 &&
