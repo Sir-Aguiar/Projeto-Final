@@ -6,4 +6,6 @@ const CreateLesson = async (API: AxiosInstance, RequestBody: ToCreateLesson) => 
   return response.data;
 };
 
+const FindTodayLessonsBySchool = async (API: AxiosInstance, idEscola: number) => {};
+
 export { CreateLesson };

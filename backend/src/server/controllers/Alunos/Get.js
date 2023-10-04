@@ -20,7 +20,7 @@ const GetAlunosController = async (req, res) => {
   if (!take) take = 30;
   if (!skip) skip = 0;
 
-  const { idEscola, idTurma, idAluno } = req.query;
+  const { idEscola, idTurma, idAluno, onlyLength } = req.query;
 
   if (!idEscola && !idTurma && !idAluno) {
     return Handler.clientError("Nenhum critério de seleção encontrado, por favor, informe uma escola, turma ou aluno");
@@ -40,6 +40,11 @@ const GetAlunosController = async (req, res) => {
 
       if (userPermission === 1) {
         const alunos = await FindStudentsFromSchoolByProfessor(Number(idEscola), Number(idUsuario), take, skip);
+        return Handler.ok({ alunos });
+      }
+
+      if (onlyLength) {
+        const alunos = await FindStudentsBySchool(Number(idEscola), take, skip, true);
         return Handler.ok({ alunos });
       }
 

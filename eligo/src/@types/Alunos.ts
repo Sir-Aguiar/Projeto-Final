@@ -41,4 +41,14 @@ interface IAlunoStats {
   faltas_total: number;
 }
 
-export type { IAluno, IAlunoStats };
+interface ToCreateStudent {
+  idTurma: number;
+  nome: string;
+}
+
+interface ToUpdateStudent {
+  idAluno: number;
+  toUpdate: { nome: string };
+}
+
+export type { IAluno, IAlunoStats, ToCreateStudent, ToUpdateStudent };

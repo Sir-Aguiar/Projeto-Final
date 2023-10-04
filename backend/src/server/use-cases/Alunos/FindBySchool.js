@@ -12,7 +12,12 @@ const ProfessorLeciona = require("../../../database/models/ProfessorLeciona");
  *
  * **_Garanta a integridade dos dados a serem passados e o tratamento de exceções é delegado totalmente ao escopo de chamada_**
  */
-const FindStudentsBySchool = async (idEscola, limit, offset) => {
+const FindStudentsBySchool = async (idEscola, limit, offset, onlyLength) => {
+  if (onlyLength) {
+    const alunos = await Aluno.count({ where: { idEscola } });
+    return alunos;
+  }
+
   const alunos = await Aluno.findAndCountAll({
     where: {
       idEscola,

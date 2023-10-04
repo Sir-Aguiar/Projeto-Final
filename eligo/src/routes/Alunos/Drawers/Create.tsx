@@ -1,32 +1,30 @@
 import React, { useEffect, useState } from "react";
 import styles from "./Create.module.css";
-import { Divider, Drawer, TextField } from "@mui/material";
+import { CircularProgress, Divider, Drawer, TextField } from "@mui/material";
 import { useAlunosContext } from "../RouteStateManager";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import { AxiosError } from "axios";
+
 const Create: React.FC = () => {
   const {
     DrawerCreate,
-    RouteAPI,
     Escolas,
     Turmas,
     showClasses,
     TokenData,
-    setSnackMessage,
-    setSnackbarOpen,
     selectedClass,
-    showStudent,
     selectedSchool,
+    handleCreate,
+    isLoading,
   } = useAlunosContext();
 
   const [idEscola, setIdEscola] = useState("");
   const [idTurma, setIdTurma] = useState("");
 
   const onClose = async () => {
-    await showStudent();
     DrawerCreate.close();
     setIdEscola("");
     setIdTurma("");
@@ -36,16 +34,14 @@ const Create: React.FC = () => {
     e.preventDefault();
 
     const AlunoNome = e.currentTarget.querySelector<HTMLInputElement>("#aluno-nome");
-    try {
-      const response = await RouteAPI.post(`/aluno`, { alunos: [{ idTurma, nome: AlunoNome?.value }] });
-      setSnackMessage("Aluno criado com sucesso");
-      setSnackbarOpen(true);
-      onClose();
-    } catch (error: any) {
-      if (error instanceof AxiosError) {
-        alert(error.response?.data.error.message);
-      }
+
+    if (!AlunoNome) {
+      alert("Erro inesperado");
+      return;
     }
+
+    await handleCreate({ idTurma: Number(idTurma), nome: AlunoNome!.value });
+    await onClose();
   };
 
   useEffect(() => {
@@ -118,7 +114,9 @@ const Create: React.FC = () => {
           <button onClick={() => DrawerCreate.close()} className={styles.cancel}>
             Cancelar
           </button>
-          <input type="submit" value="Cadastrar" form="create-student" className={styles.submiter} />
+          <button type="submit" form="create-student" className={`${styles.submiter} bg-blue-600`}>
+            {isLoading ? <CircularProgress size={25} color="inherit" /> : "Cadastrar"}
+          </button>
         </footer>
       </div>
     </Drawer>

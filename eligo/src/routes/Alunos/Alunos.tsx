@@ -30,7 +30,7 @@ const Alunos: React.FC = () => {
     TokenData,
     setSelectedClass,
     alunosCount,
-    showStudent,
+    showStudentsFromSchool,
   } = useAlunosContext();
 
   const CreateButton = {
@@ -143,7 +143,7 @@ const Alunos: React.FC = () => {
                   </tr>
                 ))}
                 {Alunos.length < alunosCount && (
-                  <tr onClick={() => showStudent()}>
+                  <tr onClick={() => showStudentsFromSchool()}>
                     <td colSpan={6}>
                       <div className="flex items-center justify-center underline cursor-pointer font-medium">
                         {isLoading ? <CircularProgress size={20} /> : "Carregar mais"}

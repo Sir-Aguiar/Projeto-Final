@@ -51,7 +51,7 @@ const FindDisciplinesFromClassByProfessor = async (idTurma, idProfessor) => {
     nest: true,
   });
 
-  return relacoes.map((relacao) => relacao.toJSON()).map(({ disciplina }) => disciplina);
+  return relacoes.map((relacao) => relacao).map(({ disciplina }) => disciplina);
 };
 
 module.exports = { FindDisciplinesByClass, FindDisciplinesFromClassByProfessor };

@@ -4,30 +4,31 @@ import { useAuthHeader } from "react-auth-kit";
 import jwtDecode from "jwt-decode";
 import { useParams } from "react-router-dom";
 import NotFound from "../Errors/NotFound";
+import { IDisciplina, ToCreateDiscipline } from "../../@types/Disciplinas";
+import { ICurso, ITurma } from "../../@types/Turmas";
+import { IEscola } from "../../@types/Escolas";
+import { FindClassesBySchool } from "../../services/Turmas";
+import { FindSchoolById } from "../../services/Escolas";
+import { CreateDiscipline, FindDisciplinesBySchool, FindDisciplinesCountBySchool } from "../../services/Disciplinas";
+import { FindStudentsCountBySchool } from "../../services/Alunos";
+import { CreateDisciplineGrid } from "../../services/CursoDisciplina";
 
 interface IAula {
   idAula: number;
   anotacao: string | null;
-  createdAt: string;
-  turma: Pick<ITurma, "idEscola" | "nome">;
-  disciplina: Pick<IProfessor, "disciplina">;
-  profesor: {
+  turma: {
+    idTurma: number;
+    nome: string;
+  };
+  disciplina: {
+    idDisciplina: number;
+    nome: string;
+  };
+  professor: {
     idUsuario: number;
     nome: string;
   };
-}
-
-interface IEscola {
-  idGestor: number;
-  idEscola: number;
-  nome: string;
-}
-
-interface ITurma {
-  idTurma: number;
-  nome: string;
-  idEscola: number;
-  idCurso: number;
+  createdAt: string;
 }
 
 interface IProfessor {
@@ -53,17 +54,6 @@ interface IGrid {
   };
 }
 
-interface IDisciplina {
-  idDisciplina: number;
-  nome: string;
-}
-
-interface IUserTokenData {
-  email: string;
-  idUsuario: number;
-  iat: number;
-}
-
 interface IModalProps {
   situation: boolean;
   open: () => void;
@@ -74,7 +64,7 @@ type ProviderProps = {
 };
 
 interface IRouteContext {
-  SchoolData: IEscola;
+  SchoolData?: IEscola;
   ProfessorsData: IProfessor[];
   DisciplinesData: IDisciplina[];
   GridData: IGrid[];
@@ -92,28 +82,48 @@ interface IRouteContext {
   ToDayClassRooms: IAula[];
   todayDate: Date;
   StudentLength: number;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  isLoading: boolean;
+  handleCreateDiscipline: (nome: string, cursos: number[]) => Promise<void>;
 }
 
 const RouteContext = createContext<IRouteContext | null>(null);
 
 const EscolaProvider: React.FC<ProviderProps> = ({ children }) => {
   const { idEscola } = useParams();
-  const [isUserAuthorized, setUserAuthorized] = useState(true);
-  const [SchoolData, setSchoolData] = useState<IEscola>({} as IEscola);
+
   const authHeader = useAuthHeader();
+
+  const RouteAPI = axios.create({
+    baseURL: import.meta.env.VITE_SERVER_URL,
+    headers: {
+      Authorization: authHeader(),
+    },
+  });
+
   const [professorsCount, setProfessorsCount] = useState(0);
   const [ProfessorsData, setProfessorsData] = useState<IProfessor[]>([]);
+
   const [disciplinesCount, setDisciplinesCount] = useState(0);
   const [DisciplinesData, setDisciplinesData] = useState<IDisciplina[]>([]);
+
+  const [isUserAuthorized, setUserAuthorized] = useState(true);
+  const [SchoolData, setSchoolData] = useState<IEscola>();
+
+  const [StudentLength, setStudentLength] = useState(0);
+
   const [GridData, setGridData] = useState<IGrid[]>([]);
   const [Classes, setClasses] = useState<ITurma[]>([]);
+
   const [ToDayClassRooms, setTodayClassRooms] = useState<IAula[]>([]);
+  const [todayDate, setTodayDate] = useState<Date>(new Date());
+
+  const [isLoading, setLoading] = useState(false);
   const [isProfessorModalOpen, setProfessorModalOpen] = useState(false);
   const [isDisciplineModalOpen, setDisciplineModalOpen] = useState(false);
   const [isDisciplineDrawerOpen, setDisciplineDrawerOpen] = useState(false);
   const [isProfessorDrawerOpen, setProfessorDrawerOpen] = useState(false);
-  const [todayDate, setTodayDate] = useState<Date>(new Date());
-  const [StudentLength, setStudentLength] = useState(0);
+
   const ProfessorModal = useMemo(() => {
     return {
       situation: isProfessorModalOpen,
@@ -157,35 +167,28 @@ const EscolaProvider: React.FC<ProviderProps> = ({ children }) => {
   const DisciplineDrawer = useMemo(() => {
     return {
       situation: isDisciplineDrawerOpen,
-      close() {
-        loadInitialData().then(() => setDisciplineDrawerOpen(false));
-      },
-      open() {
-        loadDisciplineData(false)
-          .then(() => loadGridData())
-          .then(() => setDisciplineDrawerOpen(true));
-      },
+      close: () => loadInitialData().then(() => setDisciplineDrawerOpen(false)),
+      open: () => setDisciplineDrawerOpen(true),
     };
   }, [isDisciplineDrawerOpen]);
 
-  const TokenData = useMemo(() => {
-    const TOKEN = authHeader();
-    const TOKEN_DATA = jwtDecode(TOKEN) as IUserTokenData;
-    return TOKEN_DATA;
-  }, [authHeader()]);
+  const handleCreateDiscipline = async (nome: string, cursos: number[]) => {
+    setLoading(true);
 
-  const RouteAPI = axios.create({
-    baseURL: import.meta.env.VITE_SERVER_URL,
-    headers: {
-      Authorization: authHeader(),
-    },
-  });
+    try {
+      const disciplina = await CreateDiscipline(RouteAPI, { idEscola: Number(idEscola), nome });
+      await CreateDisciplineGrid(RouteAPI, Number(idEscola), disciplina.idDisciplina, cursos);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const loadSchoolClasses = async () => {
     try {
-      const response = await RouteAPI.get(`/turma?idEscola=${idEscola}`);
-      console.log(response.data.turmas);
-      setClasses(response.data.turmas);
+      const response = await FindClassesBySchool(RouteAPI, Number(idEscola));
+      setClasses(response);
     } catch (error: any) {
       console.log(error);
     }
@@ -193,18 +196,21 @@ const EscolaProvider: React.FC<ProviderProps> = ({ children }) => {
 
   const loadSchoolData = async () => {
     try {
-      const response = await RouteAPI.get(`/escola?idEscola=${idEscola}`);
-      setSchoolData(response.data.escola);
+      const response = await FindSchoolById(RouteAPI, Number(idEscola));
+      setSchoolData(response);
     } catch (error: any) {
       console.log(error);
       if (error instanceof AxiosError) {
-        if (error.response?.status === 401) {
-          setUserAuthorized(false);
-          return;
-        }
-        if (error.response?.status === 404) {
-          setUserAuthorized(false);
-          return;
+        const response = error.response;
+        if (response) {
+          if (response.status === 401) {
+            setUserAuthorized(false);
+            return;
+          }
+          if (response.status === 404) {
+            setUserAuthorized(false);
+            return;
+          }
         }
       }
     }
@@ -236,26 +242,23 @@ const EscolaProvider: React.FC<ProviderProps> = ({ children }) => {
   const loadDisciplineData = async (initial = true) => {
     if (initial) {
       try {
-        const response = await RouteAPI.get(`/disciplina?idEscola=${idEscola}&onlyLength=true`);
-        setDisciplinesCount(response.data.length);
+        const response = await FindDisciplinesCountBySchool(RouteAPI, Number(idEscola));
+        setDisciplinesCount(response);
         return;
       } catch (error: any) {
         console.log(error);
-        if (error instanceof AxiosError) {
-        }
       }
     }
     try {
-      const response = await RouteAPI.get(`/disciplina?idEscola=${idEscola}`);
-      setDisciplinesData(response.data.disciplinas);
+      const response = await FindDisciplinesBySchool(RouteAPI, Number(idEscola));
+      setDisciplinesData(response);
       return;
     } catch (error: any) {
       console.log(error);
-      if (error instanceof AxiosError) {
-      }
     }
   };
-  const loadTodayClassRooms = async () => {
+
+  /*   const loadTodayClassRooms = async () => {
     try {
       const response = await RouteAPI.get(
         `/aula?idEscola=${idEscola}&createdAt=${todayDate.toLocaleString("en-US", { dateStyle: "short" })}`,
@@ -265,20 +268,24 @@ const EscolaProvider: React.FC<ProviderProps> = ({ children }) => {
       console.log(error);
     }
   };
+
+  
+ */
   const loadStudentsLength = async () => {
     try {
-      const response = await RouteAPI.get(`/aluno?idEscola=${idEscola}&onlyLength=true`);
-      setStudentLength(response.data.alunos);
+      const response = await FindStudentsCountBySchool(RouteAPI, Number(idEscola));
+      setStudentLength(response);
     } catch (error) {
       console.log(error);
     }
   };
+
   const loadInitialData = async () => {
     await loadSchoolData();
     await loadStudentsLength();
     await loadProfessorData();
     await loadDisciplineData();
-    await loadTodayClassRooms();
+    /*     await loadTodayClassRooms(); */
   };
 
   const loadGridData = async () => {
@@ -302,7 +309,7 @@ const EscolaProvider: React.FC<ProviderProps> = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    document.title = `Eligo  ${`| ${SchoolData.nome || ""}`}`;
+    document.title = `Eligo  ${`| ${SchoolData?.nome || ""}`}`;
   }, [SchoolData]);
 
   return (
@@ -310,6 +317,7 @@ const EscolaProvider: React.FC<ProviderProps> = ({ children }) => {
       value={{
         disciplinesCount,
         DisciplinesData,
+        handleCreateDiscipline,
         ProfessorDrawer,
         StudentLength,
         DisciplineDrawer,
@@ -326,6 +334,8 @@ const EscolaProvider: React.FC<ProviderProps> = ({ children }) => {
         ToDayClassRooms,
         GridData,
         RouteAPI,
+        isLoading,
+        setLoading,
       }}
     >
       {isUserAuthorized ? children : <NotFound />}

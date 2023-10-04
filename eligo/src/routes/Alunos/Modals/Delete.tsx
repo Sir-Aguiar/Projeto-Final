@@ -3,30 +3,11 @@ import styles from "./Delete.module.css";
 import GppMaybeIcon from "@mui/icons-material/GppMaybe";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Modal from "@mui/material/Modal";
-import { Fade } from "@mui/material";
+import { CircularProgress, Fade } from "@mui/material";
 import { useAlunosContext } from "../RouteStateManager";
-import { AxiosError } from "axios";
 
 const Delete: React.FC = () => {
-  const { ModalDelete, selectedRows, RouteAPI, setSnackMessage, setSnackbarOpen, showStudent } = useAlunosContext();
-  const handleDelete = async () => {
-    try {
-      // Realizar uma requisição por vez
-      for (const idAluno of selectedRows) {
-        await RouteAPI.delete(`/aluno/${idAluno}`);
-      }
-      setSnackMessage("Turma excluída com sucesso");
-      setSnackbarOpen(true);
-    } catch (error: any) {
-      if (error instanceof AxiosError) {
-        return console.log(error.response?.data);
-      }
-      return console.log(error);
-    } finally {
-      await showStudent();
-      ModalDelete.close();
-    }
-  };
+  const { ModalDelete, selectedRows, handleDelete, isLoading } = useAlunosContext();
 
   return (
     <Modal open={ModalDelete.situation} onClose={() => ModalDelete.close()} closeAfterTransition>
@@ -57,7 +38,13 @@ const Delete: React.FC = () => {
               Cancelar
             </button>
             <button className="bg-[#EB4B4B] flex items-center justify-center gap-[2px]" onClick={handleDelete}>
-              Excluir <DeleteIcon />
+              {isLoading ? (
+                <CircularProgress size={25} color="inherit" />
+              ) : (
+                <>
+                  Excluir <DeleteIcon />
+                </>
+              )}
             </button>
           </footer>
         </div>

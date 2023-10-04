@@ -5,6 +5,10 @@ const FindAllSchools = async (API: AxiosInstance): Promise<IEscola[]> => {
   const response = await API.get("/escola");
   return response.data.escolas as IEscola[];
 };
+const FindSchoolById = async (API: AxiosInstance, idEscola: number): Promise<IEscola> => {
+  const response = await API.get(`/escola?idEscola=${idEscola}`);
+  return response.data.escola as IEscola;
+};
 
 const DeleteSchools = async (API: AxiosInstance, escolas: number[]) => {
   for (const idEscola of escolas) {
@@ -22,4 +26,4 @@ const UpdateSchool = async (API: AxiosInstance, idEscola: number, toUpdate: ToUp
   return response;
 };
 
-export { FindAllSchools, DeleteSchools, CreateSchool, UpdateSchool };
+export { FindAllSchools, DeleteSchools, CreateSchool, UpdateSchool, FindSchoolById };

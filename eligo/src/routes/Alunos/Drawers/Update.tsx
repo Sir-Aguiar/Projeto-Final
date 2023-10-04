@@ -9,8 +9,7 @@ import InputLabel from "@mui/material/InputLabel";
 import { AxiosError } from "axios";
 import { UpdateStudent } from "../../../services/Alunos";
 const Update: React.FC = () => {
-  const { DrawerUpdate, Turmas, selectedRows, Alunos, RouteAPI, showStudent, setSnackMessage, setSnackbarOpen } =
-    useAlunosContext();
+  const { DrawerUpdate, Turmas, selectedRows, Alunos, RouteAPI, showStudent } = useAlunosContext();
 
   const [idTurma, setIdTurma] = useState("");
   const [nomeAluno, setNomeAluno] = useState("");
@@ -25,8 +24,7 @@ const Update: React.FC = () => {
     const toUpdate = { nome: nomeAluno, idTurma };
     try {
       const response = await UpdateStudent(RouteAPI, selectedRows[0], toUpdate);
-      setSnackMessage("Aluno atualizado com sucesso");
-      setSnackbarOpen(true);
+
       await onClose();
     } catch (error) {
       if (error instanceof AxiosError) {

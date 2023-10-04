@@ -17,7 +17,7 @@ const UserAuthMiddleware = async (req, res, next) => {
   try {
     const userData = jwt.verify(AuthToken, process.env.SECRET, {});
     req.userData = userData;
-    console.log(userData.email, req.path);
+    console.log(userData.email, req.method, req.path, req.query);
     next();
   } catch (error) {
     if (error instanceof JsonWebTokenError) {

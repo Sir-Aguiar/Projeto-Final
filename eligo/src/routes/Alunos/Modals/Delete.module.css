@@ -38,9 +38,8 @@
 .delete_container footer button:nth-child(1) {
   @apply hover:brightness-110;
 }
+
 .delete_container footer button:nth-child(2) {
   @apply hover:brightness-90;
 }
-.delete_container footer button:nth-child(2) svg {
-  @apply h-[18px] w-[18px];
-}
+

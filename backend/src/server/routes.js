@@ -15,7 +15,7 @@ const GetAlunosController = require("./controllers/Alunos/Get");
 const UpdateAlunosController = require("./controllers/Alunos/Update");
 const DeleteAlunosController = require("./controllers/Alunos/Delete");
 const CreateDisciplinaController = require("./controllers/Disciplinas/Create");
-const AssociateCursoDiscipinaController = require("./controllers/Disciplinas/AssociateCourse");
+const CreateDisciplineGridController = require("./controllers/CursoDisciplina/Create");
 const GetDisciplinasController = require("./controllers/Disciplinas/Get");
 const UpdateDisciplinasController = require("./controllers/Disciplinas/Update");
 const DeleteDisciplinasController = require("./controllers/Disciplinas/Delete");
@@ -46,8 +46,6 @@ const DeleteUserController = require("./controllers/User/Delete");
 const UpdateUserController = require("./controllers/User/Update");
 const CreateSchoolController = require("./controllers/Escolas/Create");
 
-
-
 routes.post("/registro", RegisterUser);
 routes.post("/login", Login);
 
@@ -66,7 +64,7 @@ routes.get("/disciplina", UserAuthMiddleware, GetDisciplinasController);
 routes.put("/disciplina/:idDisciplina", UserAuthMiddleware, UpdateDisciplinasController);
 routes.delete("/disciplina/:idDisciplina", UserAuthMiddleware, DeleteDisciplinasController);
 
-routes.post("/curso-disciplina", UserAuthMiddleware, AssociateCursoDiscipinaController);
+routes.post("/curso-disciplina", UserAuthMiddleware, CreateDisciplineGridController);
 routes.get("/grade", UserAuthMiddleware, GetCursoDisciplinaController);
 routes.delete("/curso-disciplina/:idCurso/:idDisciplina", UserAuthMiddleware, DeleteCursoDisciplinasController);
 routes.put("/curso-disciplina/:idCurso/:idDisciplina", UserAuthMiddleware, UpdateCursoDisciplinaController);
@@ -94,8 +92,8 @@ routes.delete("/aula/:idAula", UserAuthMiddleware, DeleteAulasController);
 
 routes.post("/aluno", UserAuthMiddleware, CreateAlunosController);
 routes.get("/aluno", UserAuthMiddleware, GetAlunosController);
-routes.delete("/aluno/:idAluno", UserAuthMiddleware, DeleteAlunosController);
-routes.put("/aluno/:idAluno", UserAuthMiddleware, UpdateAlunosController);
+routes.delete("/aluno", UserAuthMiddleware, DeleteAlunosController);
+routes.put("/aluno", UserAuthMiddleware, UpdateAlunosController);
 
 routes.post("/chamada", UserAuthMiddleware, CreateChamadaController);
 routes.get("/chamada/:idAula", UserAuthMiddleware, GetChamadaController);

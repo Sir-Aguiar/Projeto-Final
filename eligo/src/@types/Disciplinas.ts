@@ -3,4 +3,9 @@ interface IDisciplina {
   nome: string;
 }
 
-export type { IDisciplina };
+interface ToCreateDiscipline {
+  idEscola: number;
+  nome: string;
+}
+
+export type { IDisciplina, ToCreateDiscipline };

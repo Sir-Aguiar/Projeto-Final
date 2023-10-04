@@ -9,8 +9,10 @@ const SignUserToken = (user, remember) => {
     return TOKEN;
   }
 
-  const TOKEN = sign({ idUsuario, email, nome }, process.env.SECRET, { expiresIn: 60 * 60 * 6 });
-  return TOKEN;
+  const expiresIn = 60 * 60 * 6;
+
+  const TOKEN = sign({ idUsuario, email, nome }, process.env.SECRET, { expiresIn });
+  return { data: TOKEN, expiresIn };
 };
 
 module.exports = SignUserToken;

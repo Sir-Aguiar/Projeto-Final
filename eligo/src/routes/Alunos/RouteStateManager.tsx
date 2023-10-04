@@ -4,10 +4,10 @@ import { useAuthHeader } from "react-auth-kit";
 import { FindAllSchools } from "../../services/Escolas";
 import jwtDecode from "jwt-decode";
 import { FindClassesBySchool } from "../../services/Turmas";
-import { IAluno } from "../../@types/Alunos";
+import { IAluno, ToCreateStudent } from "../../@types/Alunos";
 import { IEscola } from "../../@types/Escolas";
 import { ITurma } from "../../@types/Turmas";
-import { FindStudentsByClass, FindStudentsBySchool } from "../../services/Alunos";
+import { CreateStudent, DeleteStudent, FindStudentsByClass, FindStudentsBySchool } from "../../services/Alunos";
 import { useToast } from "../../components/Toast/Toast";
 
 interface IUserTokenData {
@@ -38,7 +38,6 @@ interface IRouteContext {
   selectRow: (idTurma: number) => void;
   showSchools: () => Promise<void>;
   showClasses: (idEscola?: number) => Promise<void>;
-  showStudent: (idEscola?: number) => Promise<void>;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   isLoading: boolean;
   selectedSchool: string;
@@ -47,6 +46,10 @@ interface IRouteContext {
   setSelectedClass: React.Dispatch<React.SetStateAction<string>>;
   TokenData: IUserTokenData;
   alunosCount: number;
+  handleCreate: (RequestBody: ToCreateStudent) => Promise<void>;
+  handleDelete: () => Promise<void>;
+  showStudentsFromClass: () => Promise<void>;
+  showStudentsFromSchool: (clean?: boolean) => Promise<void>;
 }
 
 const RouteContext = createContext<IRouteContext | null>(null);
@@ -181,66 +184,116 @@ const AlunosProvider: React.FC<ProviderProps> = ({ children }) => {
     }
   };
 
+  const handleCreate = async (RequestBody: ToCreateStudent) => {
+    setLoading(true);
+
+    try {
+      const response = await CreateStudent(RouteAPI, [RequestBody]);
+      setRows([]);
+      setSelectedClass("");
+      setSelectedSchool("");
+      setAlunos([]);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const showStudentsFromSchool = async (clean = false) => {
+    const skip = clean ? 0 : Alunos.length;
+
+    try {
+      const { count, rows } = await FindStudentsBySchool(RouteAPI, Number(selectedSchool), undefined, skip);
+      console.log(rows);
+      setAlunos((value) => {
+        console.log([...value, ...rows]);
+        return [...value, ...rows];
+      });
+      setAlunosCount(count);
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        // ERR_NETWORK -> mostre mais grave
+        if (error.response!.status >= 400 && error.response!.status < 500) {
+          notify({
+            title: "Erro consultar alunos da escola",
+            message: error.response!.data.error.message,
+            severity: "warn",
+          });
+          return;
+        }
+      }
+      // ERR_NETWORK -> mostre mais grave
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const showStudentsFromClass = async () => {
+    try {
+      const alunos = await FindStudentsByClass(RouteAPI, Number(selectedClass));
+      console.log(alunos);
+      setAlunos(alunos);
+      setAlunosCount(alunos.length);
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        // ERR_NETWORK -> mostre mais grave
+        if (error.response!.status >= 400 && error.response!.status < 500) {
+          notify({
+            title: "Erro consultar alunos da turma",
+            message: error.response!.data.error.message,
+            severity: "warn",
+          });
+          return;
+        }
+      }
+      // ERR_NETWORK -> mostre mais grave
+    }
+  };
+
+  const handleUpdate = async () => {};
+
+  const handleDelete = async () => {
+    setLoading(true);
+
+    try {
+      for (const idAluno of selectedRows) {
+        await DeleteStudent(RouteAPI, idAluno);
+        console.log(`Foi o ${idAluno}`);
+      }
+
+      setRows([]);
+      setSelectedClass("");
+      setSelectedSchool("");
+      setAlunos([])
+      ModalDelete.close();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     setRows([]);
-    if (selectedSchool && !selectedClass) {
-      setAlunos([]);
-      showClasses(Number(selectedSchool));
-      showStudent();
+
+    if (selectedSchool) {
+      showClasses(Number(selectedSchool)).then(() => showStudentsFromSchool(true));
     }
-  }, [selectedSchool, selectedClass]);
+  }, [selectedSchool]);
 
   useEffect(() => {
+    setRows([]);
+
     if (selectedClass) {
-      showStudent();
+      showStudentsFromClass();
+    }
+
+    if (!selectedClass && selectedSchool) {
+      setAlunos([]);
+      showStudentsFromSchool(true);
     }
   }, [selectedClass]);
-
-  const showStudent = async () => {
-    setLoading(true);
-    if (selectedClass) {
-      try {
-        const alunos = await FindStudentsByClass(RouteAPI, Number(selectedClass));
-        setAlunos(alunos);
-        setAlunosCount(alunos.length);
-      } catch (error) {
-        if (error instanceof AxiosError) {
-          // ERR_NETWORK -> mostre mais grave
-          if (error.response!.status >= 400 && error.response!.status < 500) {
-            notify({
-              title: "Erro consultar alunos da turma",
-              message: error.response!.data.error.message,
-              severity: "warn",
-            });
-            return;
-          }
-        }
-        // ERR_NETWORK -> mostre mais grave
-      }
-    } else if (selectedSchool) {
-      try {
-        const skip = Alunos.length;
-        const { count, rows } = await FindStudentsBySchool(RouteAPI, Number(selectedSchool), undefined, skip);
-        setAlunos((value) => [...value, ...rows]);
-        setAlunosCount(count);
-      } catch (error) {
-        if (error instanceof AxiosError) {
-          // ERR_NETWORK -> mostre mais grave
-          if (error.response!.status >= 400 && error.response!.status < 500) {
-            notify({
-              title: "Erro consultar alunos da escola",
-              message: error.response!.data.error.message,
-              severity: "warn",
-            });
-            return;
-          }
-        }
-        // ERR_NETWORK -> mostre mais grave
-      }
-    }
-
-    setLoading(false);
-  };
 
   useEffect(() => {
     document.title = "Eligo | Alunos";
@@ -262,7 +315,6 @@ const AlunosProvider: React.FC<ProviderProps> = ({ children }) => {
         selectRow,
         showClasses,
         showSchools,
-        showStudent,
         isLoading,
         setLoading,
         selectedClass,
@@ -270,6 +322,10 @@ const AlunosProvider: React.FC<ProviderProps> = ({ children }) => {
         setSelectedClass,
         setSelectedSchool,
         alunosCount,
+        handleCreate,
+        handleDelete,
+        showStudentsFromSchool,
+        showStudentsFromClass,
       }}
     >
       {children}

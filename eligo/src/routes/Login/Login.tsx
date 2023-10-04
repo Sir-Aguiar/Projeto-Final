@@ -35,13 +35,19 @@ const Login: React.FC = () => {
     axios
       .post(`${import.meta.env.VITE_SERVER_URL}/login`, userData)
       .then((res) => {
-        signIn({
-          token: res.data.token,
-          tokenType: "Bearer",
-          expiresIn: remember ? 99 * 99 * 99 * 99 : 60 * 60 * 6,
-          authState: { email },
-        });
-        navigate("/");
+        if (
+          signIn({
+            token: res.data.token.data,
+            tokenType: "Bearer",
+            expiresIn: remember ? 99 * 99 * 99 * 99 : res.data.token.expiresIn / 60,
+            authState: { email },
+          })
+        ) {
+          navigate("/");
+        } else {
+          alert("Rolou algum erro");
+          return;
+        }
       })
       .catch((error) => {
         console.log(error);

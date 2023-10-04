@@ -32,17 +32,15 @@ const Register: React.FC = () => {
 
     axios
       .post(`${import.meta.env.VITE_SERVER_URL}/registro`, { nome, email, senha: password })
-
       .then((res) => {
-        const { token } = res.data;
         signIn({
-          token,
+          token: res.data.token.data,
           tokenType: "Bearer",
-          expiresIn: 60 * 60 * 6,
+          expiresIn: res.data.token.expiresIn / 60,
+          authState: { email },
         });
         navigate("/");
       })
-
       .catch((error) => {
         console.log(error);
         if (error instanceof AxiosError) {

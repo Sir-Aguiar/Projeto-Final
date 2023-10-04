@@ -19,7 +19,7 @@ const ClassRoomCard: React.FC<{ aula: any }> = ({ aula }) => {
       <header>
         <h1>Turma: {aula.turma.nome}</h1>
       </header>
-{/*       <main>
+      {/*       <main>
         <div className={styles.actions}>
           <OpenInNewIcon />
           Abrir
@@ -59,7 +59,7 @@ const Escola: React.FC = () => {
   return (
     <div className={styles.content_container}>
       <header className={styles.header}>
-        <h1 className="text-2xl font-bold text-black-text">{SchoolData.nome}</h1>
+        <h1 className="text-2xl font-bold text-black-text">{SchoolData?.nome}</h1>
         <div className="flex items-center w-full gap-2">
           <button className={`${styles.button}`} onClick={() => DisciplineDrawer.open()}>
             <img src={DisciplinaIcon} className="max-h-[20px]" />
