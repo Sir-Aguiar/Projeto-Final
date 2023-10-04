@@ -25,6 +25,11 @@ const Usuario = Database.define(
       type: DataTypes.TEXT,
       allowNull: false,
     },
+    profile_image: {
+      type: DataTypes.TEXT,
+      defaultValue: "default_profile_image.png",
+      allowNull: false,
+    },
   },
   { tableName: "usuarios" },
 );

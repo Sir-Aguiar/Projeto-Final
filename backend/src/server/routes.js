@@ -1,4 +1,5 @@
 const { Router } = require("express");
+const { storage } = require("../server/utils/multer-config");
 const routes = Router();
 const RegisterUser = require("./controllers/User/ReigsterUser");
 const Login = require("./controllers/User/Login");
@@ -45,6 +46,8 @@ const GetUserController = require("./controllers/User/Get");
 const DeleteUserController = require("./controllers/User/Delete");
 const UpdateUserController = require("./controllers/User/Update");
 const CreateSchoolController = require("./controllers/Escolas/Create");
+const multer = require("multer");
+const UpdateProfileImageController = require("./controllers/User/UpdateImage");
 
 routes.post("/registro", RegisterUser);
 routes.post("/login", Login);
@@ -111,4 +114,8 @@ routes.put("/usuario", UserAuthMiddleware, UpdateUserController);
 routes.get("/aulas-professor-turma", UserAuthMiddleware, GetProfessorsStatsByClassRooms);
 routes.get("/students-stat", UserAuthMiddleware, MonthlyPresenceController);
 routes.get("/class-stats", UserAuthMiddleware, GetTurmaStatsController);
+
+const upload = multer({ storage });
+routes.post("/profile-image", UserAuthMiddleware, upload.single("profile_image"), UpdateProfileImageController);
+
 module.exports = routes;

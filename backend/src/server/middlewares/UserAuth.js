@@ -5,7 +5,6 @@ const { JsonWebTokenError } = require("jsonwebtoken");
 /** @type {import("express").RequestHandler}  */
 const UserAuthMiddleware = async (req, res, next) => {
   const AuthToken = req.header("Authorization")?.split(" ")[1];
-
   if (!AuthToken) {
     return res.status(400).json({
       error: {

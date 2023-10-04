@@ -1,0 +1,6 @@
+.modal_content {
+  @apply bg-background rounded-md;
+  @apply w-[300px] h-[300px];
+  @apply flex flex-col items-center p-2 gap-1;
+  @apply text-black-smooth font-Montserrat;
+}

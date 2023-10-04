@@ -22,6 +22,11 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: false,
       },
+      profile_image: {
+        type: Sequelize.TEXT,
+        defaultValue: "default_profile_image.png",
+        allowNull: false,
+      },
       createdAt: {
         type: Sequelize.DATE,
         allowNull: false,
