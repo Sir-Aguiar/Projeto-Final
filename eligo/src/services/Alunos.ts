@@ -20,8 +20,8 @@ const FindStudentsStats = async (API: AxiosInstance, idAluno: number, month: num
   return response.data;
 };
 
-const UpdateStudent = async (API: AxiosInstance, idAluno: number, toUpdate: any) => {
-  const response = await API.put(`/aluno/${idAluno}`, { toUpdate });
+const UpdateStudent = async (API: AxiosInstance, idAluno: number, toUpdate: { nome: string }) => {
+  const response = await API.put(`/aluno?idAluno=${idAluno}`, { toUpdate });
   return response;
 };
 

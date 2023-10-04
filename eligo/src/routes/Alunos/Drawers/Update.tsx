@@ -1,38 +1,24 @@
 import React, { useState, useEffect } from "react";
 import styles from "./Update.module.css";
-import { Divider, Drawer, TextField } from "@mui/material";
+import { CircularProgress, Divider, Drawer, TextField } from "@mui/material";
 import { useAlunosContext } from "../RouteStateManager";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
-import { AxiosError } from "axios";
-import { UpdateStudent } from "../../../services/Alunos";
+
 const Update: React.FC = () => {
-  const { DrawerUpdate, Turmas, selectedRows, Alunos, RouteAPI, showStudent } = useAlunosContext();
+  const { DrawerUpdate, Turmas, selectedRows, Alunos, isLoading, handleUpdate } = useAlunosContext();
 
   const [idTurma, setIdTurma] = useState("");
   const [nomeAluno, setNomeAluno] = useState("");
 
-  const onClose = async () => {
-    await showStudent();
-    DrawerUpdate.close();
-  };
-
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const toUpdate = { nome: nomeAluno, idTurma };
-    try {
-      const response = await UpdateStudent(RouteAPI, selectedRows[0], toUpdate);
 
-      await onClose();
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        alert(error.response?.data.error.message);
-        return;
-      }
-      console.log(error);
-    }
+    await handleUpdate(nomeAluno);
+
+    DrawerUpdate.close();
   };
 
   useEffect(() => {
@@ -55,7 +41,7 @@ const Update: React.FC = () => {
           <form className={styles.formulary} id="update-student" onSubmit={onSubmit}>
             <FormControl fullWidth disabled={Turmas.length < 1}>
               <InputLabel>Turma</InputLabel>
-              <Select value={idTurma} required label="Turma" onChange={(e: any) => setIdTurma(e.target.value)}>
+              <Select value={idTurma} disabled required label="Turma" onChange={(e: any) => setIdTurma(e.target.value)}>
                 {Turmas.length > 0
                   ? Turmas.map((turma, index) => (
                       <MenuItem value={turma.idTurma} key={index}>
@@ -69,7 +55,7 @@ const Update: React.FC = () => {
               label="Nome do aluno"
               variant="outlined"
               fullWidth
-              inputProps={{ maxLength: 50 }}
+              inputProps={{ maxLength: 45 }}
               value={nomeAluno}
               onChange={(e: any) => setNomeAluno(e.target.value)}
               required
@@ -80,7 +66,9 @@ const Update: React.FC = () => {
           <button onClick={() => DrawerUpdate.close()} className={styles.cancel}>
             Cancelar
           </button>
-          <input type="submit" value="Cadastrar" form="update-student" className={styles.submiter} />
+          <button type="submit" form="update-student" className={`${styles.submiter} bg-blue-600`}>
+            {isLoading ? <CircularProgress size={25} color="inherit" /> : "Atualizar"}
+          </button>
         </footer>
       </div>
     </Drawer>

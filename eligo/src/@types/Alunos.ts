@@ -46,9 +46,5 @@ interface ToCreateStudent {
   nome: string;
 }
 
-interface ToUpdateStudent {
-  idAluno: number;
-  toUpdate: { nome: string };
-}
 
-export type { IAluno, IAlunoStats, ToCreateStudent, ToUpdateStudent };
+export type { IAluno, IAlunoStats, ToCreateStudent };

@@ -7,7 +7,13 @@ import { FindClassesBySchool } from "../../services/Turmas";
 import { IAluno, ToCreateStudent } from "../../@types/Alunos";
 import { IEscola } from "../../@types/Escolas";
 import { ITurma } from "../../@types/Turmas";
-import { CreateStudent, DeleteStudent, FindStudentsByClass, FindStudentsBySchool } from "../../services/Alunos";
+import {
+  CreateStudent,
+  DeleteStudent,
+  FindStudentsByClass,
+  FindStudentsBySchool,
+  UpdateStudent,
+} from "../../services/Alunos";
 import { useToast } from "../../components/Toast/Toast";
 
 interface IUserTokenData {
@@ -50,6 +56,7 @@ interface IRouteContext {
   handleDelete: () => Promise<void>;
   showStudentsFromClass: () => Promise<void>;
   showStudentsFromSchool: (clean?: boolean) => Promise<void>;
+  handleUpdate: (nome: string) => Promise<void>;
 }
 
 const RouteContext = createContext<IRouteContext | null>(null);
@@ -189,10 +196,11 @@ const AlunosProvider: React.FC<ProviderProps> = ({ children }) => {
 
     try {
       const response = await CreateStudent(RouteAPI, [RequestBody]);
+
       setRows([]);
+
       setSelectedClass("");
       setSelectedSchool("");
-      setAlunos([]);
     } catch (error) {
       console.log(error);
     } finally {
@@ -205,12 +213,21 @@ const AlunosProvider: React.FC<ProviderProps> = ({ children }) => {
 
     try {
       const { count, rows } = await FindStudentsBySchool(RouteAPI, Number(selectedSchool), undefined, skip);
+
       console.log(rows);
-      setAlunos((value) => {
-        console.log([...value, ...rows]);
-        return [...value, ...rows];
-      });
+
       setAlunosCount(count);
+
+      if (skip !== 0) {
+        setAlunos((value) => {
+          console.log("Novo valor para alunos", [...value, ...rows]);
+          return [...value, ...rows];
+        });
+
+        return;
+      }
+
+      setAlunos(rows);
     } catch (error) {
       if (error instanceof AxiosError) {
         // ERR_NETWORK -> mostre mais grave
@@ -251,7 +268,20 @@ const AlunosProvider: React.FC<ProviderProps> = ({ children }) => {
     }
   };
 
-  const handleUpdate = async () => {};
+  const handleUpdate = async (nome: string) => {
+    try {
+      setLoading(true);
+      await UpdateStudent(RouteAPI, selectedRows[0], { nome });
+
+      setRows([]);
+      setSelectedClass("");
+      setSelectedSchool("");
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleDelete = async () => {
     setLoading(true);
@@ -259,13 +289,13 @@ const AlunosProvider: React.FC<ProviderProps> = ({ children }) => {
     try {
       for (const idAluno of selectedRows) {
         await DeleteStudent(RouteAPI, idAluno);
-        console.log(`Foi o ${idAluno}`);
       }
 
       setRows([]);
+
       setSelectedClass("");
       setSelectedSchool("");
-      setAlunos([])
+
       ModalDelete.close();
     } catch (error) {
       console.log(error);
@@ -274,24 +304,34 @@ const AlunosProvider: React.FC<ProviderProps> = ({ children }) => {
     }
   };
 
+  /* Toda vez que a escola mudar, redefina a turma. Carregue os alunos da escola */
+  /* Toda vez que a turma mudar, redefina os alunos. Carregue os alunos da turma */
+
   useEffect(() => {
     setRows([]);
 
+    if (selectedSchool && selectedClass) {
+      setSelectedClass("");
+    }
+
     if (selectedSchool) {
-      showClasses(Number(selectedSchool)).then(() => showStudentsFromSchool(true));
+      showClasses(Number(selectedSchool)).then(() => {
+        showStudentsFromSchool(true);
+      });
     }
   }, [selectedSchool]);
 
   useEffect(() => {
     setRows([]);
 
-    if (selectedClass) {
-      showStudentsFromClass();
+    if (!selectedClass && selectedSchool) {
+      showStudentsFromSchool(true);
+      return;
     }
 
-    if (!selectedClass && selectedSchool) {
-      setAlunos([]);
-      showStudentsFromSchool(true);
+    if (selectedClass) {
+      showStudentsFromClass();
+      return;
     }
   }, [selectedClass]);
 
@@ -326,6 +366,7 @@ const AlunosProvider: React.FC<ProviderProps> = ({ children }) => {
         handleDelete,
         showStudentsFromSchool,
         showStudentsFromClass,
+        handleUpdate,
       }}
     >
       {children}
