@@ -7,6 +7,7 @@ import axios, { AxiosError } from "axios";
 import { useIsAuthenticated, useSignIn } from "react-auth-kit";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useToast } from "../../components/Toast/Toast";
+import { HandleError } from "../../utils/defaultErrorHandler";
 
 const Login: React.FC = () => {
   const signIn = useSignIn();
@@ -43,35 +44,11 @@ const Login: React.FC = () => {
         ) {
           navigate("/");
         } else {
-          alert("Rolou algum erro");
-          return;
+          notify({ title: "Erro ao realizar login", message: "Este é um erro inesperado, tente novamente mais tarde" });
         }
       })
       .catch((error) => {
-        console.log(error);
-        if (error instanceof AxiosError) {
-          const response = error.response;
-          if (response) {
-            setFormError(response.data.error.message);
-            return;
-          }
-          if (error.message === "Network Error") {
-            return notify({
-              title: "Servidor se encontra fora do ar",
-              message: "Tente novamente em alguns instantes",
-              severity: "error",
-            });
-          }
-          return notify({
-            title: error.message,
-            severity: "error",
-          });
-        }
-        notify({
-          title: "Este erro não é esperado, atualize a página e tente novamente",
-          message: error.message,
-          severity: "error",
-        });
+        HandleError(error, notify, "Erro ao realizar login");
       })
       .finally(() => {
         setLoading(false);

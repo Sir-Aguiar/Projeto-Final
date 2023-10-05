@@ -12,7 +12,8 @@ import { FindSchoolById } from "../../services/Escolas";
 import { CreateDiscipline, FindDisciplinesBySchool, FindDisciplinesCountBySchool } from "../../services/Disciplinas";
 import { FindStudentsCountBySchool } from "../../services/Alunos";
 import { CreateDisciplineGrid } from "../../services/CursoDisciplina";
-
+import { HandleError } from "../../utils/defaultErrorHandler";
+import { useToast } from "../../components/Toast/Toast";
 interface IAula {
   idAula: number;
   anotacao: string | null;
@@ -91,7 +92,7 @@ const RouteContext = createContext<IRouteContext | null>(null);
 
 const EscolaProvider: React.FC<ProviderProps> = ({ children }) => {
   const { idEscola } = useParams();
-
+  const { notify } = useToast();
   const authHeader = useAuthHeader();
 
   const RouteAPI = axios.create({
@@ -178,8 +179,8 @@ const EscolaProvider: React.FC<ProviderProps> = ({ children }) => {
     try {
       const disciplina = await CreateDiscipline(RouteAPI, { idEscola: Number(idEscola), nome });
       await CreateDisciplineGrid(RouteAPI, Number(idEscola), disciplina.idDisciplina, cursos);
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      HandleError(error, notify, "Erro ao consultar criar disciplina");
     } finally {
       setLoading(false);
     }
@@ -190,7 +191,7 @@ const EscolaProvider: React.FC<ProviderProps> = ({ children }) => {
       const response = await FindClassesBySchool(RouteAPI, Number(idEscola));
       setClasses(response);
     } catch (error: any) {
-      console.log(error);
+      HandleError(error, notify, "Erro ao consultar turmas da escola");
     }
   };
 
@@ -199,20 +200,7 @@ const EscolaProvider: React.FC<ProviderProps> = ({ children }) => {
       const response = await FindSchoolById(RouteAPI, Number(idEscola));
       setSchoolData(response);
     } catch (error: any) {
-      console.log(error);
-      if (error instanceof AxiosError) {
-        const response = error.response;
-        if (response) {
-          if (response.status === 401) {
-            setUserAuthorized(false);
-            return;
-          }
-          if (response.status === 404) {
-            setUserAuthorized(false);
-            return;
-          }
-        }
-      }
+      HandleError(error, notify, "Erro ao consultar dados da escola");
     }
   };
 
@@ -223,9 +211,7 @@ const EscolaProvider: React.FC<ProviderProps> = ({ children }) => {
         setProfessorsCount(response.data.length);
         return;
       } catch (error: any) {
-        console.log(error);
-        if (error instanceof AxiosError) {
-        }
+        HandleError(error, notify, "Erro ao consultar dados iniciais");
       }
     }
     try {
@@ -233,9 +219,7 @@ const EscolaProvider: React.FC<ProviderProps> = ({ children }) => {
       setProfessorsData(response.data.professores);
       return;
     } catch (error: any) {
-      console.log(error);
-      if (error instanceof AxiosError) {
-      }
+      HandleError(error, notify, "Erro ao consultar professores");
     }
   };
 
@@ -246,7 +230,7 @@ const EscolaProvider: React.FC<ProviderProps> = ({ children }) => {
         setDisciplinesCount(response);
         return;
       } catch (error: any) {
-        console.log(error);
+        HandleError(error, notify, "Erro ao consultar dados iniciais");
       }
     }
     try {
@@ -254,29 +238,27 @@ const EscolaProvider: React.FC<ProviderProps> = ({ children }) => {
       setDisciplinesData(response);
       return;
     } catch (error: any) {
-      console.log(error);
+      HandleError(error, notify, "Erro ao consultar disciplinas");
     }
   };
 
-  /*   const loadTodayClassRooms = async () => {
+  const loadTodayClassRooms = async () => {
     try {
       const response = await RouteAPI.get(
         `/aula?idEscola=${idEscola}&createdAt=${todayDate.toLocaleString("en-US", { dateStyle: "short" })}`,
       );
       setTodayClassRooms(response.data.aulas);
     } catch (error: any) {
-      console.log(error);
+      HandleError(error, notify, "Erro ao consultar aulas do dia");
     }
   };
 
-  
- */
   const loadStudentsLength = async () => {
     try {
       const response = await FindStudentsCountBySchool(RouteAPI, Number(idEscola));
       setStudentLength(response);
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      HandleError(error, notify, "Erro ao consultar alunos");
     }
   };
 
@@ -285,7 +267,7 @@ const EscolaProvider: React.FC<ProviderProps> = ({ children }) => {
     await loadStudentsLength();
     await loadProfessorData();
     await loadDisciplineData();
-    /*     await loadTodayClassRooms(); */
+    await loadTodayClassRooms();
   };
 
   const loadGridData = async () => {
@@ -293,13 +275,8 @@ const EscolaProvider: React.FC<ProviderProps> = ({ children }) => {
       const response = await RouteAPI.get(`/grade?idEscola=${idEscola}`);
       console.log(response);
       setGridData(response.data.grade);
-    } catch (error) {
-      console.log(error);
-      if (error instanceof AxiosError) {
-        if (error.response?.status === 401) {
-          return alert("Você não possui acesso à esta escola");
-        }
-      }
+    } catch (error: any) {
+      HandleError(error, notify, "Erro ao consultar grades");
     }
   };
 

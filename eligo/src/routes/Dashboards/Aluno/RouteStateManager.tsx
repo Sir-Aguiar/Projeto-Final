@@ -4,6 +4,8 @@ import { useAuthHeader } from "react-auth-kit";
 import { useParams } from "react-router-dom";
 import { FindStudentsStats } from "../../../services/Alunos";
 import NotFound from "../../Errors/NotFound";
+import { HandleError } from "../../../utils/defaultErrorHandler";
+import { useToast } from "../../../components/Toast/Toast";
 
 interface IAluno {
   idAluno: number;
@@ -27,6 +29,7 @@ const StudentDashboardContext = createContext<Context | null>(null);
 
 export const StudentDashboardProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { idAluno } = useParams();
+  const { notify } = useToast();
   const authHeader = useAuthHeader();
   const [isUserAuthorized, setAuthorization] = useState(true);
   const RouteAPI = axios.create({
@@ -36,7 +39,6 @@ export const StudentDashboardProvider: React.FC<{ children: React.ReactNode }> =
     },
   });
 
-  /* Somar todas as faltas, calcular porcentagem que a disciplina representa DisciplinaFalta / (Total / 100) */
   const [StudentData, setStudentData] = useState<IAluno>();
   const [MonthPresenceComparation, setMonthPresenceComparation] = useState<any[]>();
   const [MonthlyPresence, setMonthlyPresence] = useState<any[]>();
@@ -74,21 +76,7 @@ export const StudentDashboardProvider: React.FC<{ children: React.ReactNode }> =
         ]),
       );
     } catch (error: any) {
-      if (error instanceof AxiosError) {
-        const response = error.response;
-
-        if (response) {
-          if (response.status === 401) {
-            setAuthorization(false);
-            return;
-          }
-          alert(response.data.error.message);
-        }
-
-        if (error.status === 500) {
-          return;
-        }
-      }
+      HandleError(error, notify, "Erro ao carregar dados do aluno");
     }
   };
 

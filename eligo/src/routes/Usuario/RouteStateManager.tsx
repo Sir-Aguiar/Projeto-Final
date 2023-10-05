@@ -5,6 +5,7 @@ import jwtDecode from "jwt-decode";
 import { FindUser, UpdateProfileImage } from "../../services/Usuario";
 import { useToast } from "../../components/Toast/Toast";
 import { IUsuario } from "../../@types/Usuario";
+import { HandleError } from "../../utils/defaultErrorHandler";
 
 interface IModalProps {
   situation: boolean;
@@ -84,8 +85,8 @@ const UsuarioProvider: React.FC<ProviderProps> = ({ children }) => {
       await loadUserData();
       ModalUpload.close();
       notify({ title: "Foto de perfil atualizada" });
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      HandleError(error, notify, "Erro ao atualizar foto");
     } finally {
       setLoading(false);
     }
@@ -114,8 +115,8 @@ const UsuarioProvider: React.FC<ProviderProps> = ({ children }) => {
     try {
       const response = await FindUser(RouteAPI);
       setUsuario(response);
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      HandleError(error, notify, "Erro ao carregar dados do usuário");
     } finally {
       setLoading(false);
     }

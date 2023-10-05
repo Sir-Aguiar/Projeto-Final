@@ -9,9 +9,12 @@ import { UpdateUser } from "../../services/Usuario";
 import { ToUpdateUser } from "../../@types/Usuario";
 import { useSignOut } from "react-auth-kit";
 import Delete from "./Modals/Delete";
+import { useToast } from "../../components/Toast/Toast";
+import { HandleError } from "../../utils/defaultErrorHandler";
 
 const Usuario: React.FC = () => {
   const { handleFileSelect, handleFileSubmit, Usuario, isLoading, RouteAPI, ModalDelete } = useUsuarioContext();
+  const { notify } = useToast();
   const [formError, setFormError] = useState("");
   const [isCurrentPasswordValid, setCurrentPasswordValid] = useState(false);
   const [isFormLoading, setFormLoading] = useState(false);
@@ -39,22 +42,8 @@ const Usuario: React.FC = () => {
         const response = await RouteAPI.post("/check-password", { senha: currentPassword });
         setCurrentPasswordValid(true);
         setFormError("");
-      } catch (error) {
-        if (error instanceof AxiosError) {
-          const response = error.response;
-
-          if (response) {
-            if (response.status === 400) {
-              setCurrentPasswordValid(false);
-              setFormError("Senha incorreta");
-              setNewPassword("");
-              setNewPasswordAgain("");
-            }
-            // Outro erro inesperado
-          }
-          // Outro erro inesperado
-        }
-        // Outro erro inesperado
+      } catch (error: any) {
+        HandleError(error, notify, "Erro ao atualizar dados");
       } finally {
         setFormLoading(false);
       }
@@ -82,8 +71,8 @@ const Usuario: React.FC = () => {
     try {
       const response = await UpdateUser(RouteAPI, RequestBody);
       signOut();
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      HandleError(error, notify, "Erro ao atualizar dados");
     } finally {
       setFormLoading(false);
     }

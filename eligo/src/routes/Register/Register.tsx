@@ -7,6 +7,7 @@ import axios, { AxiosError } from "axios";
 import { useIsAuthenticated, useSignIn } from "react-auth-kit";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../../components/Toast/Toast";
+import { HandleError } from "../../utils/defaultErrorHandler";
 
 const Register: React.FC = () => {
   const { notify } = useToast();
@@ -42,24 +43,7 @@ const Register: React.FC = () => {
         navigate("/");
       })
       .catch((error) => {
-        console.log(error);
-        if (error instanceof AxiosError) {
-          const response = error.response;
-
-          if (response) {
-            return setFormError(response.data.error.message);
-          }
-
-          notify({
-            title: error.message,
-            severity: "error",
-          });
-        }
-        notify({
-          title: "Servidor se encontra fora do ar",
-          message: "Este problema é completamente do nosso lado. Aguarde alguns instantes",
-          severity: "error",
-        });
+        HandleError(error, notify, "Erro ao cadastrar");
       })
 
       .finally(() => setLoading(false));

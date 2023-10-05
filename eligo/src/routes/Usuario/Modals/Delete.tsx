@@ -7,9 +7,12 @@ import { AxiosError } from "axios";
 import { Fade } from "@mui/material";
 import { useUsuarioContext } from "../RouteStateManager";
 import { useSignOut } from "react-auth-kit";
+import { HandleError } from "../../../utils/defaultErrorHandler";
+import { useToast } from "../../../components/Toast/Toast";
 
 const Delete: React.FC = () => {
   const { ModalDelete, RouteAPI } = useUsuarioContext();
+  const { notify } = useToast();
   const onClose = async () => {
     ModalDelete.close();
   };
@@ -21,7 +24,7 @@ const Delete: React.FC = () => {
       signOut();
       onClose();
     } catch (error: any) {
-      console.log(error);
+      HandleError(error, notify, "Erro ao excluir usuário");
     }
   };
 

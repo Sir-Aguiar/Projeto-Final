@@ -15,6 +15,7 @@ import {
   UpdateStudent,
 } from "../../services/Alunos";
 import { useToast } from "../../components/Toast/Toast";
+import { HandleError } from "../../utils/defaultErrorHandler";
 
 interface IUserTokenData {
   email: string;
@@ -136,20 +137,7 @@ const AlunosProvider: React.FC<ProviderProps> = ({ children }) => {
       const response = await FindAllSchools(RouteAPI);
       setEscolas(response);
     } catch (error: any) {
-      if (error instanceof AxiosError) {
-        // ERR_NETWORK -> mostre mais grave
-        const response = error.response;
-        if (response) {
-          notify({
-            message: error.response!.data.error.message,
-            title: "Erro ao consultar turmas",
-            severity: "warn",
-          });
-          return;
-        }
-      }
-
-      // Caso error 500 ->  mostre mais grave
+      HandleError(error, notify, "Erro ao consultar escolas");
     }
   };
 
@@ -159,40 +147,14 @@ const AlunosProvider: React.FC<ProviderProps> = ({ children }) => {
         const response = await FindClassesBySchool(RouteAPI, Number(idEscola));
         setTurmas(response);
       } catch (error: any) {
-        if (error instanceof AxiosError) {
-          // ERR_NETWORK -> mostre mais grave
-          const response = error.response;
-          if (response) {
-            notify({
-              message: error.response!.data.error.message,
-              title: "Erro ao consultar turmas",
-              severity: "warn",
-            });
-            return;
-          }
-        }
-
-        // Caso error 500 ->  mostre mais grave
+        HandleError(error, notify, "Erro ao consultar turmas");
       }
     } else if (selectedSchool) {
       try {
         const response = await FindClassesBySchool(RouteAPI, Number(selectedSchool));
         setTurmas(response);
       } catch (error: any) {
-        if (error instanceof AxiosError) {
-          // ERR_NETWORK -> mostre mais grave
-          const response = error.response;
-          if (response) {
-            notify({
-              message: error.response!.data.error.message,
-              title: "Erro ao consultar turmas",
-              severity: "warn",
-            });
-            return;
-          }
-        }
-
-        // Caso error 500 ->  mostre mais grave
+        HandleError(error, notify, "Erro ao consultar turmas");
       }
     }
   };
@@ -207,21 +169,8 @@ const AlunosProvider: React.FC<ProviderProps> = ({ children }) => {
       notify({
         title: "Aluno criado com sucesso",
       });
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        // ERR_NETWORK -> mostre mais grave
-        const response = error.response;
-        if (response) {
-          notify({
-            message: error.response!.data.error.message,
-            title: "Erro ao consultar turmas",
-            severity: "warn",
-          });
-          return;
-        }
-      }
-
-      // Caso error 500 ->  mostre mais grave
+    } catch (error: any) {
+      HandleError(error, notify, "Erro ao criar aluno");
     } finally {
       setLoading(false);
     }
@@ -239,13 +188,10 @@ const AlunosProvider: React.FC<ProviderProps> = ({ children }) => {
     try {
       const { count, rows } = await FindStudentsBySchool(RouteAPI, Number(selectedSchool), undefined, skip);
 
-      console.log(rows);
-
       setAlunosCount(count);
 
       if (skip !== 0) {
         setAlunos((value) => {
-          console.log("Novo valor para alunos", [...value, ...rows]);
           return [...value, ...rows];
         });
 
@@ -253,21 +199,8 @@ const AlunosProvider: React.FC<ProviderProps> = ({ children }) => {
       }
 
       setAlunos(rows);
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        // ERR_NETWORK -> mostre mais grave
-        const response = error.response;
-        if (response) {
-          notify({
-            message: error.response!.data.error.message,
-            title: "Erro ao consultar turmas",
-            severity: "warn",
-          });
-          return;
-        }
-      }
-
-      // Caso error 500 ->  mostre mais grave
+    } catch (error: any) {
+      HandleError(error, notify, "Erro ao consultar alunos");
     } finally {
       setLoading(false);
     }
@@ -279,21 +212,8 @@ const AlunosProvider: React.FC<ProviderProps> = ({ children }) => {
       console.log(alunos);
       setAlunos(alunos);
       setAlunosCount(alunos.length);
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        // ERR_NETWORK -> mostre mais grave
-        const response = error.response;
-        if (response) {
-          notify({
-            message: error.response!.data.error.message,
-            title: "Erro ao consultar turmas",
-            severity: "warn",
-          });
-          return;
-        }
-      }
-
-      // Caso error 500 ->  mostre mais grave
+    } catch (error: any) {
+      HandleError(error, notify, "Erro ao consultar alunos");
     }
   };
 
@@ -307,21 +227,8 @@ const AlunosProvider: React.FC<ProviderProps> = ({ children }) => {
       notify({
         title: "Aluno atualizado com sucesso",
       });
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        // ERR_NETWORK -> mostre mais grave
-        const response = error.response;
-        if (response) {
-          notify({
-            message: error.response!.data.error.message,
-            title: "Erro ao consultar turmas",
-            severity: "warn",
-          });
-          return;
-        }
-      }
-
-      // Caso error 500 ->  mostre mais grave
+    } catch (error: any) {
+      HandleError(error, notify, "Erro ao atualizar aluno");
     } finally {
       setLoading(false);
     }
@@ -343,21 +250,8 @@ const AlunosProvider: React.FC<ProviderProps> = ({ children }) => {
       notify({
         title: "Aluno deletado com sucesso",
       });
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        // ERR_NETWORK -> mostre mais grave
-        const response = error.response;
-        if (response) {
-          notify({
-            message: error.response!.data.error.message,
-            title: "Erro ao consultar turmas",
-            severity: "warn",
-          });
-          return;
-        }
-      }
-
-      // Caso error 500 ->  mostre mais grave
+    } catch (error: any) {
+      HandleError(error, notify, "Erro ao excluir aluno");
     } finally {
       setLoading(false);
     }
