@@ -5,4 +5,10 @@ interface IUsuario {
   profile_image: string;
 }
 
-export type { IUsuario };
+interface ToUpdateUser {
+  nome?: string;
+  email?: string;
+  senha?: string;
+}
+
+export type { IUsuario, ToUpdateUser };

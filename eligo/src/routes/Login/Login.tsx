@@ -13,7 +13,6 @@ const Login: React.FC = () => {
   const navigate = useNavigate();
   const isUserAuthenticated = useIsAuthenticated();
   const [formError, setFormError] = useState("");
-  const [remember, setRemember] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const { notify } = useToast();
 
@@ -29,7 +28,6 @@ const Login: React.FC = () => {
     const userData = {
       email: email.value,
       senha: senha.value,
-      remember,
     };
 
     axios
@@ -39,7 +37,7 @@ const Login: React.FC = () => {
           signIn({
             token: res.data.token.data,
             tokenType: "Bearer",
-            expiresIn: remember ? 99 * 99 * 99 * 99 : res.data.token.expiresIn / 60,
+            expiresIn: 99 * 99 * 99 * 99,
             authState: { email },
           })
         ) {
@@ -93,12 +91,6 @@ const Login: React.FC = () => {
             <TextField required fullWidth id="email" type="email" label="Nome de usuário" variant="outlined" />
             <TextField required fullWidth id="senha" label="Senha" type="password" variant="outlined" />
             {formError && <span className="text-[12px] text-red-500 text-start w-full">{formError}</span>}
-            <div className="w-full flex items-center font-Roboto text-sm text-black-text font-medium">
-              <Checkbox size="small" id="remember" checked={remember} onChange={() => setRemember((value) => !value)} />
-              <label htmlFor="remember" className="cursor-pointer">
-                Lembrar senha
-              </label>
-            </div>
           </div>
 
           <button type="submit" className={`${styles.login} bg-blue-500`} id="login-submiter">

@@ -48,6 +48,7 @@ const UpdateUserController = require("./controllers/User/Update");
 const CreateSchoolController = require("./controllers/Escolas/Create");
 const multer = require("multer");
 const UpdateProfileImageController = require("./controllers/User/UpdateImage");
+const CheckPasswordController = require("./controllers/User/CheckPassword");
 
 routes.post("/registro", RegisterUser);
 routes.post("/login", Login);
@@ -114,6 +115,9 @@ routes.put("/usuario", UserAuthMiddleware, UpdateUserController);
 routes.get("/aulas-professor-turma", UserAuthMiddleware, GetProfessorsStatsByClassRooms);
 routes.get("/students-stat", UserAuthMiddleware, MonthlyPresenceController);
 routes.get("/class-stats", UserAuthMiddleware, GetTurmaStatsController);
+
+routes.post("/check-password", UserAuthMiddleware, CheckPasswordController)
+
 
 const upload = multer({ storage });
 routes.post("/profile-image", UserAuthMiddleware, upload.single("profile_image"), UpdateProfileImageController);

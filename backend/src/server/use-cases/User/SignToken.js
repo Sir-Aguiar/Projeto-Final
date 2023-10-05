@@ -1,18 +1,11 @@
 require("dotenv/config");
 const { sign } = require("jsonwebtoken");
 
-const SignUserToken = (user, remember) => {
+const SignUserToken = (user) => {
   const { idUsuario, email, nome } = user;
 
-  if (remember) {
-    const TOKEN = sign({ idUsuario, email, nome }, process.env.SECRET);
-    return TOKEN;
-  }
-
-  const expiresIn = 60 * 60 * 6;
-
-  const TOKEN = sign({ idUsuario, email, nome }, process.env.SECRET, { expiresIn });
-  return { data: TOKEN, expiresIn };
+  const TOKEN = sign({ idUsuario, email, nome }, process.env.SECRET);
+  return { data: TOKEN };
 };
 
 module.exports = SignUserToken;

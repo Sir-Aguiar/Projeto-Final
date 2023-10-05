@@ -3,19 +3,20 @@
   @apply desktop:max-w-[1120px];
   @apply tablet:max-w-[770px];
   @apply mobile:max-w-[328px];
-  @apply flex items-center gap-4;
+  @apply flex mobile:flex-col items-center gap-4;
   @apply font-Montserrat text-black-smooth;
   @apply bg-background;
 }
-
+.content_section *:disabled {
+  @apply cursor-not-allowed opacity-60;
+}
 .profile_image_section {
-  @apply h-full w-full max-w-[256px] mobile:max-w-full;
-  /*   @apply bg-black-smooth rounded-md; */
-  @apply flex flex-col items-center gap-4 p-2;
+  @apply w-full desktop:h-full max-w-[256px] mobile:max-w-full;
+  @apply flex flex-col items-center gap-2 p-2;
 }
 
 .profile_image {
-  @apply w-[256px] h-[256px] min-w-[256px] min-h-[256px] rounded-full;
+  @apply w-[200px] h-[200px] min-w-[200px] min-h-[200px] rounded-full;
 }
 
 .update {
@@ -25,4 +26,9 @@
   @apply transition-all;
   @apply bg-blue-500 hover:brightness-95;
   @apply rounded-sm;
+}
+
+.user_info_section {
+  @apply w-full max-w-[400px] desktop:h-full;
+  @apply flex flex-col items-start justify-between p-2 gap-3;
 }

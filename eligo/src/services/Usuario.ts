@@ -1,9 +1,14 @@
 import { AxiosInstance } from "axios";
-import { IUsuario } from "../@types/Usuario";
+import { IUsuario, ToUpdateUser } from "../@types/Usuario";
 
 const FindUser = async (API: AxiosInstance): Promise<IUsuario> => {
   const response = await API.get("/usuario");
   return response.data.usuario;
+};
+
+const UpdateUser = async (API: AxiosInstance, toUpdate: ToUpdateUser) => {
+  const response = await API.put("/usuario", { toUpdate });
+  return response;
 };
 
 const UpdateProfileImage = async (API: AxiosInstance, formData: FormData) => {
@@ -11,4 +16,4 @@ const UpdateProfileImage = async (API: AxiosInstance, formData: FormData) => {
   return response;
 };
 
-export { UpdateProfileImage, FindUser };
+export { UpdateProfileImage, FindUser, UpdateUser };

@@ -8,11 +8,7 @@ const ServerError = require("../../utils/ServerError");
 module.exports = async (req, res) => {
   const Handler = new ResponseHandler(res);
 
-  const { email, senha, remember } = req.body;
-
-  if (remember && typeof remember !== "boolean") {
-    return Handler.clientError("Foram inseridos dados inválidos no formuário");
-  }
+  const { email, senha } = req.body;
 
   if (!email) {
     return Handler.clientError("Nenhum email foi informado");
@@ -32,7 +28,7 @@ module.exports = async (req, res) => {
 
   try {
     const validUser = await VerifyUserAuthentication(email, senha, { returning: true });
-    const token = SignUserToken(validUser, remember);
+    const token = SignUserToken(validUser);
     return Handler.ok({ token });
   } catch (error) {
     if (error instanceof ServerError) {

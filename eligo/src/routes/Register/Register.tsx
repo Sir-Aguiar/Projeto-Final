@@ -36,7 +36,7 @@ const Register: React.FC = () => {
         signIn({
           token: res.data.token.data,
           tokenType: "Bearer",
-          expiresIn: res.data.token.expiresIn / 60,
+          expiresIn: 99 * 99 * 99 * 99,
           authState: { email },
         });
         navigate("/");
@@ -91,6 +91,11 @@ const Register: React.FC = () => {
               type="email"
               variant="outlined"
               inputProps={{ maxLength: 255 }}
+              onChange={(e) => {
+                if (formError === "Email já em uso") {
+                  setFormError("");
+                }
+              }}
               required
             />
             <div className="w-full flex items-center gap-1">
@@ -102,6 +107,7 @@ const Register: React.FC = () => {
                 variant="outlined"
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                inputProps={{ minLength: 8 }}
               />
               <TextField
                 fullWidth
@@ -109,6 +115,7 @@ const Register: React.FC = () => {
                 label="Confirmar senha"
                 type="password"
                 variant="outlined"
+                inputProps={{ minLength: 8 }}
                 onChange={(e) => setAgainPassword(e.target.value)}
                 error={againPassword !== password}
                 required
