@@ -13,7 +13,7 @@ import { CreateDiscipline, FindDisciplinesBySchool, FindDisciplinesCountBySchool
 import { FindStudentsCountBySchool } from "../../services/Alunos";
 import { CreateDisciplineGrid } from "../../services/CursoDisciplina";
 import { HandleError } from "../../utils/defaultErrorHandler";
-import { useToast } from "../../components/Toast/Toast";
+import { ToastProps, useToast } from "../../components/Toast/Toast";
 interface IAula {
   idAula: number;
   anotacao: string | null;
@@ -86,6 +86,7 @@ interface IRouteContext {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   isLoading: boolean;
   handleCreateDiscipline: (nome: string, cursos: number[]) => Promise<void>;
+  notify: (options: ToastProps) => void;
 }
 
 const RouteContext = createContext<IRouteContext | null>(null);
@@ -313,6 +314,7 @@ const EscolaProvider: React.FC<ProviderProps> = ({ children }) => {
         RouteAPI,
         isLoading,
         setLoading,
+        notify,
       }}
     >
       {isUserAuthorized ? children : <NotFound />}

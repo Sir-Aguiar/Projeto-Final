@@ -126,7 +126,7 @@ const Homepage: React.FC = () => {
             </TutorialStep>
           </Tutorial>
           <Tutorial area={3}>
-            <TutorialTitle>Paineis Analíticos</TutorialTitle>
+            <TutorialTitle>Painéis Analíticos</TutorialTitle>
             <TutorialStep title="Turma" stage={1}>
               <p>Ao acessar à página da turma terá acesso a:</p>
               <p>Um gráfico comparando a quantidade de alunos na turma, e alunos matriculados no mesmo curso.</p>
@@ -150,7 +150,7 @@ const Homepage: React.FC = () => {
             </TutorialStep>
             <TutorialStep title="Foto de Perfil">
               <p>
-                Na páigna de usuário, poderá alterar sua foto de perfil carregando uma imagem de sua própria máquina.
+                Na página de usuário, poderá alterar sua foto de perfil carregando uma imagem de sua própria máquina.
               </p>
             </TutorialStep>
           </Tutorial>

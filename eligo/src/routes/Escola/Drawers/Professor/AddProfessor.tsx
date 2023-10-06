@@ -9,6 +9,7 @@ import Select from "@mui/material/Select";
 import { AxiosError } from "axios";
 import { useEscolaContext } from "../../RouteStateManager";
 import Turmas from "../../../Turmas/Turmas";
+import { HandleError } from "../../../../utils/defaultErrorHandler";
 
 const NewAssociation: React.FC<{ turmas: any[]; disciplinas: any[] }> = ({ turmas, disciplinas }) => {
   const [idTurma, setIdTurma] = useState("");
@@ -71,7 +72,8 @@ const NewAssociation: React.FC<{ turmas: any[]; disciplinas: any[] }> = ({ turma
 };
 
 const AddProfessor: React.FC = () => {
-  const { ProfessorDrawer, ProfessorsData, RouteAPI, SchoolData, DisciplinesData, GridData } = useEscolaContext();
+  const { ProfessorDrawer, ProfessorsData, RouteAPI, SchoolData, DisciplinesData, GridData, notify } =
+    useEscolaContext();
   const [Turmas, setTurmas] = useState<any[]>([]);
   const [associationsToAdd, setAssociations] = useState([0]);
 
@@ -81,7 +83,7 @@ const AddProfessor: React.FC = () => {
 
   useEffect(() => {
     if (ProfessorDrawer.situation) {
-      RouteAPI.get(`/turma?idEscola=${SchoolData.idEscola}`).then((res) => setTurmas(res.data.turmas));
+      RouteAPI.get(`/turma?idEscola=${SchoolData?.idEscola}`).then((res) => setTurmas(res.data.turmas));
     }
   }, [ProfessorDrawer.situation]);
 
@@ -101,11 +103,19 @@ const AddProfessor: React.FC = () => {
       const idTurma = relation.querySelector<HTMLInputElement>('input[name="professor-turma"]')?.value;
       const idDisciplina = relation.querySelector<HTMLInputElement>('input[name="professor-disciplina"]')?.value;
       if (!idTurma || !idDisciplina) {
-        alert("Preencha todos os campos inseridos");
         return;
       }
       relacoes.push({ idDisciplina, idTurma });
     });
+
+    if (relacoes.length < 1) {
+      notify({
+        title: "Dados insuficientes",
+        message: "Por favor, associe o professor à uma ou mais turmas/disciplinas",
+        severity: "warn",
+      });
+      return;
+    }
 
     for (const relacao of relacoes) {
       try {
@@ -115,14 +125,12 @@ const AddProfessor: React.FC = () => {
           idDisciplina,
           idTurma,
         });
+        notify({ title: "Professor criado com sucesso" });
+        onClose();
       } catch (error: any) {
-        console.log(error);
-        if (error instanceof AxiosError) {
-          alert(error.response?.data.error.message);
-        }
+        HandleError(error, notify, "Erro ao criar professor");
       }
     }
-    onClose();
   };
 
   return (
@@ -157,7 +165,9 @@ const AddProfessor: React.FC = () => {
           <button onClick={onClose} className={styles.cancel}>
             Cancelar
           </button>
-          <input type="submit" value="Enviar" form="create-class" className={styles.submiter} />
+          <button type="submit" form="create-class" className={`${styles.submiter} bg-blue-600`}>
+            Enviar
+          </button>
         </footer>
       </div>
     </Drawer>

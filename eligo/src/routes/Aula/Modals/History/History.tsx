@@ -224,11 +224,11 @@ const History: React.FC = () => {
                   </tbody>
                 </table>
               </div>
-              <div className={styles.actions}>
+              {/* <div className={styles.actions}>
                 <button className={styles.downloader} disabled={!ClassRoomData}>
                   Baixar PDF <DownloadForOfflineIcon fontSize="small" />
                 </button>
-              </div>
+              </div> */}
             </div>
             <ClassRoomInfo ClassRoomData={ClassRoomData} />
           </main>

@@ -60,7 +60,7 @@ const UpdateDiscipline: React.FC<Props> = ({ disciplina, onClose, situation, han
           <button onClick={onClose} className={styles.cancel}>
             Cancelar
           </button>
-          <input type="submit" value="Atualizar" form="update-discipline" className={styles.submiter} />
+          <input type="submit" value="Atualizar" form="update-discipline" className={`${styles.submiter} bg-blue-600`} />
         </footer>
       </div>
     </Modal>

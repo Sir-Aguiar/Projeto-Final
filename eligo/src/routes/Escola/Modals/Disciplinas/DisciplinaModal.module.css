@@ -9,14 +9,36 @@
 }
 
 .controllers {
-  @apply flex flex-col items-center gap-2;
-  @apply w-full max-w-[256px] mobile:max-w-full h-full;
+  @apply w-full max-w-[256px];
+  @apply flex flex-col justify-center items-center gap-2 py-2;
+  @apply font-Montserrat text-black-smooth;
 }
+
+.controller_options {
+  @apply w-full;
+  @apply flex flex-col justify-center items-center p-2 gap-2;
+  @apply border-y-[1px] border-black-smooth border-opacity-50;
+}
+.option {
+  @apply w-full h-[45px] min-h-[45px] rounded-sm;
+  @apply flex items-center justify-start px-1 py-2 gap-3;
+  @apply transition-all duration-200;
+  @apply disabled:cursor-not-allowed disabled:opacity-75;
+  @apply hover:bg-gray-100;
+  @apply font-semibold text-sm;
+}
+
+.option svg {
+  @apply w-[20px] h-[20px];
+  @apply fill-black-smooth;
+}
+
 .discipline_list {
   @apply w-full h-full max-h-[400px];
   @apply flex flex-col gap-3 py-1;
   @apply overflow-y-auto;
   @apply border-[1px] border-black-text border-opacity-50 rounded-sm;
+  @apply font-Roboto;
 }
 .disciplina {
   @apply w-full flex items-center gap-1;
