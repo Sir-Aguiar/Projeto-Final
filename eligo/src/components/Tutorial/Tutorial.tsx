@@ -34,7 +34,15 @@ const TutorialStep: React.FC<{ title: string; stage?: number; children: JSX.Elem
 };
 
 const Tutorial: React.FC<{ area: 2 | 3; children: JSX.Element[] }> = ({ area, children }) => {
-  return <div className={`flex flex-col items-center justify-start gap-3 col-span-${area} mobile:col-span-1`}>{children}</div>;
+  return (
+    <div
+      className={`flex flex-col items-center justify-start gap-3 w-full h-full max-w-[${
+        area === 2 ? "300px" : "100%"
+      }] mobile:max-w-full`}
+    >
+      {children}
+    </div>
+  );
 };
 
 export { Tutorial, TutorialStep, TutorialTitle };
