@@ -1,9 +1,11 @@
 import React from "react";
 import styles from "./LandingCard.module.css";
+
 type Props = {
 	image: string;
 	text: string;
 };
+
 const LandingCard: React.FC<Props> = ({ image, text }) => {
 	return (
 		<div className={styles.card_container}>

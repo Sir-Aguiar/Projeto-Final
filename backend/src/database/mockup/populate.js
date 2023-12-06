@@ -64,3 +64,12 @@ const PopulateDisciplines = async () => {
     }
   }
 };
+
+
+PopulateCourses().then(() => {
+  PopulateUser().then(() => {
+    PopulateClasses().then(() => {
+      
+    })
+  })
+})

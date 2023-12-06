@@ -67,7 +67,7 @@ const Navbar: React.FC = () => {
                 margin: "0px",
               }}
             >
-              <span className="font-Montserrat text-[15px] w-full">{authUser()?.email.value}</span>
+              <span className="font-Montserrat text-[15px] w-full">{authUser()?.email}</span>
             </MenuItem>
             <Divider />
             <MenuItem

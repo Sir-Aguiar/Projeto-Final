@@ -1,89 +1,23 @@
 {
 	"Usuarios": [
 		{
-			"email": "socurran0@reddit.com",
-			"nome": "Stace O'Curran",
-			"senha": "yX2}(f>}Eh\\RW"
-		},
-		{
 			"email": "dwoehler1@ebay.com",
 			"nome": "Dennis Woehler",
 			"senha": "iD6*S8jjmkRt"
 		},
 		{
-			"email": "cgrutchfield2@arizona.edu",
-			"nome": "Candi Grutchfield",
-			"senha": "rJ2}_OLV"
-		},
-		{
-			"email": "pjaher3@quantcast.com",
-			"nome": "Pancho Jaher",
-			"senha": "yB8~%Dg&"
-		},
-		{
-			"email": "lwellbeloved4@purevolume.com",
-			"nome": "Lannie Wellbeloved",
-			"senha": "oS9.EWQGrbp83x"
-		},
-		{
-			"email": "mollenbuttel5@nationalgeographic.com",
-			"nome": "Marsha Ollenbuttel",
-			"senha": "sE3_3M~Qw+yK"
-		},
-		{
-			"email": "lhollington6@free.fr",
-			"nome": "Lonee Hollington",
-			"senha": "iV8@!CTFV4F5{$'"
-		},
-		{
-			"email": "rpaynes7@indiegogo.com",
-			"nome": "Robbin Paynes",
-			"senha": "kM0~|3AmU+"
-		},
-		{
-			"email": "sblogg8@tumblr.com",
-			"nome": "Spence Blogg",
-			"senha": "kW7,5aU?QI"
-		},
-		{
-			"email": "nfuzzard9@blog.com",
-			"nome": "Nowell Fuzzard",
-			"senha": "bP6#mwfL}JcpfXg,"
-		},
-		{
 			"email": "felipeferreiraaguiar9@gmail.com",
 			"nome": "Felipe Ferreira Aguiar",
 			"senha": "112233"
-		},
-		{
-			"email": "slarmorb@storify.com",
-			"nome": "Stephani Larmor",
-			"senha": "eW8%l\">Aj"
 		}
 	],
 	"Escolas": [
 		{
-			"idGestor": 3,
-			"nome": "Escola Municipal Weerawila"
-		},
-		{
-			"idGestor": 12,
-			"nome": "Escola Estadual Dunwich"
-		},
-		{
-			"idGestor": 11,
+			"idGestor": 2,
 			"nome": "Instituição Sherman Army Air Field"
 		},
 		{
-			"idGestor": 3,
-			"nome": "Escola Mount Etjo"
-		},
-		{
-			"idGestor": 12,
-			"nome": "Escola Estadual Southern Seaplane"
-		},
-		{
-			"idGestor": 11,
+			"idGestor": 2,
 			"nome": "Espaço New Orleans Field"
 		}
 	],
@@ -185,303 +119,144 @@
 		},
 		{
 			"idCurso": 10,
-			"idEscola": 3,
+			"idEscola": 2,
 			"nome": "1 Ano A"
 		},
 		{
 			"idCurso": 10,
-			"idEscola": 3,
+			"idEscola": 2,
 			"nome": "1 Ano B"
 		},
 		{
 			"idCurso": 10,
-			"idEscola": 3,
+			"idEscola": 2,
 			"nome": "1 Ano C"
 		},
 		{
 			"idCurso": 11,
-			"idEscola": 3,
+			"idEscola": 2,
 			"nome": "2 Ano A"
 		},
 		{
 			"idCurso": 11,
-			"idEscola": 3,
+			"idEscola": 2,
 			"nome": "2 Ano B"
 		},
 		{
 			"idCurso": 11,
-			"idEscola": 3,
+			"idEscola": 2,
 			"nome": "2 Ano C"
 		},
 		{
 			"idCurso": 12,
-			"idEscola": 3,
+			"idEscola": 2,
 			"nome": "3 Ano A"
 		},
 		{
 			"idCurso": 12,
-			"idEscola": 3,
+			"idEscola": 2,
 			"nome": "3 Ano B"
 		},
 		{
 			"idCurso": 12,
-			"idEscola": 3,
+			"idEscola": 2,
 			"nome": "3 Ano C"
+		}
+	],
+	"Disciplinas": [
+		{
+			"idEscola": 1,
+			"nome": "Matemática 1 Ano"
 		},
 		{
-			"idCurso": 1,
+			"idEscola": 1,
+			"nome": "Matemática 2 Ano"
+		},
+		{
+			"idEscola": 1,
+			"nome": "Matemática 3 Ano"
+		},
+		{
 			"idEscola": 2,
-			"nome": "1 Ano A"
+			"nome": "Matemática 1 Ano"
 		},
 		{
-			"idCurso": 1,
 			"idEscola": 2,
-			"nome": "1 Ano B"
+			"nome": "Matemática 2 Ano"
 		},
 		{
-			"idCurso": 2,
 			"idEscola": 2,
-			"nome": "2 Ano A"
+			"nome": "Matemática 3 Ano"
 		},
 		{
-			"idCurso": 3,
+			"idEscola": 1,
+			"nome": "Português 1 Ano"
+		},
+		{
+			"idEscola": 1,
+			"nome": "Português 2 Ano"
+		},
+		{
+			"idEscola": 1,
+			"nome": "Português 3 Ano"
+		},
+		{
 			"idEscola": 2,
-			"nome": "3 Ano B"
+			"nome": "Português 1 Ano"
 		},
 		{
-			"idCurso": 3,
 			"idEscola": 2,
-			"nome": "3 Ano A"
+			"nome": "Português 2 Ano"
 		},
 		{
-			"idCurso": 2,
 			"idEscola": 2,
-			"nome": "2 Ano B"
+			"nome": "Português 3 Ano"
 		},
 		{
-			"idCurso": 4,
+			"idEscola": 1,
+			"nome": "Filosofia"
+		},
+		{
+			"idEscola": 1,
+			"nome": "Geografia"
+		},
+		{
 			"idEscola": 2,
-			"nome": "4 Ano A"
+			"nome": "Biologia"
 		},
 		{
-			"idCurso": 4,
 			"idEscola": 2,
-			"nome": "4 Ano B"
+			"nome": "Química 2 Ano"
 		},
 		{
-			"idCurso": 6,
 			"idEscola": 2,
-			"nome": "6 Ano A"
+			"nome": "Física 3 Ano"
+		}
+	],
+	"CursoDisciplina": [
+		{
+			"idDisciplina": 1,
+			"idCurso": 10
 		},
 		{
-			"idCurso": 6,
-			"idEscola": 2,
-			"nome": "6 Ano B"
+			"idDisciplina": 2,
+			"idCurso": 11
 		},
 		{
-			"idCurso": 7,
-			"idEscola": 2,
-			"nome": "7 Ano A"
+			"idDisciplina": 3,
+			"idCurso": 12
 		},
 		{
-			"idCurso": 7,
-			"idEscola": 2,
-			"nome": "7 Ano B"
+			"idDisciplina": 1,
+			"idCurso": 10
 		},
 		{
-			"idCurso": 8,
-			"idEscola": 2,
-			"nome": "8 Ano A"
+			"idDisciplina": 2,
+			"idCurso": 11
 		},
 		{
-			"idCurso": 8,
-			"idEscola": 2,
-			"nome": "8 Ano B"
-		},
-		{
-			"idCurso": 5,
-			"idEscola": 4,
-			"nome": "5 Ano A"
-		},
-		{
-			"idCurso": 5,
-			"idEscola": 4,
-			"nome": "5 Ano B"
-		},
-		{
-			"idCurso": 6,
-			"idEscola": 4,
-			"nome": "6 Ano A"
-		},
-		{
-			"idCurso": 6,
-			"idEscola": 4,
-			"nome": "6 Ano B"
-		},
-		{
-			"idCurso": 9,
-			"idEscola": 4,
-			"nome": "9 Ano A"
-		},
-		{
-			"idCurso": 9,
-			"idEscola": 4,
-			"nome": "9 Ano B"
-		},
-		{
-			"idCurso": 9,
-			"idEscola": 4,
-			"nome": "9 Ano C"
-		},
-		{
-			"idCurso": 1,
-			"idEscola": 5,
-			"nome": "1 Ano A"
-		},
-		{
-			"idCurso": 1,
-			"idEscola": 5,
-			"nome": "1 Ano B"
-		},
-		{
-			"idCurso": 1,
-			"idEscola": 5,
-			"nome": "1 Ano C"
-		},
-		{
-			"idCurso": 2,
-			"idEscola": 5,
-			"nome": "2 Ano A"
-		},
-		{
-			"idCurso": 2,
-			"idEscola": 5,
-			"nome": "2 Ano B"
-		},
-		{
-			"idCurso": 2,
-			"idEscola": 5,
-			"nome": "2 Ano C"
-		},
-		{
-			"idCurso": 3,
-			"idEscola": 5,
-			"nome": "3 Ano A"
-		},
-		{
-			"idCurso": 3,
-			"idEscola": 5,
-			"nome": "3 Ano B"
-		},
-		{
-			"idCurso": 3,
-			"idEscola": 5,
-			"nome": "3 Ano C"
-		},
-		{
-			"idCurso": 4,
-			"idEscola": 5,
-			"nome": "4 Ano A"
-		},
-		{
-			"idCurso": 4,
-			"idEscola": 5,
-			"nome": "4 Ano B"
-		},
-		{
-			"idCurso": 4,
-			"idEscola": 5,
-			"nome": "4 Ano C"
-		},
-		{
-			"idCurso": 5,
-			"idEscola": 5,
-			"nome": "5 Ano A"
-		},
-		{
-			"idCurso": 5,
-			"idEscola": 5,
-			"nome": "5 Ano B"
-		},
-		{
-			"idCurso": 5,
-			"idEscola": 5,
-			"nome": "5 Ano C"
-		},
-		{
-			"idCurso": 1,
-			"idEscola": 6,
-			"nome": "1 Ano A"
-		},
-		{
-			"idCurso": 1,
-			"idEscola": 6,
-			"nome": "1 Ano B"
-		},
-		{
-			"idCurso": 1,
-			"idEscola": 6,
-			"nome": "1 Ano C"
-		},
-		{
-			"idCurso": 2,
-			"idEscola": 6,
-			"nome": "2 Ano A"
-		},
-		{
-			"idCurso": 2,
-			"idEscola": 6,
-			"nome": "2 Ano B"
-		},
-		{
-			"idCurso": 2,
-			"idEscola": 6,
-			"nome": "2 Ano C"
-		},
-		{
-			"idCurso": 3,
-			"idEscola": 6,
-			"nome": "3 Ano A"
-		},
-		{
-			"idCurso": 3,
-			"idEscola": 6,
-			"nome": "3 Ano B"
-		},
-		{
-			"idCurso": 3,
-			"idEscola": 6,
-			"nome": "3 Ano C"
-		},
-		{
-			"idCurso": 4,
-			"idEscola": 6,
-			"nome": "4 Ano A"
-		},
-		{
-			"idCurso": 4,
-			"idEscola": 6,
-			"nome": "4 Ano B"
-		},
-		{
-			"idCurso": 4,
-			"idEscola": 6,
-			"nome": "4 Ano C"
-		},
-		{
-			"idCurso": 5,
-			"idEscola": 6,
-			"nome": "5 Ano A"
-		},
-		{
-			"idCurso": 5,
-			"idEscola": 6,
-			"nome": "5 Ano B"
-		},
-		{
-			"idCurso": 5,
-			"idEscola": 6,
-			"nome": "5 Ano C"
+			"idDisciplina": 3,
+			"idCurso": 12
 		}
 	]
 }
