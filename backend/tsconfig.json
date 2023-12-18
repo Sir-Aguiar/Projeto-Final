@@ -1,0 +1,28 @@
+{
+	"ts-node": {
+		"files": true
+	},
+	"compilerOptions": {
+		"strict": true,
+		"target": "ES2022",
+		"module": "CommonJS",
+		"outDir": "build",
+		"moduleResolution": "Node",
+		"allowJs": true,
+		"skipLibCheck": true,
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"resolveJsonModule": true,
+		"noImplicitAny": true,
+		"noImplicitOverride": true,
+		"noImplicitReturns": true,
+		"noImplicitThis": true,
+		"strictNullChecks": true,
+		"alwaysStrict": true,
+		"removeComments": true,
+		"noUnusedLocals": true
+	},
+	"include": [
+		"src/**/*.ts"
+	]
+}
