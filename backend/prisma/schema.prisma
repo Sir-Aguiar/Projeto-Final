@@ -8,14 +8,14 @@ datasource db {
 }
 
 model User {
-  userId       Int    @id @default(autoincrement())
-  name         String @db.VarChar(255)
-  email        String @unique @db.VarChar(255)
+  userId       Int     @id @default(autoincrement())
+  name         String  @db.VarChar(255)
+  email        String  @unique @db.VarChar(255)
   password     String
-  profileImage String @unique
+  profileImage String? @unique
 
-  createdAt DateTime @default(now())
-  deletedAt DateTime
+  createdAt DateTime  @default(now())
+  deletedAt DateTime?
 
   School School[]
 
@@ -35,8 +35,8 @@ model School {
 
   Discipline Discipline[]
 
-  createdAt DateTime @default(now())
-  deletedAt DateTime
+  createdAt DateTime  @default(now())
+  deletedAt DateTime?
 
   @@map("schools")
 }
@@ -69,8 +69,8 @@ model Class {
 
   Student Student[]
 
-  createdAt DateTime @default(now())
-  deletedAt DateTime
+  createdAt DateTime  @default(now())
+  deletedAt DateTime?
 
   @@map("classes")
 }
@@ -82,8 +82,8 @@ model Student {
   Class   Class @relation(fields: [classId], references: [classId], onDelete: Cascade, onUpdate: Cascade)
   classId Int
 
-  createdAt DateTime @default(now())
-  deletedAt DateTime
+  createdAt DateTime  @default(now())
+  deletedAt DateTime?
 
   @@map("students")
 }
