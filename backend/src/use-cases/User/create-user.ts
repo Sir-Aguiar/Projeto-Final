@@ -2,6 +2,7 @@ import "dotenv/config";
 import { IUserRepository } from "../../repositories/UserRepository";
 import { hashSync } from "bcrypt";
 import { IUser } from "../../entities/User";
+import { EntityError } from "../../entities/EntityError";
 
 export interface CreateUserInput {
   name: string;
@@ -15,14 +16,17 @@ export class CreateUser {
   constructor(private repository: IUserRepository) {}
 
   async execute({ email, name, password }: CreateUserInput) {
-    if (typeof name !== "string") throw new Error();
-    if (name.length > 255) throw new Error();
+    if (typeof name !== "string") throw new EntityError("Insira um nome válido para a criação de usuário");
 
-    if (typeof email !== "string") throw new Error();
-    if (email.length > 255) throw new Error();
+    if (typeof email !== "string") throw new EntityError("Insira um email válido para a criação de usuário");
 
-    if (typeof password !== "string") throw new Error();
-    if (password.length > 255) throw new Error();
+    if (typeof password !== "string") throw new EntityError("Insira uma senha válida para a criação de usuário");
+
+    if (name.length > 70) throw new EntityError("Seu nome deve ter até 70 caracteres, use abreviações se necessário");
+
+    if (email.length > 320) throw new EntityError("Seu email pode ter no máximo 320 caracteres");
+
+    if (password.length < 6) throw new EntityError("Por favor, insira uma senha com mais de 6 dígitos");
 
     return await this.repository.save({ email, name, password: hashSync(password, Number(process.env.SALT)) });
   }

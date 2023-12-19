@@ -1,5 +1,4 @@
 import "dotenv/config";
-
 import { hashSync } from "bcrypt";
 
 export interface IUser {
