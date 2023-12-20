@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { IUserRepository } from "../../repositories/UserRepository";
+import { IUserCreationRepository } from "../../repositories/UserCreationRepository";
 import { hashSync } from "bcrypt";
 import { IUser } from "../../entities/User";
 import { EntityError } from "../../entities/EntityError";
@@ -13,7 +13,7 @@ export interface CreateUserInput {
 export type CreateUserOutput = Promise<IUser>;
 
 export class CreateUser {
-  constructor(private repository: IUserRepository) {}
+  constructor(private repository: IUserCreationRepository) {}
 
   async execute({ email, name, password }: CreateUserInput) {
     if (typeof name !== "string") throw new EntityError("Insira um nome válido para a criação de usuário");
