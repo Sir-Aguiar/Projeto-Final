@@ -14,7 +14,7 @@ export class SchoolCreationRepository implements ISchoolCreationRepository {
       return school;
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
-        if (error.code === "") {
+        if (error.code === "P2003") {
           throw new ServerError(404, "Nenhum usuário foi identificado");
         }
       }
