@@ -1,6 +1,6 @@
-import { Database } from "../database/prisma";
-import { CreateUserInput, CreateUserOutput } from "../use-cases/User/create-user";
-import { ServerError } from "../entities/ServerError";
+import { Database } from "../../database/prisma";
+import { CreateUserInput, CreateUserOutput } from "../../use-cases/User/create-user";
+import { ServerError } from "../../entities/ServerError";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
 export interface IUserCreationRepository {

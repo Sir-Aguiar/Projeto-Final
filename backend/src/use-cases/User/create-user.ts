@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { IUserCreationRepository } from "../../repositories/UserCreationRepository";
+import { IUserCreationRepository } from "../../repositories/User/UserCreationRepository";
 import { hashSync } from "bcrypt";
 import { IUser } from "../../entities/User";
 import { EntityError } from "../../entities/EntityError";
