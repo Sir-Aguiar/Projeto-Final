@@ -4,7 +4,7 @@ import { ServerError } from "../../entities/ServerError";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
 export interface IUserCreationRepository {
-  save(data: CreateUserInput): CreateUserOutput;
+  save({ email, name, password }: CreateUserInput): CreateUserOutput;
 }
 
 export class UserCreationRepository implements IUserCreationRepository {
