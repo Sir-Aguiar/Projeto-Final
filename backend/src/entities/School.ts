@@ -5,3 +5,5 @@ export interface ISchool {
   createdAt: Date;
   deletedAt: Date | null;
 }
+
+export class School {}

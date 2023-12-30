@@ -14,8 +14,8 @@ export class CourseCreationRepository implements ICourseCreationRepository {
       return course;
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
-        if (error.code === "P2025") {
-          throw new ServerError(404, "Nenhuma escola foi identificado");
+        if (error.code === "P2003") {
+          throw new ServerError(403, "Nenhuma escola foi identificada");
         }
       }
       throw error;
