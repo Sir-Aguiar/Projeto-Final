@@ -77,7 +77,7 @@ model Class {
 
 model Student {
   studentId Int    @id @default(autoincrement())
-  name      String @db.VarChar(255)
+  name      String @db.VarChar(125)
 
   Class   Class @relation(fields: [classId], references: [classId], onDelete: Cascade, onUpdate: Cascade)
   classId Int
