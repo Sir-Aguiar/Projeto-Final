@@ -1,0 +1,116 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  userId       Int     @id @default(autoincrement())
+  name         String  @db.VarChar(70)
+  email        String  @unique @db.Text
+  password     String
+  profileImage String? @unique
+
+  createdAt DateTime  @default(now())
+  deletedAt DateTime?
+
+  School School[]
+
+  @@map("users")
+}
+
+model School {
+  schoolId Int    @id @default(autoincrement())
+  name     String @db.VarChar(100)
+
+  owner   User @relation(fields: [ownerId], references: [userId], onDelete: Cascade, onUpdate: Cascade)
+  ownerId Int
+
+  Classes Class[]
+
+  Course Course[]
+
+  Discipline Discipline[]
+
+  createdAt DateTime  @default(now())
+  deletedAt DateTime?
+
+  @@map("schools")
+}
+
+model Course {
+  courseId Int    @id @default(autoincrement())
+  name     String @db.VarChar(75)
+
+  School   School @relation(fields: [schoolId], references: [schoolId], onDelete: Cascade, onUpdate: Cascade)
+  schoolId Int
+
+  Classes Class[]
+
+  DisciplineCourse DisciplineCourse[]
+
+  createdAt DateTime @default(now())
+
+  @@map("courses")
+}
+
+model Class {
+  classId Int    @id @default(autoincrement())
+  name    String @db.VarChar(75)
+
+  School   School @relation(fields: [schoolId], references: [schoolId], onDelete: Cascade, onUpdate: Cascade)
+  schoolId Int
+
+  Course   Course @relation(fields: [courseId], references: [courseId], onDelete: Restrict, onUpdate: Restrict)
+  courseId Int
+
+  Student Student[]
+
+  createdAt DateTime  @default(now())
+  deletedAt DateTime?
+
+  @@map("classes")
+}
+
+model Student {
+  studentId Int    @id @default(autoincrement())
+  name      String @db.VarChar(125)
+
+  Class   Class @relation(fields: [classId], references: [classId], onDelete: Cascade, onUpdate: Cascade)
+  classId Int
+
+  createdAt DateTime  @default(now())
+  deletedAt DateTime?
+
+  @@map("students")
+}
+
+model Discipline {
+  disciplineId Int    @id @default(autoincrement())
+  name         String @db.VarChar(255)
+
+  School   School @relation(fields: [schoolId], references: [schoolId], onDelete: Cascade, onUpdate: Cascade)
+  schoolId Int
+
+  DisciplineCourse DisciplineCourse[]
+
+  createdAt DateTime @default(now())
+
+  @@map("disciplines")
+}
+
+model DisciplineCourse {
+  Course   Course @relation(fields: [courseId], references: [courseId], onDelete: Restrict, onUpdate: Restrict)
+  courseId Int
+
+  Discipline   Discipline @relation(fields: [disciplineId], references: [disciplineId], onDelete: Restrict, onUpdate: Restrict)
+  disciplineId Int
+
+  createdAt DateTime @default(now())
+
+  @@id([disciplineId, courseId])
+  @@map("discipline_course")
+}
