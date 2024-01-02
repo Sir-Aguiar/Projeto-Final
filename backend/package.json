@@ -11,12 +11,14 @@
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.2",
     "jwt-decode": "^4.0.0",
-    "multer": "^1.4.5-lts.1"
+    "multer": "^1.4.5-lts.1",
+    "vitest": "^1.1.1"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
     "@types/jwt-decode": "^3.1.0",
     "@types/node": "^20.10.4",
+    "@vitest/ui": "^1.1.1",
     "prisma": "^5.7.1",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
@@ -24,7 +26,9 @@
   },
   "scripts": {
     "dev": "node --watch src/index.js",
-    "start": "node src/index.js"
+    "start": "node src/index.js",
+    "test": "vitest",
+    "test:ui": "vitest --ui"
   },
   "keywords": [],
   "author": "",
